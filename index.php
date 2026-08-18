@@ -48,6 +48,109 @@ session_start();
     box-shadow:0 30px 80px rgba(0,0,0,0.18);
 }
 
+.contact-card {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+
+    width: 90%;
+    max-width: 380px;
+
+    padding: 35px 30px;
+
+    background: #ffffff;
+    border-radius: 20px;
+
+    text-align: center;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+}
+
+.contact-card.show {
+    display: block;
+    animation: contactShow 0.3s ease;
+}
+
+.close-contact {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+
+    border: none;
+    background: transparent;
+
+    font-size: 28px;
+    color: #30261c;
+
+    cursor: pointer;
+}
+
+.contact-success-icon {
+    width: 70px;
+    height: 70px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f3e4d3;
+    color: #c17530;
+
+    font-size: 30px;
+}
+
+.contact-card h3 {
+    color: #30261c;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.contact-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.contact-continue-btn {
+    margin-top: 15px;
+
+    border: none;
+    border-radius: 25px;
+
+    padding: 10px 30px;
+
+    background: #30261c;
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.contact-continue-btn:hover {
+    background: #c17530;
+}
+
+@keyframes contactShow {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
 /* IMAGE */
 .img-box{
     position:relative;
@@ -2409,12 +2512,70 @@ margin-top:2%;
                 <p>1784 Ramnagar Road</p>
               </div>
           </div>
-          <div class="cont ">
-            <h2 class="p-3 fw-bold">Contact Us</h2>
-              <input type="text" placeholder="  Name" >
-              <textarea name="" placeholder="  Message" ></textarea>              
-              <button class="btn  rounded-4 text-light" type="submit" >Send</button>
-          </div>
+         <div class="cont">
+
+    <h2 class="p-3 fw-bold">Contact Us</h2>
+
+    <input
+        type="text"
+        id="contactName"
+        placeholder="Name"
+        required
+    >
+
+    <textarea
+        id="contactMessage"
+        placeholder="Message"
+        required
+    ></textarea>
+
+    <button
+        class="btn rounded-4 text-light"
+        type="button"
+        onclick="sendMessage()">
+
+        Send
+
+    </button>
+
+</div>
+
+<div class="contact-card" id="contactCard">
+
+    <button
+        type="button"
+        class="close-contact"
+        onclick="closeContactCard()">
+
+        &times;
+
+    </button>
+
+    <div class="contact-success-icon">
+        <i class="fa-solid fa-paper-plane"></i>
+    </div>
+
+    <h3>Message Sent!</h3>
+
+    <p>
+        Thank you for contacting Aroma Haven.
+        We'll get back to you soon!
+    </p>
+
+    <button
+        type="button"
+        class="contact-continue-btn"
+        onclick="closeContactCard()">
+
+        Continue
+
+    </button>
+
+</div>
+
+
+
+
           </div>
       </div>           
         </div>       
@@ -2638,6 +2799,32 @@ function removeCart(product_id){
 
 }
 
+
+function sendMessage() {
+
+    let name = document.getElementById("contactName").value.trim();
+    let message = document.getElementById("contactMessage").value.trim();
+
+    if (name === "" || message === "") {
+        return;
+    }
+
+    document
+        .getElementById("contactCard")
+        .classList
+        .add("show");
+}
+
+function closeContactCard() {
+
+    document
+        .getElementById("contactCard")
+        .classList
+        .remove("show");
+
+    document.getElementById("contactName").value = "";
+    document.getElementById("contactMessage").value = "";
+}
 
 
 </script>
