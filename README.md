@@ -122,5 +122,5 @@ If you use a different folder name, update the URL accordingly.
 
 **Tanushree Dey**
 
-BCA Student | Aspiring Full-Stack Developer
+BCA Student 
 
