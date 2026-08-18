@@ -42,7 +42,10 @@ include ("includes/db_connect.php");
  $sql = "UPDATE `categories` SET `name`='$name',`slug`='$slug',`descri`='$desc',`price`='$price',`image`='$image',`status`='$status' WHERE id = '$id'" ; 
             $run=mysqli_query($conn,$sql);
             
-            echo "<script>alert('update successful !!'); window.location='category_list.php'; </script>";
+            // echo "<script>alert('update successful !!'); window.location='category_list.php'; </script>";
+
+            header("Location: edit_category.php?id=$id&updated=1");
+            exit();
 
 
 
