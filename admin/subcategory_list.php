@@ -6,6 +6,7 @@ global $conn;
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Subcategory List</title>
@@ -14,10 +15,10 @@ global $conn;
     <link rel="icon" type="image/png" href="weblogo.png">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="../assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../assets/bootstrap-5.3.7-dist/css/bootstrap.min.css" />
 
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.7/css/dataTables.bootstrap5.min.css">
@@ -29,770 +30,875 @@ global $conn;
       PREMIUM SUBCATEGORY PAGE
 ==========================================*/
 
-body{
+        /* ================= DELETE CONFIRM CARD ================= */
+
+        .custom-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .55);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+
+        .custom-overlay.show {
+            display: flex;
+        }
+
+        .custom-confirm-card {
+            width: 420px;
+            max-width: 90%;
+            background: #fff;
+            border-radius: 25px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, .25);
+            animation: confirmCardIn .3s ease;
+        }
+
+        .confirm-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fee2e2;
+            color: #dc2626;
+            font-size: 30px;
+        }
+
+        .custom-confirm-card h3 {
+            margin: 0 0 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .custom-confirm-card p {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 28px;
+        }
 
-background:#eef4fb;
+        .custom-confirm-card p strong {
+            color: #0f172a;
+        }
 
-font-family:Poppins,sans-serif;
+        .confirm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
 
-}
+        .cancel-confirm-btn,
+        .confirm-delete-btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
 
-.main-content{
+        .cancel-confirm-btn {
+            background: #f1f5f9;
+            color: #475569;
+        }
 
-margin:25px 20px 25px 300px;
+        .cancel-confirm-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
 
-width:calc(100% - 320px);
+        .confirm-delete-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, .25);
+        }
 
-animation:fadePage .8s;
+        .confirm-delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(239, 68, 68, .35);
+        }
 
-}
+        @keyframes confirmCardIn {
+            from {
+                opacity: 0;
+                transform: scale(.85) translateY(20px);
+            }
 
-body{
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
 
-overflow-x:hidden;
+        body {
 
-}
+            background: #eef4fb;
 
-.subcategory-card{
+            font-family: Poppins, sans-serif;
 
-overflow:hidden;
+        }
 
-}
+        .main-content {
 
-.table-responsive{
+            margin: 25px 20px 25px 300px;
 
-overflow-x:hidden;
+            width: calc(100% - 320px);
 
-}
+            animation: fadePage .8s;
 
-/*================ HERO =================*/
+        }
 
-.subcategory-hero{
+        body {
 
-display:flex;
+            overflow-x: hidden;
 
-justify-content:space-between;
+        }
 
-align-items:center;
+        .subcategory-card {
 
-padding:35px;
+            overflow: hidden;
 
-margin-bottom:30px;
+        }
 
-border-radius:28px;
+        .table-responsive {
 
-background:
-linear-gradient(135deg,#0f172a,#1d4ed8,#2563eb);
+            overflow-x: hidden;
 
-color:#fff;
+        }
 
-overflow:hidden;
+        /*================ HERO =================*/
 
-position:relative;
+        .subcategory-hero {
 
-box-shadow:
+            display: flex;
 
-0 25px 60px rgba(37,99,235,.28);
+            justify-content: space-between;
 
-}
+            align-items: center;
 
-.subcategory-hero::before{
+            padding: 35px;
 
-content:"";
+            margin-bottom: 30px;
 
-position:absolute;
+            border-radius: 28px;
 
-right:-70px;
+            background:
+                linear-gradient(135deg, #0f172a, #1d4ed8, #2563eb);
 
-top:-70px;
+            color: #fff;
 
-width:240px;
+            overflow: hidden;
 
-height:240px;
+            position: relative;
 
-background:rgba(255,255,255,.08);
+            box-shadow:
 
-border-radius:50%;
+                0 25px 60px rgba(37, 99, 235, .28);
 
-}
+        }
 
-.subcategory-hero::after{
+        .subcategory-hero::before {
 
-content:"";
+            content: "";
 
-position:absolute;
+            position: absolute;
 
-left:-80px;
+            right: -70px;
 
-bottom:-80px;
+            top: -70px;
 
-width:180px;
+            width: 240px;
 
-height:180px;
+            height: 240px;
 
-background:rgba(255,255,255,.06);
+            background: rgba(255, 255, 255, .08);
 
-border-radius:50%;
+            border-radius: 50%;
 
-}
+        }
 
-.subcategory-hero h2{
+        .subcategory-hero::after {
 
-font-size:34px;
+            content: "";
 
-font-weight:700;
+            position: absolute;
 
-margin-bottom:10px;
+            left: -80px;
 
-position:relative;
+            bottom: -80px;
 
-z-index:2;
+            width: 180px;
 
-}
+            height: 180px;
 
-.subcategory-hero p{
+            background: rgba(255, 255, 255, .06);
 
-font-size:15px;
+            border-radius: 50%;
 
-opacity:.9;
+        }
 
-margin:0;
+        .subcategory-hero h2 {
 
-position:relative;
+            font-size: 34px;
 
-z-index:2;
+            font-weight: 700;
 
-}
+            margin-bottom: 10px;
 
-/*================ ADD BUTTON =================*/
+            position: relative;
 
-.premium-add-btn{
+            z-index: 2;
 
-padding:14px 28px;
+        }
 
-border-radius:15px;
+        .subcategory-hero p {
 
-text-decoration:none;
+            font-size: 15px;
 
-font-weight:600;
+            opacity: .9;
 
-color:#fff;
+            margin: 0;
 
-background:
+            position: relative;
 
-linear-gradient(135deg,#06b6d4,#2563eb);
+            z-index: 2;
 
-transition:.35s;
+        }
 
-box-shadow:
+        /*================ ADD BUTTON =================*/
 
-0 15px 35px rgba(0,0,0,.25);
+        .premium-add-btn {
 
-position:relative;
+            padding: 14px 28px;
 
-z-index:2;
+            border-radius: 15px;
 
-display:inline-flex;
+            text-decoration: none;
 
-align-items:center;
+            font-weight: 600;
 
-gap:10px;
+            color: #fff;
 
-}
+            background:
 
-.premium-add-btn:hover{
+                linear-gradient(135deg, #06b6d4, #2563eb);
 
-color:#fff;
+            transition: .35s;
 
-transform:translateY(-4px);
+            box-shadow:
 
-box-shadow:
+                0 15px 35px rgba(0, 0, 0, .25);
 
-0 20px 45px rgba(37,99,235,.45);
+            position: relative;
 
-background:
+            z-index: 2;
 
-linear-gradient(135deg,#0284c7,#1d4ed8);
+            display: inline-flex;
 
-}
+            align-items: center;
 
-/*================ CONTENT CARD =================*/
+            gap: 10px;
 
-.subcategory-card{
+        }
 
-background:#fff;
+        .premium-add-btn:hover {
 
-border-radius:28px;
+            color: #fff;
 
-padding:30px;
+            transform: translateY(-4px);
 
-box-shadow:
+            box-shadow:
 
-0 18px 45px rgba(15,23,42,.08);
+                0 20px 45px rgba(37, 99, 235, .45);
 
-border:1px solid #eef2f7;
+            background:
 
-overflow:hidden;
+                linear-gradient(135deg, #0284c7, #1d4ed8);
 
-animation:cardUp .8s;
+        }
 
-}
+        /*================ CONTENT CARD =================*/
 
-/*================ TABLE =================*/
+        .subcategory-card {
 
-.table{
+            background: #fff;
 
-margin-bottom:0;
+            border-radius: 28px;
 
-border-collapse:separate;
+            padding: 30px;
 
-border-spacing:0;
+            box-shadow:
 
-}
+                0 18px 45px rgba(15, 23, 42, .08);
 
-/* .table thead tr{
+            border: 1px solid #eef2f7;
+
+            overflow: hidden;
+
+            animation: cardUp .8s;
+
+        }
+
+        /*================ TABLE =================*/
+
+        .table {
+
+            margin-bottom: 0;
+
+            border-collapse: separate;
+
+            border-spacing: 0;
+
+        }
+
+        /* .table thead tr{
 
 background-image: linear-gradient(135deg, #0f172a, #1e3a8a);
 
 } */
 
-.table thead th{
+        .table thead th {
 
-color:#000;
+            color: #000;
 
-padding:18px;
+            padding: 18px;
 
-border:none;
+            border: none;
 
-font-size:14px;
+            font-size: 14px;
 
-font-weight:600;
+            font-weight: 600;
 
-letter-spacing:.4px;
+            letter-spacing: .4px;
 
-white-space:nowrap;
+            white-space: nowrap;
 
-}
+        }
 
-.table tbody td{
+        .table tbody td {
 
-padding:16px 5px;
+            padding: 16px 5px;
 
-vertical-align:middle;
+            vertical-align: middle;
 
-border-bottom:1px solid #edf2f7;
+            border-bottom: 1px solid #edf2f7;
 
-transition:.35s;
+            transition: .35s;
 
-}
+        }
 
-.table tbody tr{
+        .table tbody tr {
 
-transition:.35s;
+            transition: .35s;
 
-}
+        }
 
-.table tbody tr:hover{
+        .table tbody tr:hover {
 
-background:#f8fbff;
+            background: #f8fbff;
 
-transform:scale(1.01);
+            transform: scale(1.01);
 
-box-shadow:
+            box-shadow:
 
-0 8px 25px rgba(0,0,0,.06);
+                0 8px 25px rgba(0, 0, 0, .06);
 
-}
+        }
 
-/*==========================================
+        /*==========================================
         PREMIUM STATS
 ==========================================*/
 
-.stats-grid{
+        .stats-grid {
 
-display:grid;
+            display: grid;
 
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 
-gap:22px;
+            gap: 22px;
 
-margin-bottom:30px;
+            margin-bottom: 30px;
 
-}
+        }
 
-.stat-card{
+        .stat-card {
 
-position:relative;
+            position: relative;
 
-overflow:hidden;
+            overflow: hidden;
 
-background:#fff;
+            background: #fff;
 
-border-radius:24px;
+            border-radius: 24px;
 
-padding:28px;
+            padding: 28px;
 
-display:flex;
+            display: flex;
 
-align-items:center;
+            align-items: center;
 
-gap:20px;
+            gap: 20px;
 
-transition:.35s;
+            transition: .35s;
 
-box-shadow:
+            box-shadow:
 
-0 15px 40px rgba(15,23,42,.08);
+                0 15px 40px rgba(15, 23, 42, .08);
 
-border:1px solid #edf2f7;
+            border: 1px solid #edf2f7;
 
-}
+        }
 
-.stat-card:hover{
+        .stat-card:hover {
 
-transform:translateY(-8px);
+            transform: translateY(-8px);
 
-box-shadow:
+            box-shadow:
 
-0 25px 55px rgba(0,0,0,.14);
+                0 25px 55px rgba(0, 0, 0, .14);
 
-}
+        }
 
-.stat-card::before{
+        .stat-card::before {
 
-content:"";
+            content: "";
 
-position:absolute;
+            position: absolute;
 
-right:-30px;
+            right: -30px;
 
-top:-30px;
+            top: -30px;
 
-width:120px;
+            width: 120px;
 
-height:120px;
+            height: 120px;
 
-border-radius:50%;
+            border-radius: 50%;
 
-opacity:.12;
+            opacity: .12;
 
-}
+        }
 
-.total-card::before{
+        .total-card::before {
 
-background:#2563eb;
+            background: #2563eb;
 
-}
+        }
 
-.active-card::before{
+        .active-card::before {
 
-background:#16a34a;
+            background: #16a34a;
 
-}
+        }
 
-.inactive-card::before{
+        .inactive-card::before {
 
-background:#ef4444;
+            background: #ef4444;
 
-}
+        }
 
-.category-card::before{
+        .category-card::before {
 
-background:#7c3aed;
+            background: #7c3aed;
 
-}
+        }
 
-.stat-icon{
+        .stat-icon {
 
-width:75px;
+            width: 75px;
 
-height:75px;
+            height: 75px;
 
-border-radius:20px;
+            border-radius: 20px;
 
-display:flex;
+            display: flex;
 
-justify-content:center;
+            justify-content: center;
 
-align-items:center;
+            align-items: center;
 
-font-size:30px;
+            font-size: 30px;
 
-color:#fff;
+            color: #fff;
 
-flex-shrink:0;
+            flex-shrink: 0;
 
-}
+        }
 
-.total-card .stat-icon{
+        .total-card .stat-icon {
 
-background:linear-gradient(135deg,#2563eb,#1d4ed8);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
 
-}
+        }
 
-.active-card .stat-icon{
+        .active-card .stat-icon {
 
-background:linear-gradient(135deg,#22c55e,#15803d);
+            background: linear-gradient(135deg, #22c55e, #15803d);
 
-}
+        }
 
-.inactive-card .stat-icon{
+        .inactive-card .stat-icon {
 
-background:linear-gradient(135deg,#ef4444,#b91c1c);
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
 
-}
+        }
 
-.category-card .stat-icon{
+        .category-card .stat-icon {
 
-background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
 
-}
+        }
 
-.stat-info{
+        .stat-info {
 
-flex:1;
+            flex: 1;
 
-}
+        }
 
-.stat-info h3{
+        .stat-info h3 {
 
-font-size:34px;
+            font-size: 34px;
 
-font-weight:700;
+            font-weight: 700;
 
-margin-bottom:4px;
+            margin-bottom: 4px;
 
-color:#0f172a;
+            color: #0f172a;
 
-}
+        }
 
-.stat-info p{
+        .stat-info p {
 
-margin:0;
+            margin: 0;
 
-font-size:15px;
+            font-size: 15px;
 
-font-weight:500;
+            font-weight: 500;
 
-color:#64748b;
+            color: #64748b;
 
-}
+        }
 
-/*==================================
+        /*==================================
      PREMIUM TABLE
 ==================================*/
 
-.premium-table{
+        .premium-table {
 
-border-collapse:separate;
+            border-collapse: separate;
 
-border-spacing:0;
+            border-spacing: 0;
 
-}
+        }
 
-.table-id{
+        .table-id {
 
-padding:8px ;
+            padding: 8px;
 
-background:#eff6ff;
+            background: #eff6ff;
 
-border-radius:30px;
+            border-radius: 30px;
 
-font-weight:700;
+            font-weight: 700;
 
-color:#2563eb;
+            color: #2563eb;
 
-}
+        }
 
-.category-box{
+        .category-box {
 
-display:flex;
+            display: flex;
 
-align-items:center;
+            align-items: center;
 
-gap:14px;
+            gap: 14px;
 
-}
+        }
 
-.category-icon{
+        .category-icon {
 
-width:52px;
+            width: 52px;
 
-height:52px;
+            height: 52px;
 
-border-radius:16px;
+            border-radius: 16px;
 
-display:flex;
+            display: flex;
 
-justify-content:center;
+            justify-content: center;
 
-align-items:center;
+            align-items: center;
 
-background:linear-gradient(135deg,#2563eb,#60a5fa);
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
 
-color:#fff;
+            color: #fff;
 
-font-size:22px;
+            font-size: 22px;
 
-}
+        }
 
-.subcategory-name{
+        .subcategory-name {
 
-font-weight:600;
+            font-weight: 600;
 
-font-size:15px;
+            font-size: 15px;
 
-color:#0f172a;
+            color: #0f172a;
 
-}
+        }
 
-.description-box{
+        .description-box {
 
-max-width:220px;
+            max-width: 220px;
 
-white-space:nowrap;
+            white-space: nowrap;
 
-overflow:hidden;
+            overflow: hidden;
 
-text-overflow:ellipsis;
+            text-overflow: ellipsis;
 
-color:#64748b;
+            color: #64748b;
 
-}
+        }
 
-.subcategory-image{
+        .subcategory-image {
 
-width:85px;
+            width: 85px;
 
-height:85px;
+            height: 85px;
 
-border-radius:18px;
+            border-radius: 18px;
 
-object-fit:cover;
+            object-fit: cover;
 
-transition:.35s;
+            transition: .35s;
 
-box-shadow:0 10px 25px rgba(0,0,0,.12);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .12);
 
-}
+        }
 
-.subcategory-image:hover{
+        .subcategory-image:hover {
 
-transform:scale(1.12);
+            transform: scale(1.12);
 
-}
+        }
 
-.price-tag{
+        .price-tag {
 
-display:inline-block;
+            display: inline-block;
 
-padding:10px 18px;
+            padding: 10px 18px;
 
-border-radius:40px;
+            border-radius: 40px;
 
-font-weight:700;
+            font-weight: 700;
 
-background:#dcfce7;
+            background: #dcfce7;
 
-color:#15803d;
+            color: #15803d;
 
-}
+        }
 
-.status-badge{
+        .status-badge {
 
-padding:8px 18px;
+            padding: 8px 18px;
 
-border-radius:30px;
+            border-radius: 30px;
 
-font-size:13px;
+            font-size: 13px;
 
-font-weight:600;
+            font-weight: 600;
 
-display:inline-flex;
+            display: inline-flex;
 
-align-items:center;
+            align-items: center;
 
-gap:8px;
+            gap: 8px;
 
-}
+        }
 
-.status-badge.active{
+        .status-badge.active {
 
-background:#dcfce7;
+            background: #dcfce7;
 
-color:#15803d;
+            color: #15803d;
 
-}
+        }
 
-.status-badge.inactive{
+        .status-badge.inactive {
 
-background:#fee2e2;
+            background: #fee2e2;
 
-color:#dc2626;
+            color: #dc2626;
 
-}
+        }
 
-.action-buttons{
+        .action-buttons {
 
-display:flex;
+            display: flex;
 
-gap:12px;
+            gap: 12px;
 
-}
+        }
 
-.edit-btn,
+        .edit-btn,
 
-.delete-btn{
+        .delete-btn {
 
-width:35px;
+            width: 35px;
 
-height:35px;
+            height: 35px;
 
-border-radius:14px;
+            border-radius: 14px;
 
-display:flex;
+            display: flex;
 
-justify-content:center;
+            justify-content: center;
 
-align-items:center;
+            align-items: center;
 
-text-decoration:none;
+            text-decoration: none;
 
-color:#fff;
+            color: #fff;
 
-transition:.3s;
+            transition: .3s;
 
-}
+        }
 
-.edit-btn{
+        .edit-btn {
 
-background:linear-gradient(135deg,#2563eb,#1d4ed8);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
 
-}
+        }
 
-.delete-btn{
+        .delete-btn {
 
-background:linear-gradient(135deg,#ef4444,#dc2626);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
 
-}
+        }
 
-.edit-btn:hover,
+        .edit-btn:hover,
 
-.delete-btn:hover{
+        .delete-btn:hover {
 
-transform:translateY(-5px) scale(1.08);
+            transform: translateY(-5px) scale(1.08);
 
-color:#fff;
+            color: #fff;
 
-box-shadow:0 12px 28px rgba(0,0,0,.2);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .2);
 
-}
+        }
 
 
 
-/* ===========================
+        /* ===========================
    PREMIUM TABLE HEADER
 =========================== */
 
-.premium-head{
+        .premium-head {
 
-background:linear-gradient(135deg,#0F172A,#1E3A8A,#2563EB);
-
-
-}
-
-.premium-head th{
-
-background:transparent !important;
-
-color:#fff !important;
-
-padding:18px 14px;
-font-size:13px;
-
-font-weight:700;
-
-text-transform:uppercase;
-
-letter-spacing:.7px;
-
-text-align:center;
-
-border:none;
-
-white-space:nowrap;
-
-position:relative;
-
-}
-
-/* Premium separator */
-.premium-head th:not(:last-child)::after{
-
-content:"";
-
-position:absolute;
-
-top:20%;
-
-right:0;
-
-width:1px;
-
-height:60%;
-
-background:rgba(255,255,255,.25);
-
-}
-
-/* Rounded corners */
-.premium-head th:first-child{
-
-border-radius:18px 0 0 0;
-
-}
-
-.premium-head th:last-child{
-
-border-radius:0 18px 0 0;
-
-}
-
-/* Header icons */
-.premium-head i{
-
-margin-right:6px;
-
-color:#60A5FA;
-
-font-size:5px;
-
-}
+            background: linear-gradient(135deg, #0F172A, #1E3A8A, #2563EB);
 
 
+        }
+
+        .premium-head th {
+
+            background: transparent !important;
+
+            color: #fff !important;
+
+            padding: 18px 14px;
+            font-size: 13px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: .7px;
+
+            text-align: center;
+
+            border: none;
+
+            white-space: nowrap;
+
+            position: relative;
+
+        }
+
+        /* Premium separator */
+        .premium-head th:not(:last-child)::after {
+
+            content: "";
+
+            position: absolute;
+
+            top: 20%;
+
+            right: 0;
+
+            width: 1px;
+
+            height: 60%;
+
+            background: rgba(255, 255, 255, .25);
+
+        }
+
+        /* Rounded corners */
+        .premium-head th:first-child {
+
+            border-radius: 18px 0 0 0;
+
+        }
+
+        .premium-head th:last-child {
+
+            border-radius: 0 18px 0 0;
+
+        }
+
+        /* Header icons */
+        .premium-head i {
+
+            margin-right: 6px;
+
+            color: #60A5FA;
+
+            font-size: 5px;
+
+        }
     </style>
 </head>
 
 <body>
-<?php
-/** @var mysqli $conn */
+    <?php
+    /** @var mysqli $conn */
 
-$limit = 5;
+    $limit = 5;
 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-if($page < 1){
-    $page = 1;
-}
+    if ($page < 1) {
+        $page = 1;
+    }
 
-$offset = ($page - 1) * $limit;
+    $offset = ($page - 1) * $limit;
 
-$search = isset($_GET['search'])
-    ? mysqli_real_escape_string($conn,$_GET['search'])
-    : '';
+    $search = isset($_GET['search'])
+        ? mysqli_real_escape_string($conn, $_GET['search'])
+        : '';
 
-/* TOTAL RECORDS */
-$total_sql = "
+    /* TOTAL RECORDS */
+    $total_sql = "
 SELECT COUNT(*) as total
 FROM subcategories s
 JOIN categories c
@@ -800,8 +906,8 @@ ON s.category_id = c.id
 WHERE 1
 ";
 
-if($search != ''){
-    $total_sql .= "
+    if ($search != '') {
+        $total_sql .= "
     AND (
         s.name LIKE '%$search%'
         OR s.descri LIKE '%$search%'
@@ -809,20 +915,20 @@ if($search != ''){
         OR s.price LIKE '%$search%'
     )
     ";
-}
+    }
 
-$total_query = mysqli_query($conn,$total_sql);
-$total_row = mysqli_fetch_assoc($total_query);
+    $total_query = mysqli_query($conn, $total_sql);
+    $total_row = mysqli_fetch_assoc($total_query);
 
-$total_records = $total_row['total'];
-$total_pages = ceil($total_records / $limit);
+    $total_records = $total_row['total'];
+    $total_pages = ceil($total_records / $limit);
 
-if($total_pages < 1){
-    $total_pages = 1;
-}
+    if ($total_pages < 1) {
+        $total_pages = 1;
+    }
 
-/* MAIN QUERY */
-$sql = "
+    /* MAIN QUERY */
+    $sql = "
 SELECT
     s.id,
     s.category_id,
@@ -839,8 +945,8 @@ ON s.category_id = c.id
 WHERE 1
 ";
 
-if($search != ''){
-    $sql .= "
+    if ($search != '') {
+        $sql .= "
     AND (
         s.name LIKE '%$search%'
         OR s.descri LIKE '%$search%'
@@ -848,186 +954,186 @@ if($search != ''){
         OR s.price LIKE '%$search%'
     )
     ";
-}
+    }
 
-$sql .= "
+    $sql .= "
 ORDER BY s.id ASC
 LIMIT $offset,$limit
 ";
 
-$res = mysqli_query($conn,$sql);
+    $res = mysqli_query($conn, $sql);
 
-if(!$res){
-    die(mysqli_error($conn));
-}
-?>
+    if (!$res) {
+        die(mysqli_error($conn));
+    }
+    ?>
 
 
-<div class="container" style="margin-left:-1%; min-width:102%;">
+    <div class="container" style="margin-left:-1%; min-width:102%;">
 
-    <!-- Sidebar + Header -->
-    <?php include "sidebar.php"; ?>
-    <?php include "header.php"; ?>
-    <div class="">
+        <!-- Sidebar + Header -->
+        <?php include "sidebar.php"; ?>
+        <?php include "header.php"; ?>
+        <div class="">
+
+        </div>
+    </div>
 
     </div>
-    </div>
 
-</div>
+    <!-- ================= TABLE ================= -->
+    <!-- <div class="table-responsive" style="margin:2% 19%; width:80%;"> -->
 
-<!-- ================= TABLE ================= -->
-<!-- <div class="table-responsive" style="margin:2% 19%; width:80%;"> -->
+    <div class="main-content">
 
-<div class="main-content">
+        <div class="subcategory-hero">
 
-<div class="subcategory-hero">
+            <div>
 
-<div>
+                <h2>
+                    <i class="fa-solid fa-layer-group"></i>
+                    Subcategory Management
+                </h2>
 
-<h2>
-<i class="fa-solid fa-layer-group"></i>
-Subcategory Management
-</h2>
+                <p>
+                    Manage all product subcategories from one premium enterprise dashboard.
+                </p>
 
-<p>
-Manage all product subcategories from one premium enterprise dashboard.
-</p>
-
-</div>
+            </div>
 
 
 
-</div>
+        </div>
 
 
-<?php
+        <?php
 
-$totalSub=mysqli_fetch_assoc(mysqli_query($conn,"
+        $totalSub = mysqli_fetch_assoc(mysqli_query($conn, "
 SELECT COUNT(*) total
 FROM subcategories
 "));
 
-// $activeSub=mysqli_fetch_assoc(mysqli_query($conn,"
-// SELECT COUNT(*) total
-// FROM subcategories
-// WHERE status=1
-// "));
+        // $activeSub=mysqli_fetch_assoc(mysqli_query($conn,"
+        // SELECT COUNT(*) total
+        // FROM subcategories
+        // WHERE status=1
+        // "));
 
-$activeSub=mysqli_fetch_assoc(mysqli_query($conn,"
+        $activeSub = mysqli_fetch_assoc(mysqli_query($conn, "
 SELECT COUNT(*) total
 FROM products
 WHERE status=1
 "));
 
-// $inactiveSub=mysqli_fetch_assoc(mysqli_query($conn,"
-// SELECT COUNT(*) total
-// FROM subcategories
-// WHERE status=0
-// "));
-$inactiveSub=mysqli_fetch_assoc(mysqli_query($conn,"
+        // $inactiveSub=mysqli_fetch_assoc(mysqli_query($conn,"
+        // SELECT COUNT(*) total
+        // FROM subcategories
+        // WHERE status=0
+        // "));
+        $inactiveSub = mysqli_fetch_assoc(mysqli_query($conn, "
 SELECT COUNT(*) total
 FROM products
 WHERE status=0
 "));
 
-$totalCategory=mysqli_fetch_assoc(mysqli_query($conn,"
+        $totalCategory = mysqli_fetch_assoc(mysqli_query($conn, "
 SELECT COUNT(*) total
 FROM categories
 "));
 
-?>
+        ?>
 
-<div class="stats-grid">
+        <div class="stats-grid">
 
-<div class="stat-card total-card">
+            <div class="stat-card total-card">
 
-<div class="stat-icon">
-<i class="fas fa-layer-group"></i>
-</div>
+                <div class="stat-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
 
-<div class="stat-info">
+                <div class="stat-info">
 
-<h3>
+                    <h3>
 
-<?php echo $totalSub['total']; ?>
+                        <?php echo $totalSub['total']; ?>
 
-</h3>
+                    </h3>
 
-<p>Total Subcategories</p>
+                    <p>Total Subcategories</p>
 
-</div>
+                </div>
 
-</div>
-
-
-<div class="stat-card active-card">
-
-<div class="stat-icon">
-<i class="fas fa-check-circle"></i>
-</div>
-
-<div class="stat-info">
-
-<h3>
-
-<?php echo $activeSub['total']; ?>
-
-</h3>
-
-<p>Active</p>
-
-</div>
-
-</div>
+            </div>
 
 
-<div class="stat-card inactive-card">
+            <div class="stat-card active-card">
 
-<div class="stat-icon">
-<i class="fas fa-ban"></i>
-</div>
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
 
-<div class="stat-info">
+                <div class="stat-info">
 
-<h3>
+                    <h3>
 
-<?php echo $inactiveSub['total']; ?>
+                        <?php echo $activeSub['total']; ?>
 
-</h3>
+                    </h3>
 
-<p>Inactive</p>
+                    <p>Active</p>
 
-</div>
+                </div>
 
-</div>
-
-
-<div class="stat-card category-card">
-
-<div class="stat-icon">
-<i class="fas fa-folder-tree"></i>
-</div>
-
-<div class="stat-info">
-
-<h3>
-
-<?php echo $totalCategory['total']; ?>
-
-</h3>
-
-<p>Main Categories</p>
-
-</div>
-
-</div>
-
-</div>
+            </div>
 
 
+            <div class="stat-card inactive-card">
+
+                <div class="stat-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+
+                <div class="stat-info">
+
+                    <h3>
+
+                        <?php echo $inactiveSub['total']; ?>
+
+                    </h3>
+
+                    <p>Inactive</p>
+
+                </div>
+
+            </div>
 
 
-    <!-- <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="stat-card category-card">
+
+                <div class="stat-icon">
+                    <i class="fas fa-folder-tree"></i>
+                </div>
+
+                <div class="stat-info">
+
+                    <h3>
+
+                        <?php echo $totalCategory['total']; ?>
+
+                    </h3>
+
+                    <p>Main Categories</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+        <!-- <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="title">Subcategory Details</h1>
 
         <a href="add_subcategory.php" class="btn btn-primary">
@@ -1035,14 +1141,14 @@ FROM categories
         </a>
     </div> -->
 
-    <!-- <table class="table table-bordered table-striped"> -->
+        <!-- <table class="table table-bordered table-striped"> -->
         <div class="subcategory-card">
 
-<div class="table-responsive">
+            <div class="table-responsive">
 
-<table class="table premium-table align-middle">
+                <table class="table premium-table align-middle">
 
-<!-- <thead>
+                    <!-- <thead>
 
 <tr>
 
@@ -1068,256 +1174,318 @@ FROM categories
 
 </thead> -->
 
-<thead class="premium-head">
-<tr>
+                    <thead class="premium-head">
+                        <tr>
 
-<th>ID</th>
+                            <th>ID</th>
 
-<th>Category</th>
+                            <th>Category</th>
 
-<th>Subcategory</th>
+                            <th>Subcategory</th>
 
-<th>Description</th>
+                            <th>Description</th>
 
-<th>Image</th>
+                            <th>Image</th>
 
-<th>Price</th>
+                            <th>Price</th>
 
-<th>Status</th>
+                            <th>Status</th>
 
-<th>Created</th>
+                            <th>Created</th>
 
-<th>Action</th>
+                            <th>Action</th>
 
-</tr>
-</thead>
+                        </tr>
+                    </thead>
 
 
 
- <tbody>
+                    <tbody>
 
-        <?php if(mysqli_num_rows($res) > 0){ ?>
+                        <?php if (mysqli_num_rows($res) > 0) { ?>
 
-            <?php while($row = mysqli_fetch_assoc($res)){ ?>
+                            <?php while ($row = mysqli_fetch_assoc($res)) { ?>
 
-          <tr>
+                                <tr>
 
-<td>
+                                    <td>
 
-<span class="table-id">
+                                        <span class="table-id">
 
-#<?php echo $row['id']; ?>
+                                            #<?php echo $row['id']; ?>
 
-</span>
+                                        </span>
 
-</td>
+                                    </td>
 
-<td>
+                                    <td>
 
-<div class="category-box">
+                                        <div class="category-box">
 
 
 
-<div>
+                                            <div>
 
-<b>
+                                                <b>
 
-<?php echo $row['category_name']; ?>
+                                                    <?php echo $row['category_name']; ?>
 
-</b>
+                                                </b>
 
 
 
 
-</div>
+                                            </div>
 
-</div>
+                                        </div>
 
-</td>
+                                    </td>
 
-<td>
+                                    <td>
 
-<div class="subcategory-name">
+                                        <div class="subcategory-name">
 
-<?php echo $row['name']; ?>
+                                            <?php echo $row['name']; ?>
 
-</div>
+                                        </div>
 
-</td>
+                                    </td>
 
-<td>
+                                    <td>
 
-<div class="description-box">
+                                        <div class="description-box">
 
-<?php echo $row['descri']; ?>
+                                            <?php echo $row['descri']; ?>
 
-</div>
+                                        </div>
 
-</td>
+                                    </td>
 
-<td>
+                                    <td>
 
-<img
+                                        <img
 
-src="<?php echo !empty($row['image']) ? '../images/'.$row['image'] : '../images/default.avif'; ?>"
+                                            src="<?php echo !empty($row['image']) ? '../images/' . $row['image'] : '../images/default.avif'; ?>"
 
-class="subcategory-image"
+                                            class="subcategory-image">
 
->
+                                    </td>
 
-</td>
+                                    <td>
 
-<td>
+                                        <div class="price-tag">
 
-<div class="price-tag">
+                                            ₹<?php echo number_format($row['price']); ?>
 
-₹<?php echo number_format($row['price']); ?>
+                                        </div>
 
-</div>
+                                    </td>
 
-</td>
+                                    <td>
 
-<td>
+                                        <?php
 
-<?php
+                                        if ($row['status'] == 1) {
 
-if($row['status']==1){
+                                        ?>
 
-?>
+                                            <span class="status-badge active">
 
-<span class="status-badge active">
+                                                <i class="fas fa-circle"></i>
 
-<i class="fas fa-circle"></i>
+                                                Active
 
-Active
+                                            </span>
 
-</span>
+                                        <?php
 
-<?php
+                                        } else {
 
-}else{
+                                        ?>
 
-?>
+                                            <span class="status-badge inactive">
 
-<span class="status-badge inactive">
+                                                <i class="fas fa-circle"></i>
 
-<i class="fas fa-circle"></i>
+                                                Inactive
 
-Inactive
+                                            </span>
 
-</span>
+                                        <?php } ?>
 
-<?php } ?>
+                                    </td>
 
-</td>
+                                    <td>
 
-<td>
+                                        <?php
 
-<?php
+                                        echo !empty($row['create_at'])
 
-echo !empty($row['create_at'])
+                                            ? date("d M Y", strtotime($row['create_at']))
 
-? date("d M Y",strtotime($row['create_at']))
+                                            : "-";
 
-: "-";
+                                        ?>
 
-?>
+                                    </td>
 
-</td>
+                                    <td>
 
-<td>
+                                        <div class="action-buttons">
 
-<div class="action-buttons">
+                                            <a
 
-<a
+                                                href="edit_subcategory.php?id=<?php echo $row['id']; ?>"
 
-href="edit_subcategory.php?id=<?php echo $row['id']; ?>"
+                                                class="edit-btn">
 
-class="edit-btn"
+                                                <i class="fas fa-pen"></i>
 
->
+                                            </a>
 
-<i class="fas fa-pen"></i>
+                                            <a
+                                                href="#"
+                                                class="delete-btn"
+                                                onclick="openDeleteCard(
+    'delete_action.php?type=subcategories&id=<?php echo $row['id']; ?>',
+    '<?php echo htmlspecialchars($row['name'], ENT_QUOTES); ?>'
+); return false;">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
 
-</a>
+                                        </div>
 
-<a
+                                    </td>
 
-href="delete_action.php?type=subcategories&id=<?php echo $row['id']; ?>"
+                                </tr>
 
-class="delete-btn"
+                            <?php } ?>
 
-onclick="return confirm('Delete this Subcategory?')"
+                        <?php } else { ?>
 
->
+                            <tr>
+                                <td colspan="10" class="text-center text-danger">
+                                    No Subcategories Found
+                                </td>
+                            </tr>
 
-<i class="fas fa-trash"></i>
+                        <?php } ?>
 
-</a>
+                    </tbody>
 
-</div>
 
-</td>
 
-</tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <div class="text-center mt-4 mb-4">
+
+            <?php if ($page > 1) { ?>
+                <a class="btn btn-primary"
+                    href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
+                    ← Previous
+                </a>
+            <?php } ?>
+
+            <?php for ($p = 1; $p <= $total_pages; $p++) { ?>
+
+                <a class="btn <?php echo ($p == $page) ? 'btn-dark' : 'btn-outline-primary'; ?>"
+                    href="?page=<?php echo $p; ?>&search=<?php echo urlencode($search); ?>">
+                    <?php echo $p; ?>
+                </a>
 
             <?php } ?>
 
-        <?php } else { ?>
+            <?php if ($page < $total_pages) { ?>
+                <a class="btn btn-primary"
+                    href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
+                    Next →
+                </a>
+            <?php } ?>
 
-            <tr>
-                <td colspan="10" class="text-center text-danger">
-                    No Subcategories Found
-                </td>
-            </tr>
-
-        <?php } ?>
-
-        </tbody> 
+        </div>
 
 
-        
+    </div>
 
-</table>
+    <!-- ================= DELETE CONFIRM CARD ================= -->
 
-</div>
+    <div id="deleteOverlay" class="custom-overlay">
 
-</div>
+        <div class="custom-confirm-card">
 
+            <div class="confirm-icon">
+                <i class="fas fa-trash"></i>
+            </div>
 
-    <div class="text-center mt-4 mb-4">
+            <h3>Delete Subcategory?</h3>
 
-<?php if($page > 1){ ?>
-    <a class="btn btn-primary"
-       href="?page=<?php echo $page-1; ?>&search=<?php echo urlencode($search); ?>">
-        ← Previous
-    </a>
-<?php } ?>
+            <p>
+                Are you sure you want to delete
+                <strong id="deleteSubcategoryName"></strong>?
+            </p>
 
-<?php for($p=1; $p<=$total_pages; $p++){ ?>
+            <div class="confirm-actions">
 
-    <a class="btn <?php echo ($p==$page)?'btn-dark':'btn-outline-primary'; ?>"
-       href="?page=<?php echo $p; ?>&search=<?php echo urlencode($search); ?>">
-        <?php echo $p; ?>
-    </a>
+                <button type="button"
+                    class="cancel-confirm-btn"
+                    onclick="closeDeleteCard()">
+                    Cancel
+                </button>
 
-<?php } ?>
+                <button type="button"
+                    class="confirm-delete-btn"
+                    onclick="confirmDelete()">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
 
-<?php if($page < $total_pages){ ?>
-    <a class="btn btn-primary"
-       href="?page=<?php echo $page+1; ?>&search=<?php echo urlencode($search); ?>">
-        Next →
-    </a>
-<?php } ?>
+            </div>
 
-</div>
+        </div>
 
+    </div>
 
-</div>
+    <script src="../assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="../assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let deleteUrl = "";
 
+        function openDeleteCard(url, subcategoryName) {
 
+            deleteUrl = url;
+
+            document.getElementById("deleteSubcategoryName").textContent =
+                subcategoryName;
+
+            document.getElementById("deleteOverlay")
+                .classList.add("show");
+        }
+
+        function closeDeleteCard() {
+
+            document.getElementById("deleteOverlay")
+                .classList.remove("show");
+
+            deleteUrl = "";
+        }
+
+        function confirmDelete() {
+
+            if (deleteUrl !== "") {
+
+                window.location.href = deleteUrl;
+
+            }
+
+        }
+    </script>
 
 </body>
+
 </html>

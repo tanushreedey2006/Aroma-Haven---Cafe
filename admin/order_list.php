@@ -45,7 +45,6 @@ $search_escaped = mysqli_real_escape_string(
 
 $where = "WHERE COALESCE(is_deleted, 0) = 0";
 
-
 if ($search !== '') {
 
     $where .= " AND (
@@ -85,10 +84,8 @@ $total_query = mysqli_query(
 
 if (!$total_query) {
 
-    die(
-        "Count Query Error: "
-        . mysqli_error($conn)
-    );
+    die("Count Query Error: "
+        . mysqli_error($conn));
 }
 
 $total_row = mysqli_fetch_assoc($total_query);
@@ -127,7 +124,9 @@ $offset = ($page - 1) * $limit;
    ORDER STATISTICS
 ========================================================= */
 
-/* Delivered */
+/* -------------------------
+   DELIVERED
+------------------------- */
 
 $delivered_query = mysqli_query(
     $conn,
@@ -151,7 +150,9 @@ if ($delivered_query) {
 }
 
 
-/* Processing */
+/* -------------------------
+   PROCESSING
+------------------------- */
 
 $processing_query = mysqli_query(
     $conn,
@@ -175,7 +176,9 @@ if ($processing_query) {
 }
 
 
-/* Cancelled */
+/* -------------------------
+   CANCELLED
+------------------------- */
 
 $cancelled_query = mysqli_query(
     $conn,
@@ -255,13 +258,318 @@ $res = mysqli_query(
     $sql
 );
 
-
 if (!$res) {
 
-    die(
-        "Main Query Error: "
-        . mysqli_error($conn)
+    die("Main Query Error: "
+        . mysqli_error($conn));
+}
+
+
+/* =========================================================
+   PAYMENT + ORDER STATUS + DELIVERY STATUS
+   MATCHING LOGIC
+========================================================= */
+
+/*
+    FLOW:
+
+    Pending Payment
+        ↓
+    Pending Order
+        ↓
+    Waiting for Payment
+
+
+    Paid
+        ↓
+    Confirmed
+        ↓
+    Preparing
+
+
+    Paid
+        ↓
+    Processing
+        ↓
+    Preparing
+
+
+    Paid
+        ↓
+    Shipped
+        ↓
+    On the Way
+
+
+    Paid
+        ↓
+    Delivered
+        ↓
+    Delivered
+
+
+    Cancelled
+        ↓
+    Cancelled
+*/
+
+
+function getOrderStatusData($paymentStatus, $orderStatus)
+{
+    $paymentStatus = strtolower(
+        trim($paymentStatus ?? 'pending')
     );
+
+    $orderStatus = strtolower(
+        trim($orderStatus ?? 'pending')
+    );
+
+
+    /* =====================================================
+       PAYMENT PENDING
+    ===================================================== */
+
+    if ($paymentStatus === 'pending') {
+
+        return [
+
+            'order_status' =>
+            'Pending',
+
+            'status_class' =>
+            'status-pending',
+
+            'delivery_status' =>
+            'Waiting for Payment',
+
+            'delivery_icon' =>
+            'fa-clock',
+
+            'delivery_color' =>
+            'text-warning'
+
+        ];
+    }
+
+
+    /* =====================================================
+       PAYMENT FAILED
+    ===================================================== */
+
+    if ($paymentStatus === 'failed') {
+
+        return [
+
+            'order_status' =>
+            'Pending',
+
+            'status_class' =>
+            'status-pending',
+
+            'delivery_status' =>
+            'Payment Failed',
+
+            'delivery_icon' =>
+            'fa-circle-xmark',
+
+            'delivery_color' =>
+            'text-danger'
+
+        ];
+    }
+
+
+    /* =====================================================
+       PAYMENT PAID
+    ===================================================== */
+
+    if ($paymentStatus === 'paid') {
+
+
+        /* -----------------------------------------------
+           CONFIRMED
+        ----------------------------------------------- */
+
+        if ($orderStatus === 'confirmed') {
+
+            return [
+
+                'order_status' =>
+                'Confirmed',
+
+                'status_class' =>
+                'status-confirmed',
+
+                'delivery_status' =>
+                'Preparing',
+
+                'delivery_icon' =>
+                'fa-box',
+
+                'delivery_color' =>
+                'text-secondary'
+
+            ];
+        }
+
+
+        /* -----------------------------------------------
+           PROCESSING
+        ----------------------------------------------- */
+
+        if ($orderStatus === 'processing') {
+
+            return [
+
+                'order_status' =>
+                'Processing',
+
+                'status_class' =>
+                'status-processing',
+
+                'delivery_status' =>
+                'Preparing',
+
+                'delivery_icon' =>
+                'fa-box',
+
+                'delivery_color' =>
+                'text-secondary'
+
+            ];
+        }
+
+
+        /* -----------------------------------------------
+           SHIPPED
+        ----------------------------------------------- */
+
+        if ($orderStatus === 'shipped') {
+
+            return [
+
+                'order_status' =>
+                'Shipped',
+
+                'status_class' =>
+                'status-shipped',
+
+                'delivery_status' =>
+                'On the Way',
+
+                'delivery_icon' =>
+                'fa-truck',
+
+                'delivery_color' =>
+                'text-warning'
+
+            ];
+        }
+
+
+        /* -----------------------------------------------
+           DELIVERED
+        ----------------------------------------------- */
+
+        if ($orderStatus === 'delivered') {
+
+            return [
+
+                'order_status' =>
+                'Delivered',
+
+                'status_class' =>
+                'status-delivered',
+
+                'delivery_status' =>
+                'Delivered',
+
+                'delivery_icon' =>
+                'fa-circle-check',
+
+                'delivery_color' =>
+                'text-success'
+
+            ];
+        }
+
+
+        /* -----------------------------------------------
+           CANCELLED
+        ----------------------------------------------- */
+
+        if ($orderStatus === 'cancelled') {
+
+            return [
+
+                'order_status' =>
+                'Cancelled',
+
+                'status_class' =>
+                'status-cancelled',
+
+                'delivery_status' =>
+                'Cancelled',
+
+                'delivery_icon' =>
+                'fa-ban',
+
+                'delivery_color' =>
+                'text-danger'
+
+            ];
+        }
+
+
+        /* -----------------------------------------------
+           PAID BUT NO VALID ORDER STATUS
+           
+           Automatically show Confirmed
+        ----------------------------------------------- */
+
+        return [
+
+            'order_status' =>
+            'Confirmed',
+
+            'status_class' =>
+            'status-confirmed',
+
+            'delivery_status' =>
+            'Preparing',
+
+            'delivery_icon' =>
+            'fa-box',
+
+            'delivery_color' =>
+            'text-secondary'
+
+        ];
+    }
+
+
+    /* =====================================================
+       DEFAULT
+    ===================================================== */
+
+    return [
+
+        'order_status' =>
+        'Pending',
+
+        'status_class' =>
+        'status-pending',
+
+        'delivery_status' =>
+        'Waiting for Payment',
+
+        'delivery_icon' =>
+        'fa-clock',
+
+        'delivery_color' =>
+        'text-warning'
+
+    ];
 }
 
 ?>
@@ -272,66 +580,62 @@ if (!$res) {
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>Order Management</title>
+    <title>Order Management</title>
 
     <link rel="icon" type="image/png" href="weblogo.png">
 
 
-<!-- Bootstrap -->
+    <!-- Bootstrap -->
 
-<link
-    rel="stylesheet"
-    href="../assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"
->
-
-
-<!-- Font Awesome -->
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
->
+    <link
+        rel="stylesheet"
+        href="../assets/bootstrap-5.3.7-dist/css/bootstrap.min.css">
 
 
-<style>
+    <!-- Font Awesome -->
 
-/* =========================================================
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+    <style>
+        /* =========================================================
    GLOBAL
 ========================================================= */
 
-*{
-    box-sizing:border-box;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-body{
+        body {
 
-    margin:0;
+            margin: 0;
 
-    background:#f5f7fb;
+            background: #f5f7fb;
 
-    font-family:
-        "Poppins",
-        Arial,
-        sans-serif;
+            font-family:
+                "Poppins",
+                Arial,
+                sans-serif;
 
-    overflow-x:hidden;
-}
+            overflow-x: hidden;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    MAIN WRAPPER
 ========================================================= */
 
-.order-wrapper{
+        .order-wrapper {
 
-    /*
+            /*
        IMPORTANT FIX
 
        OLD:
@@ -343,1580 +647,1566 @@ body{
        NEW:
     */
 
-    margin-left:18%;
+            margin-left: 18%;
 
-    margin-top:35px;
+            margin-top: 35px;
 
-    width:calc(82% - 35px);
+            width: calc(82% - 35px);
 
-    max-width:none;
+            max-width: none;
 
-    padding-bottom:40px;
-}
+            padding-bottom: 40px;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    PAGE TITLE
 ========================================================= */
 
-.title{
+        .title {
 
-    margin:0;
+            margin: 0;
 
-    color:#17213b;
+            color: #17213b;
 
-    font-size:30px;
+            font-size: 30px;
 
-    font-weight:800;
+            font-weight: 800;
 
-    letter-spacing:-0.5px;
+            letter-spacing: -0.5px;
 
-    display:flex;
+            display: flex;
 
-    align-items:center;
+            align-items: center;
 
-    gap:12px;
-}
+            gap: 12px;
+        }
 
-.title i{
+        .title i {
 
-    color:#315bea;
-}
+            color: #315bea;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TITLE UNDERLINE
 ========================================================= */
 
-.title-wrap{
+        .title-wrap {
 
-    margin-bottom:22px;
+            margin-bottom: 22px;
 
-    position:relative;
-}
-
-
+            position: relative;
+        }
 
 
-/* =========================================================
+
+
+        /* =========================================================
    STAT CARDS
 ========================================================= */
 
-.order-stats{
+        .order-stats {
 
-    display:grid;
+            display: grid;
 
-    grid-template-columns:
-        repeat(4, minmax(0,1fr));
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
 
-    gap:18px;
+            gap: 18px;
 
-    margin-bottom:25px;
-}
+            margin-bottom: 25px;
+        }
 
 
-.stat-card{
+        .stat-card {
 
-    background:#ffffff;
+            background: #ffffff;
 
-    border-radius:18px;
+            border-radius: 18px;
 
-    padding:20px;
+            padding: 20px;
 
-    min-height:125px;
+            min-height: 125px;
 
-    position:relative;
+            position: relative;
 
-    overflow:hidden;
+            overflow: hidden;
 
-    border:1px solid #e9edf5;
+            border: 1px solid #e9edf5;
 
-    box-shadow:
-        0 8px 25px rgba(30,45,80,.07);
+            box-shadow:
+                0 8px 25px rgba(30, 45, 80, .07);
 
-    transition:
-        transform .25s ease,
-        box-shadow .25s ease;
-}
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
 
 
-.stat-card:hover{
+        .stat-card:hover {
 
-    transform:translateY(-4px);
+            transform: translateY(-4px);
 
-    box-shadow:
-        0 15px 35px rgba(30,45,80,.12);
-}
+            box-shadow:
+                0 15px 35px rgba(30, 45, 80, .12);
+        }
 
 
-.stat-card::before{
+        .stat-card::before {
 
-    content:"";
+            content: "";
 
-    position:absolute;
+            position: absolute;
 
-    left:0;
+            left: 0;
 
-    top:0;
+            top: 0;
 
-    width:5px;
+            width: 5px;
 
-    height:100%;
+            height: 100%;
 
-    background:#315bea;
-}
+            background: #315bea;
+        }
 
 
-.stat-card.delivered::before{
+        .stat-card.delivered::before {
 
-    background:#16a34a;
-}
+            background: #16a34a;
+        }
 
 
-.stat-card.processing::before{
+        .stat-card.processing::before {
 
-    background:#f59e0b;
-}
+            background: #f59e0b;
+        }
 
 
-.stat-card.cancelled::before{
+        .stat-card.cancelled::before {
 
-    background:#ef4444;
-}
+            background: #ef4444;
+        }
 
 
-.stat-icon{
+        .stat-icon {
 
-    width:45px;
+            width: 45px;
 
-    height:45px;
+            height: 45px;
 
-    border-radius:13px;
+            border-radius: 13px;
 
-    display:flex;
+            display: flex;
 
-    align-items:center;
+            align-items: center;
 
-    justify-content:center;
+            justify-content: center;
 
-    font-size:19px;
+            font-size: 19px;
 
-    margin-bottom:12px;
-}
+            margin-bottom: 12px;
+        }
 
 
-.stat-card.total .stat-icon{
+        .stat-card.total .stat-icon {
 
-    background:#eaf0ff;
+            background: #eaf0ff;
 
-    color:#315bea;
-}
+            color: #315bea;
+        }
 
 
-.stat-card.delivered .stat-icon{
+        .stat-card.delivered .stat-icon {
 
-    background:#eafaf0;
+            background: #eafaf0;
 
-    color:#16a34a;
-}
+            color: #16a34a;
+        }
 
 
-.stat-card.processing .stat-icon{
+        .stat-card.processing .stat-icon {
 
-    background:#fff7e6;
+            background: #fff7e6;
 
-    color:#f59e0b;
-}
+            color: #f59e0b;
+        }
 
 
-.stat-card.cancelled .stat-icon{
+        .stat-card.cancelled .stat-icon {
 
-    background:#fff0f0;
+            background: #fff0f0;
 
-    color:#ef4444;
-}
+            color: #ef4444;
+        }
 
 
-.stat-number{
+        .stat-number {
 
-    font-size:27px;
+            font-size: 27px;
 
-    font-weight:800;
+            font-weight: 800;
 
-    color:#17213b;
+            color: #17213b;
 
-    line-height:1;
+            line-height: 1;
 
-    margin-bottom:6px;
-}
+            margin-bottom: 6px;
+        }
 
 
-.stat-label{
+        .stat-label {
 
-    font-size:13px;
+            font-size: 13px;
 
-    color:#8a94a6;
+            color: #8a94a6;
 
-    font-weight:600;
-}
+            font-weight: 600;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TABLE CARD
 ========================================================= */
 
-.table-card{
+        .table-card {
 
-    background:#fff;
+            background: #fff;
 
-    border:1px solid #e6eaf1;
+            border: 1px solid #e6eaf1;
 
-    border-radius:20px;
+            border-radius: 20px;
 
-    padding:0;
+            padding: 0;
 
-    overflow:hidden;
+            overflow: hidden;
 
-    box-shadow:
-        0 10px 35px rgba(30,45,80,.08);
-}
+            box-shadow:
+                0 10px 35px rgba(30, 45, 80, .08);
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TABLE RESPONSIVE
 ========================================================= */
 
-.order-table-wrapper{
+        .order-table-wrapper {
 
-    width:100%;
+            width: 100%;
 
-    overflow:hidden;
-}
+            overflow: hidden;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TABLE
 ========================================================= */
 
-.order-table{
+        .order-table {
 
-    width:100%;
+            width: 100%;
 
-    margin:0;
+            margin: 0;
 
-    table-layout:fixed;
+            table-layout: fixed;
 
-    border-collapse:separate;
+            border-collapse: separate;
 
-    border-spacing:0;
+            border-spacing: 0;
 
-    font-size:13px;
-}
+            font-size: 13px;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    COLUMN WIDTHS
 ========================================================= */
 
-.order-table .col-id{
-    width:5%;
-}
+        .order-table .col-id {
+            width: 5%;
+        }
 
-.order-table .col-order{
-    width:8%;
-}
+        .order-table .col-order {
+            width: 8%;
+        }
 
-.order-table .col-customer{
-    width:13%;
-}
+        .order-table .col-customer {
+            width: 13%;
+        }
 
-.order-table .col-product{
-    width:10%;
-}
+        .order-table .col-product {
+            width: 10%;
+        }
 
-.order-table .col-image{
-    width:9%;
-}
+        .order-table .col-image {
+            width: 9%;
+        }
 
-.order-table .col-qty{
-    width:5%;
-}
+        .order-table .col-qty {
+            width: 5%;
+        }
 
-.order-table .col-total{
-    width:9%;
-}
+        .order-table .col-total {
+            width: 9%;
+        }
 
-.order-table .col-payment{
-    width:9%;
-}
+        .order-table .col-payment {
+            width: 9%;
+        }
 
-.order-table .col-status{
-    width:8%;
-}
+        .order-table .col-status {
+            width: 8%;
+        }
 
-.order-table .col-delivery{
-    width:7%;
-}
+        .order-table .col-delivery {
+            width: 7%;
+        }
 
-.order-table .col-action{
-    width:4%;
-}
+        .order-table .col-action {
+            width: 4%;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TABLE HEADER
 ========================================================= */
 
-.premium-thead th{
+        .premium-thead th {
 
-    background:
-        linear-gradient(
-            135deg,
-            #17213b,
-            #263c78
-        );
+            background:
+                linear-gradient(135deg,
+                    #17213b,
+                    #263c78);
 
-    color:#ffffff;
+            color: #ffffff;
 
-    border:0;
+            border: 0;
 
-    padding:17px 10px;
+            padding: 17px 10px;
 
-    font-size:10px;
+            font-size: 10px;
 
-    font-weight:700;
+            font-weight: 700;
 
-    letter-spacing:.7px;
+            letter-spacing: .7px;
 
-    text-transform:uppercase;
+            text-transform: uppercase;
 
-    white-space:nowrap;
+            white-space: nowrap;
 
-    vertical-align:middle;
-}
+            vertical-align: middle;
+        }
 
 
-.premium-thead th:first-child{
+        .premium-thead th:first-child {
 
-    padding-left:18px;
-}
+            padding-left: 18px;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TABLE ROW
 ========================================================= */
 
-.order-table tbody tr{
+        .order-table tbody tr {
 
-    background:#ffffff;
+            background: #ffffff;
 
-    transition:
-        background .2s ease;
-}
-
-
-.order-table tbody tr:hover{
-
-    background:#f8faff;
-}
+            transition:
+                background .2s ease;
+        }
 
 
-/* =========================================================
+        .order-table tbody tr:hover {
+
+            background: #f8faff;
+        }
+
+
+        /* =========================================================
    TABLE CELLS
 ========================================================= */
 
-.order-table tbody td{
+        .order-table tbody td {
 
-    padding:16px 9px;
+            padding: 16px 9px;
 
-    border-bottom:1px solid #edf0f5;
+            border-bottom: 1px solid #edf0f5;
 
-    vertical-align:middle;
+            vertical-align: middle;
 
-    color:#26324a;
+            color: #26324a;
 
-    overflow:hidden;
-}
-
-
-.order-table tbody tr:last-child td{
-
-    border-bottom:0;
-}
+            overflow: hidden;
+        }
 
 
-/* =========================================================
+        .order-table tbody tr:last-child td {
+
+            border-bottom: 0;
+        }
+
+
+        /* =========================================================
    COLUMN BACKGROUNDS
 ========================================================= */
 
-.order-table tbody td:nth-child(1){
+        .order-table tbody td:nth-child(1) {
 
-    background:#fafbff;
-}
-
-
-.order-table tbody td:nth-child(2){
-
-    background:#f8faff;
-}
+            background: #fafbff;
+        }
 
 
-.order-table tbody td:nth-child(3){
+        .order-table tbody td:nth-child(2) {
 
-    background:#ffffff;
-}
-
-
-.order-table tbody td:nth-child(4){
-
-    background:#fffdf9;
-}
+            background: #f8faff;
+        }
 
 
-.order-table tbody td:nth-child(5){
+        .order-table tbody td:nth-child(3) {
 
-    background:#fbfcff;
-}
-
-
-.order-table tbody td:nth-child(6){
-
-    background:#ffffff;
-}
+            background: #ffffff;
+        }
 
 
-.order-table tbody td:nth-child(7){
+        .order-table tbody td:nth-child(4) {
 
-    background:#f9fffc;
-}
-
-
-.order-table tbody td:nth-child(8){
-
-    background:#fffdf7;
-}
+            background: #fffdf9;
+        }
 
 
-.order-table tbody td:nth-child(9){
+        .order-table tbody td:nth-child(5) {
 
-    background:#fbf9ff;
-}
-
-
-.order-table tbody td:nth-child(10){
-
-    background:#f8fcff;
-}
+            background: #fbfcff;
+        }
 
 
-.order-table tbody td:nth-child(11){
+        .order-table tbody td:nth-child(6) {
 
-    background:#ffffff;
-}
+            background: #ffffff;
+        }
 
 
-/* =========================================================
+        .order-table tbody td:nth-child(7) {
+
+            background: #f9fffc;
+        }
+
+
+        .order-table tbody td:nth-child(8) {
+
+            background: #fffdf7;
+        }
+
+
+        .order-table tbody td:nth-child(9) {
+
+            background: #fbf9ff;
+        }
+
+
+        .order-table tbody td:nth-child(10) {
+
+            background: #f8fcff;
+        }
+
+
+        .order-table tbody td:nth-child(11) {
+
+            background: #ffffff;
+        }
+
+
+        /* =========================================================
    ID
 ========================================================= */
 
-.order-id{
+        .order-id {
 
-    font-weight:800;
+            font-weight: 800;
 
-    color:#26324a;
+            color: #26324a;
 
-    white-space:nowrap;
-}
+            white-space: nowrap;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    ORDER NUMBER
 ========================================================= */
 
-.order-number{
+        .order-number {
 
-    display:inline-block;
+            display: inline-block;
 
-    background:#eef3fa;
+            background: #eef3fa;
 
-    color:#35435c;
+            color: #35435c;
 
-    border-radius:8px;
+            border-radius: 8px;
 
-    padding:7px 8px;
+            padding: 7px 8px;
 
-    font-size:10px;
+            font-size: 10px;
 
-    font-weight:700;
+            font-weight: 700;
 
-    max-width:100%;
+            max-width: 100%;
 
-    overflow:hidden;
+            overflow: hidden;
 
-    text-overflow:ellipsis;
+            text-overflow: ellipsis;
 
-    white-space:nowrap;
-}
+            white-space: nowrap;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    CUSTOMER
 ========================================================= */
 
-.customer-cell{
+        .customer-cell {
 
-    display:flex;
+            display: flex;
 
-    align-items:center;
+            align-items: center;
 
-    gap:9px;
+            gap: 9px;
 
-    min-width:0;
-}
-
-
-.customer-avatar{
-
-    width:35px;
-
-    height:35px;
-
-    min-width:35px;
-
-    border-radius:10px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    background:#e9eeff;
-
-    color:#315bea;
-
-    font-weight:800;
-
-    font-size:13px;
-}
+            min-width: 0;
+        }
 
 
-.customer-info{
+        .customer-avatar {
 
-    min-width:0;
-}
+            width: 35px;
 
+            height: 35px;
 
-.customer-info strong{
+            min-width: 35px;
 
-    display:block;
+            border-radius: 10px;
 
-    color:#17213b;
+            display: flex;
 
-    font-size:12px;
+            align-items: center;
 
-    white-space:nowrap;
+            justify-content: center;
 
-    overflow:hidden;
+            background: #e9eeff;
 
-    text-overflow:ellipsis;
-}
+            color: #315bea;
 
+            font-weight: 800;
 
-.customer-info small{
-
-    display:block;
-
-    color:#8c98ab;
-
-    font-size:9px;
-
-    margin-top:3px;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-}
+            font-size: 13px;
+        }
 
 
-/* =========================================================
+        .customer-info {
+
+            min-width: 0;
+        }
+
+
+        .customer-info strong {
+
+            display: block;
+
+            color: #17213b;
+
+            font-size: 12px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        .customer-info small {
+
+            display: block;
+
+            color: #8c98ab;
+
+            font-size: 9px;
+
+            margin-top: 3px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        /* =========================================================
    PRODUCT
 ========================================================= */
 
-.product-name{
+        .product-name {
 
-    font-size:11px;
+            font-size: 11px;
 
-    font-weight:600;
+            font-weight: 600;
 
-    color:#344054;
+            color: #344054;
 
-    display:block;
+            display: block;
 
-    white-space:nowrap;
+            white-space: nowrap;
 
-    overflow:hidden;
+            overflow: hidden;
 
-    text-overflow:ellipsis;
-}
+            text-overflow: ellipsis;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    IMAGE
 ========================================================= */
 
-.order-product-img{
+        .order-product-img {
 
-    width:55px;
+            width: 55px;
 
-    height:55px;
+            height: 55px;
 
-    object-fit:cover;
+            object-fit: cover;
 
-    border-radius:12px;
+            border-radius: 12px;
 
-    display:block;
+            display: block;
 
-    margin:auto;
+            margin: auto;
 
-    box-shadow:
-        0 5px 15px rgba(0,0,0,.12);
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, .12);
 
-    border:3px solid #fff;
-}
-
-
-.no-image{
-
-    width:55px;
-
-    height:55px;
-
-    border-radius:12px;
-
-    background:#f0f2f6;
-
-    color:#a0a8b8;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin:auto;
-}
+            border: 3px solid #fff;
+        }
 
 
-/* =========================================================
+        .no-image {
+
+            width: 55px;
+
+            height: 55px;
+
+            border-radius: 12px;
+
+            background: #f0f2f6;
+
+            color: #a0a8b8;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin: auto;
+        }
+
+
+        /* =========================================================
    QUANTITY
 ========================================================= */
 
-.quantity-badge{
+        .quantity-badge {
 
-    min-width:30px;
+            min-width: 30px;
 
-    height:30px;
+            height: 30px;
 
-    padding:0 8px;
+            padding: 0 8px;
 
-    background:#edf2fb;
+            background: #edf2fb;
 
-    color:#344054;
+            color: #344054;
 
-    border-radius:9px;
+            border-radius: 9px;
 
-    display:inline-flex;
+            display: inline-flex;
 
-    align-items:center;
+            align-items: center;
 
-    justify-content:center;
+            justify-content: center;
 
-    font-weight:800;
+            font-weight: 800;
 
-    font-size:11px;
-}
+            font-size: 11px;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TOTAL
 ========================================================= */
 
-.order-total{
+        .order-total {
 
-    color:#17213b;
+            color: #17213b;
 
-    font-size:12px;
+            font-size: 12px;
 
-    white-space:nowrap;
-}
+            white-space: nowrap;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    PAYMENT BADGES
 ========================================================= */
 
-.payment-badge{
+        .payment-badge {
 
-    display:inline-flex;
+            display: inline-flex;
 
-    align-items:center;
+            align-items: center;
 
-    justify-content:center;
+            justify-content: center;
 
-    gap:5px;
+            gap: 5px;
 
-    padding:7px 9px;
+            padding: 7px 9px;
 
-    border-radius:20px;
+            border-radius: 20px;
 
-    font-size:9px;
+            font-size: 9px;
 
-    font-weight:700;
+            font-weight: 700;
 
-    white-space:nowrap;
-}
-
-
-.payment-badge.paid{
-
-    background:#e8faf1;
-
-    color:#0d9b5b;
-}
+            white-space: nowrap;
+        }
 
 
-.payment-badge.pending{
+        .payment-badge.paid {
 
-    background:#fff7df;
+            background: #e8faf1;
 
-    color:#c68100;
-}
-
-
-.payment-badge.failed{
-
-    background:#fff0f0;
-
-    color:#e53935;
-}
+            color: #0d9b5b;
+        }
 
 
-/* =========================================================
+        .payment-badge.pending {
+
+            background: #fff7df;
+
+            color: #c68100;
+        }
+
+
+        .payment-badge.failed {
+
+            background: #fff0f0;
+
+            color: #e53935;
+        }
+
+
+        /* =========================================================
    STATUS
 ========================================================= */
 
-.status-badge{
+        .status-badge {
 
-    display:inline-flex;
+            display: inline-flex;
 
-    align-items:center;
+            align-items: center;
 
-    justify-content:center;
+            justify-content: center;
 
-    padding:7px 9px;
+            padding: 7px 9px;
 
-    border-radius:20px;
+            border-radius: 20px;
 
-    font-size:9px;
+            font-size: 9px;
 
-    font-weight:700;
+            font-weight: 700;
 
-    white-space:nowrap;
-}
-
-
-.status-pending{
-
-    background:#fff5df;
-
-    color:#c98200;
-}
+            white-space: nowrap;
+        }
 
 
-.status-confirmed{
+        .status-pending {
 
-    background:#eaf3ff;
+            background: #fff5df;
 
-    color:#2563eb;
-}
-
-
-.status-processing{
-
-    background:#f0eaff;
-
-    color:#713cff;
-}
+            color: #c98200;
+        }
 
 
-.status-shipped{
+        .status-confirmed {
 
-    background:#e8f8ff;
+            background: #eaf3ff;
 
-    color:#0284c7;
-}
-
-
-.status-delivered{
-
-    background:#e6faf0;
-
-    color:#0a9b5b;
-}
+            color: #2563eb;
+        }
 
 
-.status-cancelled{
+        .status-processing {
 
-    background:#ffeded;
+            background: #f0eaff;
 
-    color:#dc2626;
-}
+            color: #713cff;
+        }
 
 
-/* =========================================================
+        .status-shipped {
+
+            background: #e8f8ff;
+
+            color: #0284c7;
+        }
+
+
+        .status-delivered {
+
+            background: #e6faf0;
+
+            color: #0a9b5b;
+        }
+
+
+        .status-cancelled {
+
+            background: #ffeded;
+
+            color: #dc2626;
+        }
+
+
+        /* =========================================================
    DELIVERY
 ========================================================= */
 
-.delivery-status{
+        .delivery-status {
 
-    display:flex;
+            display: flex;
 
-    align-items:center;
+            align-items: center;
 
-    justify-content:center;
+            justify-content: center;
 
-    gap:6px;
+            gap: 6px;
 
-    font-size:9px;
+            font-size: 9px;
 
-    font-weight:700;
+            font-weight: 700;
 
-    white-space:nowrap;
+            white-space: nowrap;
 
-    color:#526071;
-}
+            color: #526071;
+        }
 
 
-/* =========================================================
+        /* =========================================================
    ACTION
 ========================================================= */
 
-.action-btn{
+        .action-btn {
 
-    width:32px;
+            width: 32px;
 
-    height:32px;
+            height: 32px;
 
-    border:1px solid #e2e7ef;
+            border: 1px solid #e2e7ef;
 
-    border-radius:9px;
+            border-radius: 9px;
 
-    background:#ffffff;
+            background: #ffffff;
 
-    color:#68758a;
+            color: #68758a;
 
-    display:flex;
+            display: flex;
 
-    align-items:center;
+            align-items: center;
 
-    justify-content:center;
+            justify-content: center;
 
-    cursor:pointer;
+            cursor: pointer;
 
-    transition:.2s;
-}
-
-
-.action-btn:hover{
-
-    background:#edf3ff;
-
-    color:#315bea;
-
-    border-color:#cbd8ff;
-}
+            transition: .2s;
+        }
 
 
-.dropdown-menu{
+        .action-btn:hover {
 
-    border:0;
+            background: #edf3ff;
 
-    border-radius:12px;
+            color: #315bea;
 
-    padding:7px;
-
-    box-shadow:
-        0 12px 35px rgba(0,0,0,.14);
-}
+            border-color: #cbd8ff;
+        }
 
 
-.dropdown-item{
+        .dropdown-menu {
 
-    border-radius:8px;
+            border: 0;
 
-    padding:9px 12px;
+            border-radius: 12px;
 
-    font-size:12px;
+            padding: 7px;
 
-    font-weight:600;
-}
-
-
-.dropdown-item:hover{
-
-    background:#f2f5fb;
-}
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, .14);
+        }
 
 
-/* =========================================================
+        .dropdown-item {
+
+            border-radius: 8px;
+
+            padding: 9px 12px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        .dropdown-item:hover {
+
+            background: #f2f5fb;
+        }
+
+
+        /* =========================================================
    NO ORDERS
 ========================================================= */
 
-.no-orders{
+        .no-orders {
 
-    text-align:center;
+            text-align: center;
 
-    padding:70px 20px !important;
+            padding: 70px 20px !important;
 
-    background:#ffffff !important;
-}
-
-
-.no-orders i{
-
-    font-size:42px;
-
-    color:#c4ccda;
-
-    margin-bottom:15px;
-}
+            background: #ffffff !important;
+        }
 
 
-.no-orders h4{
+        .no-orders i {
 
-    color:#27344d;
+            font-size: 42px;
 
-    font-weight:700;
+            color: #c4ccda;
 
-    margin-bottom:5px;
-}
-
-
-.no-orders p{
-
-    color:#8d98a9;
-
-    font-size:13px;
-
-    margin:0;
-}
+            margin-bottom: 15px;
+        }
 
 
-/* =========================================================
+        .no-orders h4 {
+
+            color: #27344d;
+
+            font-weight: 700;
+
+            margin-bottom: 5px;
+        }
+
+
+        .no-orders p {
+
+            color: #8d98a9;
+
+            font-size: 13px;
+
+            margin: 0;
+        }
+
+
+        /* =========================================================
    PAGINATION
 ========================================================= */
 
-.pagination-area{
+        .pagination-area {
 
-    display:flex;
+            display: flex;
 
-    justify-content:center;
+            justify-content: center;
 
-    align-items:center;
+            align-items: center;
 
-    gap:7px;
+            gap: 7px;
 
-    margin-top:25px;
+            margin-top: 25px;
 
-    flex-wrap:wrap;
-}
-
-
-.page-btn{
-
-    min-width:40px;
-
-    height:40px;
-
-    border-radius:11px;
-
-    border:1px solid #e2e7ef;
-
-    background:#ffffff;
-
-    color:#455267;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    text-decoration:none;
-
-    font-size:12px;
-
-    font-weight:700;
-
-    transition:.2s;
-
-    padding:0 14px;
-}
+            flex-wrap: wrap;
+        }
 
 
-.page-btn:hover{
+        .page-btn {
 
-    background:#edf3ff;
+            min-width: 40px;
 
-    color:#315bea;
+            height: 40px;
 
-    border-color:#cbd8ff;
-}
+            border-radius: 11px;
+
+            border: 1px solid #e2e7ef;
+
+            background: #ffffff;
+
+            color: #455267;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            transition: .2s;
+
+            padding: 0 14px;
+        }
 
 
-.page-btn.active{
+        .page-btn:hover {
 
-    background:
-        linear-gradient(
-            135deg,
-            #4f46e5,
-            #2563eb
-        );
+            background: #edf3ff;
 
-    color:#ffffff;
+            color: #315bea;
 
-    border-color:transparent;
-
-    box-shadow:
-        0 6px 15px rgba(49,91,234,.25);
-}
+            border-color: #cbd8ff;
+        }
 
 
-/* =========================================================
+        .page-btn.active {
+
+            background:
+                linear-gradient(135deg,
+                    #4f46e5,
+                    #2563eb);
+
+            color: #ffffff;
+
+            border-color: transparent;
+
+            box-shadow:
+                0 6px 15px rgba(49, 91, 234, .25);
+        }
+
+
+        /* =========================================================
    RESPONSIVE
 ========================================================= */
 
-@media(max-width:1200px){
+        @media(max-width:1200px) {
 
-    .order-wrapper{
+            .order-wrapper {
 
-        margin-left:18%;
+                margin-left: 18%;
 
-        width:calc(82% - 20px);
-    }
+                width: calc(82% - 20px);
+            }
 
-    .order-table{
+            .order-table {
 
-        font-size:11px;
-    }
+                font-size: 11px;
+            }
 
-    .premium-thead th{
+            .premium-thead th {
 
-        font-size:9px;
+                font-size: 9px;
 
-        padding:14px 6px;
-    }
+                padding: 14px 6px;
+            }
 
-    .order-table tbody td{
+            .order-table tbody td {
 
-        padding:12px 6px;
-    }
+                padding: 12px 6px;
+            }
 
-    .order-product-img,
-    .no-image{
+            .order-product-img,
+            .no-image {
 
-        width:48px;
+                width: 48px;
 
-        height:48px;
-    }
+                height: 48px;
+            }
 
-    .customer-avatar{
+            .customer-avatar {
 
-        width:30px;
+                width: 30px;
 
-        height:30px;
+                height: 30px;
 
-        min-width:30px;
-    }
-}
+                min-width: 30px;
+            }
+        }
 
 
-/* =========================================================
+        /* =========================================================
    TABLET
 ========================================================= */
 
-@media(max-width:900px){
+        @media(max-width:900px) {
 
-    .order-wrapper{
+            .order-wrapper {
 
-        margin-left:15px;
+                margin-left: 15px;
 
-        margin-right:15px;
+                margin-right: 15px;
 
-        width:calc(100% - 30px);
+                width: calc(100% - 30px);
 
-        margin-top:25px;
-    }
+                margin-top: 25px;
+            }
 
-    .order-stats{
+            .order-stats {
 
-        grid-template-columns:
-            repeat(2,1fr);
-    }
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
 
-    /*
+            /*
        Keep table compact instead of creating
        a giant horizontal page.
     */
 
-    .order-table{
+            .order-table {
 
-        font-size:10px;
-    }
+                font-size: 10px;
+            }
 
-    .premium-thead th{
+            .premium-thead th {
 
-        font-size:8px;
-    }
+                font-size: 8px;
+            }
 
-    .customer-info strong{
+            .customer-info strong {
 
-        font-size:10px;
-    }
+                font-size: 10px;
+            }
 
-    .customer-info small{
+            .customer-info small {
 
-        font-size:8px;
-    }
-}
+                font-size: 8px;
+            }
+        }
 
 
-/* =========================================================
+        /* =========================================================
    MOBILE
 ========================================================= */
 
-@media(max-width:650px){
+        @media(max-width:650px) {
 
-    .order-wrapper{
+            .order-wrapper {
 
-        margin:20px 10px;
+                margin: 20px 10px;
 
-        width:calc(100% - 20px);
-    }
+                width: calc(100% - 20px);
+            }
 
-    .title{
+            .title {
 
-        font-size:23px;
-    }
+                font-size: 23px;
+            }
 
-    .order-stats{
+            .order-stats {
 
-        grid-template-columns:1fr 1fr;
+                grid-template-columns: 1fr 1fr;
 
-        gap:10px;
-    }
+                gap: 10px;
+            }
 
-    .stat-card{
+            .stat-card {
 
-        padding:15px;
+                padding: 15px;
 
-        min-height:110px;
-    }
+                min-height: 110px;
+            }
 
-    .stat-number{
+            .stat-number {
 
-        font-size:22px;
-    }
+                font-size: 22px;
+            }
 
-    /*
+            /*
        Mobile table becomes scrollable INSIDE
        table card only, not entire page.
     */
 
-    .order-table-wrapper{
+            .order-table-wrapper {
 
-        overflow-x:auto;
+                overflow-x: auto;
 
-        -webkit-overflow-scrolling:touch;
-    }
+                -webkit-overflow-scrolling: touch;
+            }
 
-    .order-table{
+            .order-table {
 
-        min-width:1050px;
-    }
+                min-width: 1050px;
+            }
 
-    body{
+            body {
 
-        overflow-x:hidden;
-    }
-}
+                overflow-x: hidden;
+            }
+        }
 
 
-/* =========================================================
+        /* =========================================================
    ORDER ACTION DROPDOWN
    OPEN MENU TO THE LEFT
 ========================================================= */
 
-.order-table .action-dropdown {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .order-table .action-dropdown {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
 
-/* 3 DOT BUTTON */
+        /* 3 DOT BUTTON */
 
-.order-table .action-btn {
-    width: 38px;
-    height: 38px;
+        .order-table .action-btn {
+            width: 38px;
+            height: 38px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    border: 1px solid #e2e8f0;
-    background: #ffffff;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
 
-    border-radius: 10px;
+            border-radius: 10px;
 
-    color: #64748b;
+            color: #64748b;
 
-    cursor: pointer;
+            cursor: pointer;
 
-    transition: all 0.25s ease;
+            transition: all 0.25s ease;
 
-    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
-}
-
-
-.order-table .action-btn:hover {
-    background: #f1f5ff;
-    border-color: #4f46e5;
-    color: #4f46e5;
-
-    transform: translateY(-1px);
-
-    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.15);
-}
+            box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+        }
 
 
-/* =====================================================
+        .order-table .action-btn:hover {
+            background: #f1f5ff;
+            border-color: #4f46e5;
+            color: #4f46e5;
+
+            transform: translateY(-1px);
+
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.15);
+        }
+
+
+        /* =====================================================
    ACTION COLUMN
 ===================================================== */
 
-.action-cell {
-    position: relative;
-    width: 70px;
-    min-width: 70px;
-    text-align: center;
-    overflow: visible !important;
-}
+        .action-cell {
+            position: relative;
+            width: 70px;
+            min-width: 70px;
+            text-align: center;
+            overflow: visible !important;
+        }
 
 
-/* =====================================================
+        /* =====================================================
    DETAILS WRAPPER
 ===================================================== */
 
-.order-action {
-    position: relative;
-    display: inline-block;
-}
+        .order-action {
+            position: relative;
+            display: inline-block;
+        }
 
 
-/* =====================================================
+        /* =====================================================
    REMOVE DEFAULT SUMMARY ARROW
 ===================================================== */
 
-.order-action summary {
-    list-style: none;
-}
+        .order-action summary {
+            list-style: none;
+        }
 
-.order-action summary::-webkit-details-marker {
-    display: none;
-}
+        .order-action summary::-webkit-details-marker {
+            display: none;
+        }
 
-.order-action summary::marker {
-    display: none;
-}
+        .order-action summary::marker {
+            display: none;
+        }
 
 
-/* =====================================================
+        /* =====================================================
    THREE DOT BUTTON
 ===================================================== */
 
-.action-btn {
-    width: 40px;
-    height: 40px;
+        .action-btn {
+            width: 40px;
+            height: 40px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    padding: 0;
-    margin: 0;
+            padding: 0;
+            margin: 0;
 
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
 
-    background: #ffffff;
+            background: #ffffff;
 
-    color: #64748b;
+            color: #64748b;
 
-    font-size: 16px;
+            font-size: 16px;
 
-    cursor: pointer;
+            cursor: pointer;
 
-    transition:
-        all 0.2s ease;
+            transition:
+                all 0.2s ease;
 
-    box-shadow:
-        0 2px 8px rgba(15, 23, 42, 0.06);
-}
-
-
-.action-btn:hover {
-    background: #f4f6ff;
-
-    color: #315bea;
-
-    border-color: #cbd5ff;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 5px 14px rgba(49, 91, 234, 0.12);
-}
+            box-shadow:
+                0 2px 8px rgba(15, 23, 42, 0.06);
+        }
 
 
-/* When menu is open */
+        .action-btn:hover {
+            background: #f4f6ff;
 
-.order-action[open] .action-btn {
-    background: #eef2ff;
+            color: #315bea;
 
-    color: #315bea;
+            border-color: #cbd5ff;
 
-    border-color: #c7d2fe;
+            transform: translateY(-1px);
 
-    box-shadow:
-        0 5px 15px rgba(49, 91, 234, 0.14);
-}
+            box-shadow:
+                0 5px 14px rgba(49, 91, 234, 0.12);
+        }
 
 
-/* =====================================================
+        /* When menu is open */
+
+        .order-action[open] .action-btn {
+            background: #eef2ff;
+
+            color: #315bea;
+
+            border-color: #c7d2fe;
+
+            box-shadow:
+                0 5px 15px rgba(49, 91, 234, 0.14);
+        }
+
+
+        /* =====================================================
    ACTION MENU
    Opens to LEFT
 ===================================================== */
 
-.action-menu {
-    position: absolute;
+        .action-menu {
+            position: absolute;
 
-    right: 48px;
-    top: 50%;
+            right: 48px;
+            top: 50%;
 
-    transform: translateY(-50%);
+            transform: translateY(-50%);
 
-    width: 175px;
+            width: 175px;
 
-    padding: 7px;
+            padding: 7px;
 
-    background: #ffffff;
+            background: #ffffff;
 
-    border: 1px solid #e8ebf2;
+            border: 1px solid #e8ebf2;
 
-    border-radius: 14px;
+            border-radius: 14px;
 
-    box-shadow:
-        0 18px 45px rgba(15, 23, 42, 0.14),
-        0 4px 12px rgba(15, 23, 42, 0.06);
+            box-shadow:
+                0 18px 45px rgba(15, 23, 42, 0.14),
+                0 4px 12px rgba(15, 23, 42, 0.06);
 
-    z-index: 9999;
+            z-index: 9999;
 
-    animation: actionMenuIn 0.16s ease;
-}
+            animation: actionMenuIn 0.16s ease;
+        }
 
 
-/* =====================================================
+        /* =====================================================
    MENU SMALL ARROW
 ===================================================== */
 
-.action-menu::after {
-    content: "";
+        .action-menu::after {
+            content: "";
 
-    position: absolute;
+            position: absolute;
 
-    right: -6px;
-    top: 50%;
+            right: -6px;
+            top: 50%;
 
-    width: 11px;
-    height: 11px;
+            width: 11px;
+            height: 11px;
 
-    background: #ffffff;
+            background: #ffffff;
 
-    border-top: 1px solid #e8ebf2;
-    border-right: 1px solid #e8ebf2;
+            border-top: 1px solid #e8ebf2;
+            border-right: 1px solid #e8ebf2;
 
-    transform:
-        translateY(-50%)
-        rotate(45deg);
-}
+            transform:
+                translateY(-50%) rotate(45deg);
+        }
 
 
-/* =====================================================
+        /* =====================================================
    MENU ITEM
 ===================================================== */
 
-.action-menu-item {
-    width: 100%;
+        .action-menu-item {
+            width: 100%;
 
-    display: flex;
+            display: flex;
 
-    align-items: center;
+            align-items: center;
 
-    gap: 10px;
+            gap: 10px;
 
-    padding: 10px 11px;
+            padding: 10px 11px;
 
-    margin: 2px 0;
+            margin: 2px 0;
 
-    border-radius: 10px;
+            border-radius: 10px;
 
-    text-decoration: none;
+            text-decoration: none;
 
-    color: #334155;
+            color: #334155;
 
-    font-size: 13px;
+            font-size: 13px;
 
-    font-weight: 600;
+            font-weight: 600;
 
-    transition:
-        background 0.18s ease,
-        color 0.18s ease,
-        transform 0.18s ease;
-}
-
-
-.action-menu-item:hover {
-    background: #f7f8fc;
-
-    color: #1e293b;
-
-    transform: translateX(-2px);
-}
+            transition:
+                background 0.18s ease,
+                color 0.18s ease,
+                transform 0.18s ease;
+        }
 
 
-/* =====================================================
+        .action-menu-item:hover {
+            background: #f7f8fc;
+
+            color: #1e293b;
+
+            transform: translateX(-2px);
+        }
+
+
+        /* =====================================================
    ICON BOX
 ===================================================== */
 
-.action-menu-icon {
-    width: 30px;
-    height: 30px;
+        .action-menu-icon {
+            width: 30px;
+            height: 30px;
 
-    flex-shrink: 0;
+            flex-shrink: 0;
 
-    display: flex;
+            display: flex;
 
-    align-items: center;
-    justify-content: center;
+            align-items: center;
+            justify-content: center;
 
-    border-radius: 9px;
+            border-radius: 9px;
 
-    font-size: 12px;
-}
-
-
-/* View */
-
-.view-icon {
-    background: #eff6ff;
-
-    color: #2563eb;
-}
+            font-size: 12px;
+        }
 
 
-/* Edit */
+        /* View */
 
-.edit-icon {
-    background: #fff7ed;
+        .view-icon {
+            background: #eff6ff;
 
-    color: #f59e0b;
-}
+            color: #2563eb;
+        }
 
 
-/* =====================================================
+        /* Edit */
+
+        .edit-icon {
+            background: #fff7ed;
+
+            color: #f59e0b;
+        }
+
+
+        /* =====================================================
    ANIMATION
 ===================================================== */
 
-@keyframes actionMenuIn {
+        @keyframes actionMenuIn {
 
-    from {
-        opacity: 0;
-        transform:
-            translateY(-50%)
-            translateX(7px);
-    }
+            from {
+                opacity: 0;
+                transform:
+                    translateY(-50%) translateX(7px);
+            }
 
-    to {
-        opacity: 1;
-        transform:
-            translateY(-50%)
-            translateX(0);
-    }
+            to {
+                opacity: 1;
+                transform:
+                    translateY(-50%) translateX(0);
+            }
 
-}
+        }
 
 
-/* =====================================================
+        /* =====================================================
    IMPORTANT TABLE FIX
 ===================================================== */
 
-.order-table td,
-.order-table th {
-    overflow: visible;
-}
+        .order-table td,
+        .order-table th {
+            overflow: visible;
+        }
 
 
-/*
+        /*
    Wrapper must also allow the menu
    to come outside the table.
 */
 
-.order-table-wrapper {
-    overflow-x: auto;
-    overflow-y: visible !important;
-}
+        .order-table-wrapper {
+            overflow-x: auto;
+            overflow-y: visible !important;
+        }
 
 
-/*
+        /*
    Table card should NOT hide dropdown
 */
 
-.table-card {
-    overflow: visible !important;
-}
+        .table-card {
+            overflow: visible !important;
+        }
 
 
-/*
+        /*
    Bootstrap .table-responsive often uses overflow:auto.
    Do not use it around this table if possible.
 */
 
-.table-responsive {
-    overflow-x: auto;
-    overflow-y: visible !important;
-}
-
-
-
-
-
-
-
-</style>
+        .table-responsive {
+            overflow-x: auto;
+            overflow-y: visible !important;
+        }
+    </style>
 
 </head>
 
@@ -1924,992 +2214,986 @@ body{
 <body>
 
 
-<div class="container"   style="margin-left:-1%;min-width:102%;">
+    <div class="container" style="margin-left:-1%;min-width:102%;">
 
-<?php include "sidebar.php"; ?>
+        <?php include "sidebar.php"; ?>
 
-<?php include "header.php"; ?>
-<div class="">
+        <?php include "header.php"; ?>
+        <div class="">
 
-</div>
-</div>
-</div>
+        </div>
+    </div>
+    </div>
 
 
-<!-- =====================================================
+    <!-- =====================================================
      MAIN ORDER WRAPPER
 ===================================================== -->
 
-<div class="order-wrapper">
+    <div class="order-wrapper">
 
 
-    <!-- =================================================
+        <!-- =================================================
          TITLE
     ================================================== -->
 
-    <div class="title-wrap">
+        <div class="title-wrap">
 
-        <h1 class="title">
+            <h1 class="title">
 
-            <i class="fa-solid fa-cart-shopping"></i>
+                <i class="fa-solid fa-cart-shopping"></i>
 
-            Order Details
+                Order Details
 
-        </h1>
+            </h1>
 
-    </div>
+        </div>
 
 
-    <!-- =================================================
+        <!-- =================================================
          STATISTICS
     ================================================== -->
 
-    <div class="order-stats">
+        <div class="order-stats">
 
 
-        <!-- TOTAL -->
+            <!-- TOTAL -->
 
-        <div class="stat-card total">
+            <div class="stat-card total">
 
-            <div class="stat-icon">
+                <div class="stat-icon">
 
-                <i class="fas fa-shopping-cart"></i>
+                    <i class="fas fa-shopping-cart"></i>
+
+                </div>
+
+                <div class="stat-number">
+
+                    <?php echo $total_records; ?>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Total Orders
+
+                </div>
 
             </div>
 
-            <div class="stat-number">
 
-                <?php echo $total_records; ?>
+            <!-- DELIVERED -->
+
+            <div class="stat-card delivered">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-circle-check"></i>
+
+                </div>
+
+                <div class="stat-number">
+
+                    <?php echo $delivered; ?>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Delivered
+
+                </div>
 
             </div>
 
-            <div class="stat-label">
 
-                Total Orders
+            <!-- PROCESSING -->
+
+            <div class="stat-card processing">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-box"></i>
+
+                </div>
+
+                <div class="stat-number">
+
+                    <?php echo $processing; ?>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Processing
+
+                </div>
 
             </div>
+
+
+            <!-- CANCELLED -->
+
+            <div class="stat-card cancelled">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-ban"></i>
+
+                </div>
+
+                <div class="stat-number">
+
+                    <?php echo $cancelled; ?>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Cancelled
+
+                </div>
+
+            </div>
+
 
         </div>
 
 
-        <!-- DELIVERED -->
-
-        <div class="stat-card delivered">
-
-            <div class="stat-icon">
-
-                <i class="fas fa-circle-check"></i>
-
-            </div>
-
-            <div class="stat-number">
-
-                <?php echo $delivered; ?>
-
-            </div>
-
-            <div class="stat-label">
-
-                Delivered
-
-            </div>
-
-        </div>
-
-
-        <!-- PROCESSING -->
-
-        <div class="stat-card processing">
-
-            <div class="stat-icon">
-
-                <i class="fas fa-box"></i>
-
-            </div>
-
-            <div class="stat-number">
-
-                <?php echo $processing; ?>
-
-            </div>
-
-            <div class="stat-label">
-
-                Processing
-
-            </div>
-
-        </div>
-
-
-        <!-- CANCELLED -->
-
-        <div class="stat-card cancelled">
-
-            <div class="stat-icon">
-
-                <i class="fas fa-ban"></i>
-
-            </div>
-
-            <div class="stat-number">
-
-                <?php echo $cancelled; ?>
-
-            </div>
-
-            <div class="stat-label">
-
-                Cancelled
-
-            </div>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- =================================================
+        <!-- =================================================
          TABLE CARD
     ================================================== -->
 
-    <div class="table-card">
+        <div class="table-card">
 
 
-        <div class="order-table-wrapper">
+            <div class="order-table-wrapper">
 
 
-            <table class="table order-table align-middle">
+                <table class="table order-table align-middle">
 
 
-                <!-- ================================
+                    <!-- ================================
                      HEADER
                 ================================= -->
 
-                <thead class="premium-thead">
-
-                    <tr>
-
-                        <th class="col-id">
-                            #
-                        </th>
-
-                        <th class="col-order">
-                            Order
-                        </th>
-
-                        <th class="col-customer">
-                            Customer
-                        </th>
-
-                        <th class="col-product">
-                            Product
-                        </th>
-
-                        <th class="col-image">
-                            Image
-                        </th>
-
-                        <th class="col-qty">
-                            Qty
-                        </th>
-
-                        <th class="col-total">
-                            Total
-                        </th>
-
-                        <th class="col-payment">
-                            Payment
-                        </th>
-
-                        <th class="col-status">
-                            Order Status
-                        </th>
-
-                        <th class="col-delivery">
-                            Delivery
-                        </th>
-
-                        <th class="col-action">
-                            Action
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <!-- ================================
-                     BODY
-                ================================= -->
-
-                <tbody>
-
-
-                <?php if (mysqli_num_rows($res) > 0) { ?>
-
-
-                    <?php while ($row = mysqli_fetch_assoc($res)) { ?>
-
+                    <thead class="premium-thead">
 
                         <tr>
 
-
-                            <!-- =====================
-                                 ID
-                            ====================== -->
-
-                            <td>
-
-                                <span class="order-id">
-
-                                    #<?php
-                                    echo (int)$row['id'];
-                                    ?>
-
-                                </span>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 ORDER
-                            ====================== -->
-
-                            <td>
-
-                                <span class="order-number">
-
-                                    <?php
-
-                                    echo htmlspecialchars(
-                                        $row['order_number'] ?? ''
-                                    );
-
-                                    ?>
-
-                                </span>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 CUSTOMER
-                            ====================== -->
-
-                            <td>
-
-                                <?php
-
-                                $customerName =
-                                    $row['customer_name'] ?? '';
-
-                                $firstLetter =
-                                    $customerName !== ''
-                                    ? strtoupper(
-                                        substr(
-                                            $customerName,
-                                            0,
-                                            1
-                                        )
-                                    )
-                                    : '?';
-
-                                ?>
-
-
-                                <div class="customer-cell">
-
-
-                                    <div class="customer-avatar">
-
-                                        <?php
-                                        echo $firstLetter;
-                                        ?>
-
-                                    </div>
-
-
-                                    <div class="customer-info">
-
-                                        <strong>
-
-                                            <?php
-
-                                            echo htmlspecialchars(
-                                                $customerName
-                                            );
-
-                                            ?>
-
-                                        </strong>
-
-
-                                        <small>
-
-                                            <?php
-
-                                            echo htmlspecialchars(
-                                                $row['customer_number']
-                                                ?? ''
-                                            );
-
-                                            ?>
-
-                                        </small>
-
-                                    </div>
-
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 PRODUCT
-                            ====================== -->
-
-                            <td>
-
-                                <span class="product-name">
-
-                                    <?php
-
-                                    echo htmlspecialchars(
-                                        $row['product_name'] ?? ''
-                                    );
-
-                                    ?>
-
-                                </span>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 IMAGE
-                            ====================== -->
-
-                            <td>
-
-                                <?php
-
-                                $image = trim(
-                                    $row['product_image']
-                                    ?? ''
-                                );
-
-                                ?>
-
-
-                                <?php if ($image !== '') { ?>
-
-
-                                    <img
-                                        src="../images/<?php
-                                            echo htmlspecialchars(
-                                                $image
-                                            );
-                                        ?>"
-                                        class="order-product-img"
-                                        alt="Product"
-                                    >
-
-
-                                <?php } else { ?>
-
-
-                                    <div class="no-image">
-
-                                        <i class="fas fa-image"></i>
-
-                                    </div>
-
-
-                                <?php } ?>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 QUANTITY
-                            ====================== -->
-
-                            <td>
-
-                                <span class="quantity-badge">
-
-                                    <?php
-
-                                    echo (int)(
-                                        $row['quantity'] ?? 0
-                                    );
-
-                                    ?>
-
-                                </span>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 TOTAL
-                            ====================== -->
-
-                            <td>
-
-                                <?php
-
-                                $grandTotal =
-                                    (float)(
-                                        $row['grand_total']
-                                        ?? 0
-                                    );
-
-
-                                if ($grandTotal <= 0) {
-
-                                    $grandTotal =
-                                        (float)(
-                                            $row['total_amount']
-                                            ?? 0
-                                        );
-                                }
-
-                                ?>
-
-
-                                <strong class="order-total">
-
-                                    ₹<?php
-
-                                    echo number_format(
-                                        $grandTotal,
-                                        2
-                                    );
-
-                                    ?>
-
-                                </strong>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 PAYMENT
-                            ====================== -->
-
-                            <td>
-
-                                <?php
-
-                                $payment =
-                                    strtolower(
-                                        trim(
-                                            $row['payment_status']
-                                            ?? 'Pending'
-                                        )
-                                    );
-
-                                ?>
-
-
-                                <?php if (
-                                    $payment === 'paid'
-                                ) { ?>
-
-
-                                    <span
-                                        class="payment-badge paid"
-                                    >
-
-                                        <i
-                                            class="fas
-                                            fa-check-circle"
-                                        ></i>
-
-                                        Paid
-
-                                    </span>
-
-
-                                <?php } elseif (
-                                    $payment === 'failed'
-                                ) { ?>
-
-
-                                    <span
-                                        class="payment-badge failed"
-                                    >
-
-                                        <i
-                                            class="fas
-                                            fa-times-circle"
-                                        ></i>
-
-                                        Failed
-
-                                    </span>
-
-
-                                <?php } else { ?>
-
-
-                                    <span
-                                        class="payment-badge pending"
-                                    >
-
-                                        <i
-                                            class="fas
-                                            fa-clock"
-                                        ></i>
-
-                                        Pending
-
-                                    </span>
-
-
-                                <?php } ?>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 ORDER STATUS
-                            ====================== -->
-
-                            <td>
-
-                                <?php
-
-                                $orderStatus =
-                                    strtolower(
-                                        trim(
-                                            $row['order_status']
-                                            ?? 'Pending'
-                                        )
-                                    );
-
-
-                                $statusClass =
-                                    'status-pending';
-
-
-                                if (
-                                    $orderStatus ===
-                                    'confirmed'
-                                ) {
-
-                                    $statusClass =
-                                        'status-confirmed';
-
-                                } elseif (
-                                    $orderStatus ===
-                                    'processing'
-                                ) {
-
-                                    $statusClass =
-                                        'status-processing';
-
-                                } elseif (
-                                    $orderStatus ===
-                                    'shipped'
-                                ) {
-
-                                    $statusClass =
-                                        'status-shipped';
-
-                                } elseif (
-                                    $orderStatus ===
-                                    'delivered'
-                                ) {
-
-                                    $statusClass =
-                                        'status-delivered';
-
-                                } elseif (
-                                    $orderStatus ===
-                                    'cancelled'
-                                ) {
-
-                                    $statusClass =
-                                        'status-cancelled';
-                                }
-
-                                ?>
-
-
-                                <span
-                                    class="status-badge
-                                    <?php
-                                    echo $statusClass;
-                                    ?>"
-                                >
-
-                                    <?php
-
-                                    echo htmlspecialchars(
-                                        $row['order_status']
-                                        ?? 'Pending'
-                                    );
-
-                                    ?>
-
-                                </span>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 DELIVERY
-                            ====================== -->
-
-                            <td>
-
-                                <?php
-
-                                $deliveryStatus =
-                                    $row['delivery_status']
-                                    ?? 'Preparing';
-
-
-                                $deliveryLower =
-                                    strtolower(
-                                        trim(
-                                            $deliveryStatus
-                                        )
-                                    );
-
-                                ?>
-
-
-                                <div class="delivery-status">
-
-
-                                    <?php if (
-                                        $deliveryLower ===
-                                        'delivered'
-                                    ) { ?>
-
-
-                                        <i
-                                            class="
-                                            fas
-                                            fa-circle-check
-                                            text-success
-                                            "
-                                        ></i>
-
-
-                                    <?php } elseif (
-                                        $deliveryLower ===
-                                        'near you'
-                                    ) { ?>
-
-
-                                        <i
-                                            class="
-                                            fas
-                                            fa-location-dot
-                                            text-primary
-                                            "
-                                        ></i>
-
-
-                                    <?php } elseif (
-                                        $deliveryLower ===
-                                        'on the way'
-                                    ) { ?>
-
-
-                                        <i
-                                            class="
-                                            fas
-                                            fa-truck
-                                            text-warning
-                                            "
-                                        ></i>
-
-
-                                    <?php } else { ?>
-
-
-                                        <i
-                                            class="
-                                            fas
-                                            fa-box
-                                            text-secondary
-                                            "
-                                        ></i>
-
-
-                                    <?php } ?>
-
-
-                                    <span>
-
-                                        <?php
-
-                                        echo htmlspecialchars(
-                                            $deliveryStatus
-                                        );
-
-                                        ?>
-
-                                    </span>
-
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- =====================
-                                 ACTION
-                            ====================== -->
-<!-- =====================
-     ACTION
-====================== -->
-
-<td class="action-cell">
-
-    <details class="order-action">
-
-        <summary class="action-btn" title="Order Actions">
-
-            <i class="fas fa-ellipsis-v"></i>
-
-        </summary>
-
-
-        <div class="action-menu">
-
-            <a
-                href="view_order.php?id=<?php echo (int)$row['id']; ?>"
-                class="action-menu-item"
-            >
-
-                <span class="action-menu-icon view-icon">
-                    <i class="fas fa-eye"></i>
-                </span>
-
-                <span>
-                    View Order
-                </span>
-
-            </a>
-
-
-            <a
-                href="edit_order.php?id=<?php echo (int)$row['id']; ?>"
-                class="action-menu-item"
-            >
-
-                <span class="action-menu-icon edit-icon">
-                    <i class="fas fa-pen"></i>
-                </span>
-
-                <span>
-                    Edit Order
-                </span>
-
-            </a>
-
-        </div>
-
-    </details>
-
-</td>
-
-
+                            <th class="col-id">
+                                #
+                            </th>
+
+                            <th class="col-order">
+                                Order
+                            </th>
+
+                            <th class="col-customer">
+                                Customer
+                            </th>
+
+                            <th class="col-product">
+                                Product
+                            </th>
+
+                            <th class="col-image">
+                                Image
+                            </th>
+
+                            <th class="col-qty">
+                                Qty
+                            </th>
+
+                            <th class="col-total">
+                                Total
+                            </th>
+
+                            <th class="col-payment">
+                                Payment
+                            </th>
+
+                            <th class="col-status">
+                                Order Status
+                            </th>
+
+                            <th class="col-delivery">
+                                Delivery
+                            </th>
+
+                            <th class="col-action">
+                                Action
+                            </th>
 
                         </tr>
 
-
-                    <?php } ?>
-
-
-                <?php } else { ?>
+                    </thead>
 
 
-                    <!-- ============================
-                         NO ORDERS
-                    ============================= -->
+                    <!-- ================================
+                     BODY
+                ================================= -->
 
-                    <tr>
+                    <!-- ================================
+     BODY
+================================= -->
 
-                        <td
-                            colspan="11"
-                            class="no-orders"
-                        >
+                    <tbody>
 
-                            <div>
+                        <?php if (mysqli_num_rows($res) > 0) { ?>
 
-                                <i
-                                    class="
-                                    fas
-                                    fa-box-open
-                                    "
-                                ></i>
+                            <?php while ($row = mysqli_fetch_assoc($res)) { ?>
+
+                                <?php
+
+                                /* =====================================================
+           PAYMENT + ORDER STATUS + DELIVERY STATUS
+           MATCHING
+        ===================================================== */
+
+                                $payment = strtolower(
+                                    trim($row['payment_status'] ?? 'Pending')
+                                );
+
+                                $orderStatus = strtolower(
+                                    trim($row['order_status'] ?? 'Pending')
+                                );
 
 
-                                <h4>
-                                    No Orders Found
-                                </h4>
+                                /*
+        ========================================================
+           DEFAULT VALUES
+        ========================================================
+        */
+
+                                $displayOrderStatus = 'Pending';
+                                $statusClass = 'status-pending';
+
+                                $displayDelivery = 'Waiting for Payment';
+                                $deliveryIcon = 'fa-clock';
+                                $deliveryColor = 'text-warning';
 
 
-                                <p>
+                                /*
+        ========================================================
+           PAYMENT PENDING
+        ========================================================
+        */
 
-                                    There are no orders
-                                    matching your search.
+                                if ($payment === 'pending') {
 
-                                </p>
+                                    $displayOrderStatus = 'Pending';
+                                    $statusClass = 'status-pending';
 
-                            </div>
+                                    $displayDelivery = 'Waiting for Payment';
+                                    $deliveryIcon = 'fa-clock';
+                                    $deliveryColor = 'text-warning';
+                                }
 
-                        </td>
 
-                    </tr>
+                                /*
+        ========================================================
+           PAYMENT FAILED
+        ========================================================
+        */ elseif ($payment === 'failed') {
+
+                                    $displayOrderStatus = 'Payment Failed';
+                                    $statusClass = 'status-cancelled';
+
+                                    $displayDelivery = 'Payment Failed';
+                                    $deliveryIcon = 'fa-circle-xmark';
+                                    $deliveryColor = 'text-danger';
+                                }
+
+
+                                /*
+        ========================================================
+           PAYMENT PAID
+        ========================================================
+        */ elseif ($payment === 'paid') {
+
+
+                                    /*
+            ----------------------------------------------------
+               PAID + CONFIRMED
+            ----------------------------------------------------
+            */
+
+                                    if ($orderStatus === 'confirmed') {
+
+                                        $displayOrderStatus = 'Confirmed';
+                                        $statusClass = 'status-confirmed';
+
+                                        $displayDelivery = 'Preparing';
+                                        $deliveryIcon = 'fa-box';
+                                        $deliveryColor = 'text-secondary';
+                                    }
+
+
+                                    /*
+            ----------------------------------------------------
+               PAID + PROCESSING
+            ----------------------------------------------------
+            */ elseif ($orderStatus === 'processing') {
+
+                                        $displayOrderStatus = 'Processing';
+                                        $statusClass = 'status-processing';
+
+                                        $displayDelivery = 'Preparing';
+                                        $deliveryIcon = 'fa-box';
+                                        $deliveryColor = 'text-secondary';
+                                    }
+
+
+                                    /*
+            ----------------------------------------------------
+               PAID + SHIPPED
+            ----------------------------------------------------
+            */ elseif ($orderStatus === 'shipped') {
+
+                                        $displayOrderStatus = 'Shipped';
+                                        $statusClass = 'status-shipped';
+
+                                        $displayDelivery = 'On the Way';
+                                        $deliveryIcon = 'fa-truck';
+                                        $deliveryColor = 'text-warning';
+                                    }
+
+
+                                    /*
+            ----------------------------------------------------
+               PAID + DELIVERED
+            ----------------------------------------------------
+            */ elseif ($orderStatus === 'delivered') {
+
+                                        $displayOrderStatus = 'Delivered';
+                                        $statusClass = 'status-delivered';
+
+                                        $displayDelivery = 'Delivered';
+                                        $deliveryIcon = 'fa-circle-check';
+                                        $deliveryColor = 'text-success';
+                                    }
+
+
+                                    /*
+            ----------------------------------------------------
+               PAID + CANCELLED
+            ----------------------------------------------------
+            */ elseif ($orderStatus === 'cancelled') {
+
+                                        $displayOrderStatus = 'Cancelled';
+                                        $statusClass = 'status-cancelled';
+
+                                        $displayDelivery = 'Cancelled';
+                                        $deliveryIcon = 'fa-ban';
+                                        $deliveryColor = 'text-danger';
+                                    }
+
+
+                                    /*
+            ----------------------------------------------------
+               PAID BUT STATUS EMPTY / INVALID
+               
+               Automatically show Confirmed
+            ----------------------------------------------------
+            */ else {
+
+                                        $displayOrderStatus = 'Confirmed';
+                                        $statusClass = 'status-confirmed';
+
+                                        $displayDelivery = 'Preparing';
+                                        $deliveryIcon = 'fa-box';
+                                        $deliveryColor = 'text-secondary';
+                                    }
+                                }
+
+                                ?>
+
+                                <tr>
+
+                                    <!-- =====================
+                 ID
+            ====================== -->
+
+                                    <td>
+
+                                        <span class="order-id">
+
+                                            #<?php
+                                                echo (int)$row['id'];
+                                                ?>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 ORDER
+            ====================== -->
+
+                                    <td>
+
+                                        <span class="order-number">
+
+                                            <?php
+
+                                            echo htmlspecialchars(
+                                                $row['order_number'] ?? ''
+                                            );
+
+                                            ?>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 CUSTOMER
+            ====================== -->
+
+                                    <td>
+
+                                        <?php
+
+                                        $customerName =
+                                            $row['customer_name'] ?? '';
+
+                                        $firstLetter =
+                                            $customerName !== ''
+                                            ? strtoupper(
+                                                substr(
+                                                    $customerName,
+                                                    0,
+                                                    1
+                                                )
+                                            )
+                                            : '?';
+
+                                        ?>
+
+                                        <div class="customer-cell">
+
+                                            <div class="customer-avatar">
+
+                                                <?php
+                                                echo $firstLetter;
+                                                ?>
+
+                                            </div>
+
+
+                                            <div class="customer-info">
+
+                                                <strong>
+
+                                                    <?php
+
+                                                    echo htmlspecialchars(
+                                                        $customerName
+                                                    );
+
+                                                    ?>
+
+                                                </strong>
+
+
+                                                <small>
+
+                                                    <?php
+
+                                                    echo htmlspecialchars(
+                                                        $row['customer_number']
+                                                            ?? ''
+                                                    );
+
+                                                    ?>
+
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 PRODUCT
+            ====================== -->
+
+                                    <td>
+
+                                        <span class="product-name">
+
+                                            <?php
+
+                                            echo htmlspecialchars(
+                                                $row['product_name'] ?? ''
+                                            );
+
+                                            ?>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 IMAGE
+            ====================== -->
+
+                                    <td>
+
+                                        <?php
+
+                                        $image = trim(
+                                            $row['product_image']
+                                                ?? ''
+                                        );
+
+                                        ?>
+
+                                        <?php if ($image !== '') { ?>
+
+                                            <img
+                                                src="../images/<?php
+                                                                echo htmlspecialchars(
+                                                                    $image
+                                                                );
+                                                                ?>"
+                                                class="order-product-img"
+                                                alt="Product">
+
+                                        <?php } else { ?>
+
+                                            <div class="no-image">
+
+                                                <i class="fas fa-image"></i>
+
+                                            </div>
+
+                                        <?php } ?>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 QUANTITY
+            ====================== -->
+
+                                    <td>
+
+                                        <span class="quantity-badge">
+
+                                            <?php
+
+                                            echo (int)(
+                                                $row['quantity'] ?? 0
+                                            );
+
+                                            ?>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 TOTAL
+            ====================== -->
+
+                                    <td>
+
+                                        <?php
+
+                                        $grandTotal =
+                                            (float)(
+                                                $row['grand_total']
+                                                ?? 0
+                                            );
+
+                                        if ($grandTotal <= 0) {
+
+                                            $grandTotal =
+                                                (float)(
+                                                    $row['total_amount']
+                                                    ?? 0
+                                                );
+                                        }
+
+                                        ?>
+
+                                        <strong class="order-total">
+
+                                            ₹<?php
+
+                                                echo number_format(
+                                                    $grandTotal,
+                                                    2
+                                                );
+
+                                                ?>
+
+                                        </strong>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 PAYMENT
+            ====================== -->
+
+                                    <td>
+
+                                        <?php if ($payment === 'paid') { ?>
+
+                                            <span
+                                                class="payment-badge paid">
+
+                                                <i
+                                                    class="fas fa-check-circle"></i>
+
+                                                Paid
+
+                                            </span>
+
+
+                                        <?php } elseif ($payment === 'failed') { ?>
+
+                                            <span
+                                                class="payment-badge failed">
+
+                                                <i
+                                                    class="fas fa-times-circle"></i>
+
+                                                Failed
+
+                                            </span>
+
+
+                                        <?php } else { ?>
+
+                                            <span
+                                                class="payment-badge pending">
+
+                                                <i
+                                                    class="fas fa-clock"></i>
+
+                                                Pending
+
+                                            </span>
+
+                                        <?php } ?>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 ORDER STATUS
+            ====================== -->
+
+                                    <td>
+
+                                        <span
+                                            class="status-badge <?php
+                                                                echo $statusClass;
+                                                                ?>">
+
+                                            <?php
+
+                                            echo htmlspecialchars(
+                                                $displayOrderStatus
+                                            );
+
+                                            ?>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 DELIVERY
+            ====================== -->
+
+                                    <td>
+
+                                        <div class="delivery-status">
+
+                                            <i
+                                                class="fas
+                        <?php
+                                echo $deliveryIcon;
+                        ?>
+                        <?php
+                                echo $deliveryColor;
+                        ?>"></i>
+
+                                            <span>
+
+                                                <?php
+
+                                                echo htmlspecialchars(
+                                                    $displayDelivery
+                                                );
+
+                                                ?>
+
+                                            </span>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- =====================
+                 ACTION
+            ====================== -->
+
+                                    <td class="action-cell">
+
+                                        <details class="order-action">
+
+                                            <summary
+                                                class="action-btn"
+                                                title="Order Actions">
+
+                                                <i
+                                                    class="fas fa-ellipsis-v"></i>
+
+                                            </summary>
+
+
+                                            <div class="action-menu">
+
+
+                                                <!-- VIEW -->
+
+                                                <a
+                                                    href="view_order.php?id=<?php
+                                                                            echo (int)$row['id'];
+                                                                            ?>"
+                                                    class="action-menu-item">
+
+                                                    <span
+                                                        class="action-menu-icon view-icon">
+
+                                                        <i
+                                                            class="fas fa-eye"></i>
+
+                                                    </span>
+
+                                                    <span>
+                                                        View Order
+                                                    </span>
+
+                                                </a>
+
+
+                                                <!-- EDIT -->
+
+                                                <a
+                                                    href="edit_order.php?id=<?php
+                                                                            echo (int)$row['id'];
+                                                                            ?>"
+                                                    class="action-menu-item">
+
+                                                    <span
+                                                        class="action-menu-icon edit-icon">
+
+                                                        <i
+                                                            class="fas fa-pen"></i>
+
+                                                    </span>
+
+                                                    <span>
+                                                        Edit Order
+                                                    </span>
+
+                                                </a>
+
+
+                                            </div>
+
+                                        </details>
+
+                                    </td>
+
+                                </tr>
+
+
+                            <?php } ?>
+
+
+                        <?php } else { ?>
+
+
+                            <!-- ============================
+         NO ORDERS
+    ============================= -->
+
+                            <tr>
+
+                                <td
+                                    colspan="11"
+                                    class="no-orders">
+
+                                    <div>
+
+                                        <i
+                                            class="fas fa-box-open"></i>
+
+
+                                        <h4>
+                                            No Orders Found
+                                        </h4>
+
+
+                                        <p>
+
+                                            There are no orders
+                                            matching your search.
+
+                                        </p>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+
+                        <?php } ?>
+
+                    </tbody>
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+         PAGINATION
+    ================================================== -->
+
+        <?php if ($total_records > 0) { ?>
+
+
+            <div class="pagination-area">
+
+
+                <!-- PREVIOUS -->
+
+                <?php if ($page > 1) { ?>
+
+
+                    <a
+                        class="page-btn"
+                        href="?page=<?php
+                                    echo $page - 1;
+                                    ?>&search=<?php
+                                echo urlencode($search);
+                                ?>">
+
+                        <i
+                            class="fas fa-arrow-left me-2"></i>
+
+                        Previous
+
+                    </a>
 
 
                 <?php } ?>
 
 
-                </tbody>
+                <!-- PAGE NUMBERS -->
+
+                <?php for (
+                    $i = 1;
+                    $i <= $total_pages;
+                    $i++
+                ) { ?>
 
 
-            </table>
-
-
-        </div>
-
-
-    </div>
-
-
-    <!-- =================================================
-         PAGINATION
-    ================================================== -->
-
-    <?php if ($total_records > 0) { ?>
-
-
-        <div class="pagination-area">
-
-
-            <!-- PREVIOUS -->
-
-            <?php if ($page > 1) { ?>
-
-
-                <a
-                    class="page-btn"
-                    href="?page=<?php
-                        echo $page - 1;
-                    ?>&search=<?php
-                        echo urlencode($search);
-                    ?>"
-                >
-
-                    <i
-                        class="fas fa-arrow-left me-2"
-                    ></i>
-
-                    Previous
-
-                </a>
-
-
-            <?php } ?>
-
-
-            <!-- PAGE NUMBERS -->
-
-            <?php for (
-                $i = 1;
-                $i <= $total_pages;
-                $i++
-            ) { ?>
-
-
-                <a
-                    class="
+                    <a
+                        class="
                     page-btn
                     <?php
                     echo (
                         $i == $page
                     )
-                    ? 'active'
-                    : '';
+                        ? 'active'
+                        : '';
                     ?>
                     "
-                    href="?page=<?php
+                        href="?page=<?php
+                                    echo $i;
+                                    ?>&search=<?php
+                                echo urlencode($search);
+                                ?>">
+
+                        <?php
                         echo $i;
-                    ?>&search=<?php
-                        echo urlencode($search);
-                    ?>"
-                >
+                        ?>
 
-                    <?php
-                    echo $i;
-                    ?>
-
-                </a>
+                    </a>
 
 
-            <?php } ?>
+                <?php } ?>
 
 
-            <!-- NEXT -->
+                <!-- NEXT -->
 
-            <?php if (
-                $page < $total_pages
-            ) { ?>
+                <?php if (
+                    $page < $total_pages
+                ) { ?>
 
 
-                <a
-                    class="page-btn"
-                    href="?page=<?php
-                        echo $page + 1;
-                    ?>&search=<?php
-                        echo urlencode($search);
-                    ?>"
-                >
+                    <a
+                        class="page-btn"
+                        href="?page=<?php
+                                    echo $page + 1;
+                                    ?>&search=<?php
+                                echo urlencode($search);
+                                ?>">
 
-                    Next
+                        Next
 
-                    <i
-                        class="
+                        <i
+                            class="
                         fas
                         fa-arrow-right
                         ms-2
-                        "
-                    ></i>
+                        "></i>
 
-                </a>
-
-
-            <?php } ?>
+                    </a>
 
 
-        </div>
+                <?php } ?>
 
 
-    <?php } ?>
+            </div>
 
 
-</div>
+        <?php } ?>
 
 
-<!-- =====================================================
+    </div>
+
+
+    <!-- =====================================================
      BOOTSTRAP JS
 ====================================================== -->
 
-<script
-    src="../assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js">
-</script>
+    <script
+        src="../assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js">
+    </script>
 
 
 </body>

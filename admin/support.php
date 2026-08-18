@@ -6,7 +6,7 @@ include("function.php");
 
 /** @var mysqli $conn */
 
-mysqli_query($conn,"
+mysqli_query($conn, "
 UPDATE support_messages
 SET notification=0
 WHERE sender='User'
@@ -173,8 +173,7 @@ Customer Support
 </h2>
 
 <?php
-while($row=mysqli_fetch_assoc($query))
-{
+while ($row = mysqli_fetch_assoc($query)) {
 ?>
 
 <div class="customer-card">
@@ -188,7 +187,7 @@ while($row=mysqli_fetch_assoc($query))
 <small>
 
 Last Message :
-<?= date("d M Y h:i A",strtotime($row['last_message'])) ?>
+<?= date("d M Y h:i A", strtotime($row['last_message'])) ?>
 
 </small>
 
@@ -197,8 +196,7 @@ Last Message :
 <div>
 
 <?php
-if($row['unread']>0)
-{
+    if ($row['unread'] > 0) {
 ?>
 
 <span class="badge1">
@@ -210,7 +208,7 @@ New
 </span>
 
 <?php
-}
+    }
 ?>
 
 <a
@@ -277,7 +275,6 @@ $query = mysqli_query($conn, "
 if (!$query) {
 
     die("Database Error: " . mysqli_error($conn));
-
 }
 
 ?>
@@ -292,36 +289,31 @@ if (!$query) {
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+        content="width=device-width, initial-scale=1.0">
 
     <title>Customer Support</title>
 
 
     <link
         rel="icon"
-        href="weblogo.png"
-    >
+        href="weblogo.png">
 
 
     <!-- Bootstrap -->
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+        rel="stylesheet">
 
 
     <!-- Font Awesome -->
 
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    >
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 
     <style>
-
         * {
 
             margin: 0;
@@ -424,8 +416,7 @@ if (!$query) {
             margin-bottom: 18px;
 
             box-shadow:
-                0 10px 30px
-                rgba(0, 0, 0, .07);
+                0 10px 30px rgba(0, 0, 0, .07);
 
             transition: .3s;
 
@@ -437,8 +428,7 @@ if (!$query) {
             transform: translateY(-3px);
 
             box-shadow:
-                0 15px 35px
-                rgba(0, 0, 0, .10);
+                0 15px 35px rgba(0, 0, 0, .10);
 
         }
 
@@ -658,8 +648,7 @@ if (!$query) {
             text-align: center;
 
             box-shadow:
-                0 10px 30px
-                rgba(0, 0, 0, .06);
+                0 10px 30px rgba(0, 0, 0, .06);
 
         }
 
@@ -740,7 +729,6 @@ if (!$query) {
             }
 
         }
-
     </style>
 
 </head>
@@ -750,102 +738,136 @@ if (!$query) {
 
 
 
-<div class="support-wrapper">
+    <div class="support-wrapper">
 
 
-    <!-- ==================================================
+        <!-- ==================================================
          PAGE HEADER
     ================================================== -->
 
-    <div class="support-page-header">
+        <div class="support-page-header">
 
 
-        <h2 class="support-title">
+            <h2 class="support-title">
 
-            <i class="fa-solid fa-headset"></i>
+                <i class="fa-solid fa-headset"></i>
 
-            Customer Support
+                Customer Support
 
-        </h2>
-
-
-        <span class="support-request-count">
-
-            <i class="fa-solid fa-envelope"></i>
-
-            <?= mysqli_num_rows($query) ?>
-
-            Requests
-
-        </span>
+            </h2>
 
 
-    </div>
+            <span class="support-request-count">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                <?= mysqli_num_rows($query) ?>
+
+                Requests
+
+            </span>
 
 
-    <!-- ==================================================
+        </div>
+
+
+        <!-- ==================================================
          SUPPORT REQUESTS
     ================================================== -->
 
-    <?php
+        <?php
 
-    if (mysqli_num_rows($query) > 0) {
+        if (mysqli_num_rows($query) > 0) {
 
-        while ($row = mysqli_fetch_assoc($query)) {
+            while ($row = mysqli_fetch_assoc($query)) {
 
-    ?>
+        ?>
 
 
-            <!-- ==================================================
+                <!-- ==================================================
                  CUSTOMER CARD
             ================================================== -->
 
-            <div class="support-card">
+                <div class="support-card">
 
 
-                <!-- CUSTOMER INFORMATION -->
+                    <!-- CUSTOMER INFORMATION -->
 
-                <div class="support-card-header">
-
-
-                    <div>
+                    <div class="support-card-header">
 
 
-                        <h5 class="customer-name">
-
-                            <?= htmlspecialchars(
-                                $row['name']
-                            ) ?>
-
-                        </h5>
+                        <div>
 
 
-                        <p class="customer-email">
-
-                            <i class="fa-solid fa-envelope"></i>
-
-                            <?= htmlspecialchars(
-                                $row['email']
-                            ) ?>
-
-                        </p>
-
-
-                        <?php
-
-                        if (!empty($row['mobile'])) {
-
-                        ?>
-
-                            <p class="customer-phone">
-
-                                <i class="fa-solid fa-phone"></i>
+                            <h5 class="customer-name">
 
                                 <?= htmlspecialchars(
-                                    $row['mobile']
+                                    $row['name']
+                                ) ?>
+
+                            </h5>
+
+
+                            <p class="customer-email">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                                <?= htmlspecialchars(
+                                    $row['email']
                                 ) ?>
 
                             </p>
+
+
+                            <?php
+
+                            if (!empty($row['mobile'])) {
+
+                            ?>
+
+                                <p class="customer-phone">
+
+                                    <i class="fa-solid fa-phone"></i>
+
+                                    <?= htmlspecialchars(
+                                        $row['mobile']
+                                    ) ?>
+
+                                </p>
+
+                            <?php
+
+                            }
+
+                            ?>
+
+
+                        </div>
+
+
+                        <!-- NEW / READ -->
+
+                        <?php
+
+                        if ($row['notification'] == 1) {
+
+                        ?>
+
+                            <span class="new-badge">
+
+                                <i class="fa-solid fa-bell"></i>
+
+                                New
+
+                            </span>
+
+                        <?php
+
+                        } else {
+
+                        ?>
+
+
 
                         <?php
 
@@ -857,158 +879,112 @@ if (!$query) {
                     </div>
 
 
-                    <!-- NEW / READ -->
-
-                    <?php
-
-                    if ($row['notification'] == 1) {
-
-                    ?>
-
-                        <span class="new-badge">
-
-                            <i class="fa-solid fa-bell"></i>
-
-                            New
-
-                        </span>
-
-                    <?php
-
-                    } else {
-
-                    ?>
-
-                      
-
-                    <?php
-
-                    }
-
-                    ?>
-
-
-                </div>
-
-
-                <!-- ==================================================
+                    <!-- ==================================================
                      MESSAGE
                 ================================================== -->
 
-                <div class="support-message">
+                    <div class="support-message">
 
 
-                    <div class="support-message-title">
+                        <div class="support-message-title">
 
-                        <i class="fa-solid fa-message"></i>
+                            <i class="fa-solid fa-message"></i>
 
-                        Customer Message
+                            Customer Message
+
+                        </div>
+
+
+                        <div class="support-message-text">
+
+                            <?= nl2br(
+                                htmlspecialchars(
+                                    $row['message']
+                                )
+                            ) ?>
+
+                        </div>
+
 
                     </div>
 
 
-                    <div class="support-message-text">
-
-                        <?= nl2br(
-                            htmlspecialchars(
-                                $row['message']
-                            )
-                        ) ?>
-
-                    </div>
-
-
-                </div>
-
-
-                <!-- ==================================================
+                    <!-- ==================================================
                      FOOTER
                 ================================================== -->
 
-                <div class="support-card-footer">
+                    <div class="support-card-footer">
 
 
-                    <span class="support-date">
+                        <span class="support-date">
 
-                        <i class="fa-regular fa-clock"></i>
+                            <i class="fa-regular fa-clock"></i>
 
-                        <?= date(
-                            "d M Y, h:i A",
-                            strtotime(
-                                $row['created_at']
-                            )
-                        ) ?>
+                            <?= date(
+                                "d M Y, h:i A",
+                                strtotime(
+                                    $row['created_at']
+                                )
+                            ) ?>
 
-                    </span>
+                        </span>
 
 
-                    <a
-                        href="support_view.php?id=<?= $row['id'] ?>"
-                        class="view-btn"
-                    >
 
-                        <i class="fa-solid fa-eye"></i>
 
-                        View Request
-
-                    </a>
+                    </div>
 
 
                 </div>
+
+
+            <?php
+
+            }
+        } else {
+
+            ?>
+
+
+            <!-- ==================================================
+             EMPTY STATE
+        ================================================== -->
+
+            <div class="support-empty">
+
+
+                <i class="fa-solid fa-headset"></i>
+
+
+                <h4>
+
+                    No Support Requests
+
+                </h4>
+
+
+                <p>
+
+                    Customers haven't submitted any support
+                    requests yet.
+
+                </p>
 
 
             </div>
 
 
-    <?php
+        <?php
 
         }
 
-    } else {
 
-    ?>
-
-
-        <!-- ==================================================
-             EMPTY STATE
-        ================================================== -->
-
-        <div class="support-empty">
+        ?>
 
 
-            <i class="fa-solid fa-headset"></i>
-
-
-            <h4>
-
-                No Support Requests
-
-            </h4>
-
-
-            <p>
-
-                Customers haven't submitted any support
-                requests yet.
-
-            </p>
-
-
-        </div>
-
-
-    <?php
-
-    }
-
-
-    ?>
-
-
-</div>
+    </div>
 
 
 </body>
 
 </html>
-

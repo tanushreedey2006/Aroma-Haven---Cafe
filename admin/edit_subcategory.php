@@ -1,5 +1,7 @@
-
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 session_start();
 
@@ -13,20 +15,44 @@ global $conn;
 // GET SUBCATEGORY ID
 // ==========================
 
-$id = $_GET['id'];
+// $id = $_GET['id'];
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if ($id <= 0) {
+    die("Invalid subcategory ID.");
+}
 
 
 // ==========================
 // FETCH SUBCATEGORY DATA
 // ==========================
 
+// $sql = "
+//     SELECT *
+//     FROM subcategories
+//     WHERE id='$id'
+// ";
+
+// $run = mysqli_query($conn, $sql);
+
+// $data = mysqli_fetch_assoc($run);
+
 $sql = "
     SELECT *
     FROM subcategories
-    WHERE id='$id'
+    WHERE id = $id
+    LIMIT 1
 ";
 
 $run = mysqli_query($conn, $sql);
+
+if (!$run) {
+    die("Database query failed: " . mysqli_error($conn));
+}
+
+if (mysqli_num_rows($run) == 0) {
+    die("Subcategory not found for ID: " . $id);
+}
 
 $data = mysqli_fetch_assoc($run);
 
@@ -72,7 +98,6 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
 
     <style>
-
         /*====================================
         PREMIUM EDIT SUBCATEGORY
         ====================================*/
@@ -94,12 +119,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
         body {
 
             background:
-                linear-gradient(
-                    135deg,
+                linear-gradient(135deg,
                     #eef2ff,
                     #f8fafc,
-                    #ffffff
-                );
+                    #ffffff);
 
             min-height: 100vh;
 
@@ -128,9 +151,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
             z-index: -1;
 
             animation:
-                floatShape 8s
-                ease-in-out
-                infinite;
+                floatShape 8s ease-in-out infinite;
 
         }
 
@@ -228,32 +249,26 @@ $cat_run = mysqli_query($conn, $cat_sql);
         .edit-card {
 
             background:
-                rgba(
+                rgba(255,
                     255,
                     255,
-                    255,
-                    .78
-                );
+                    .78);
 
             backdrop-filter:
                 blur(18px);
 
             border:
-                1px solid
-                rgba(
+                1px solid rgba(255,
                     255,
                     255,
-                    255,
-                    .5
-                );
+                    .5);
 
             border-radius: 30px;
 
             overflow: hidden;
 
             box-shadow:
-                0 20px 60px
-                rgba(0, 0, 0, .12);
+                0 20px 60px rgba(0, 0, 0, .12);
 
             animation:
                 fadeUp .7s ease;
@@ -301,11 +316,9 @@ $cat_run = mysqli_query($conn, $cat_sql);
             padding: 28px 35px;
 
             background:
-                linear-gradient(
-                    135deg,
+                linear-gradient(135deg,
                     #2563eb,
-                    #4f46e5
-                );
+                    #4f46e5);
 
             color: #fff;
 
@@ -338,12 +351,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
             justify-content: center;
 
             background:
-                rgba(
+                rgba(255,
                     255,
                     255,
-                    255,
-                    .15
-                );
+                    .15);
 
             font-size: 28px;
 
@@ -437,8 +448,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
                 1px solid #edf2f7;
 
             box-shadow:
-                0 10px 30px
-                rgba(0, 0, 0, .06);
+                0 10px 30px rgba(0, 0, 0, .06);
 
             height: 100%;
 
@@ -453,13 +463,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
                 translateY(-5px);
 
             box-shadow:
-                0 20px 45px
-                rgba(
-                    37,
+                0 20px 45px rgba(37,
                     99,
                     235,
-                    .12
-                );
+                    .12);
 
         }
 
@@ -527,13 +534,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
             border-color: #2563eb;
 
             box-shadow:
-                0 0 0 4px
-                rgba(
-                    37,
+                0 0 0 4px rgba(37,
                     99,
                     235,
-                    .12
-                );
+                    .12);
 
         }
 
@@ -597,8 +601,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
             border: 5px solid #fff;
 
             box-shadow:
-                0 15px 35px
-                rgba(0, 0, 0, .18);
+                0 15px 35px rgba(0, 0, 0, .18);
 
             transition: .45s;
 
@@ -690,11 +693,9 @@ $cat_run = mysqli_query($conn, $cat_sql);
             border-radius: 15px;
 
             background:
-                linear-gradient(
-                    135deg,
+                linear-gradient(135deg,
                     #2563eb,
-                    #4f46e5
-                );
+                    #4f46e5);
 
             font-size: 17px;
 
@@ -713,13 +714,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
                 translateY(-4px);
 
             box-shadow:
-                0 18px 35px
-                rgba(
-                    37,
+                0 18px 35px rgba(37,
                     99,
                     235,
-                    .35
-                );
+                    .35);
 
         }
 
@@ -831,7 +829,6 @@ $cat_run = mysqli_query($conn, $cat_sql);
             }
 
         }
-
     </style>
 
 </head>
@@ -929,8 +926,8 @@ $cat_run = mysqli_query($conn, $cat_sql);
                     type="hidden"
                     name="id"
                     value="<?php
-                        echo $data['id'];
-                    ?>">
+                            echo $data['id'];
+                            ?>">
 
 
                 <div class="row g-4">
@@ -999,23 +996,18 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
                                         <option
                                             value="<?php
-                                                echo $catRow['id'];
-                                            ?>"
+                                                    echo $catRow['id'];
+                                                    ?>"
 
                                             <?php
 
                                             if (
-                                                $data[
-                                                    'category_id'
-                                                ]
+                                                $data['category_id']
                                                 ==
-                                                $catRow[
-                                                    'id'
-                                                ]
+                                                $catRow['id']
                                             ) {
 
                                                 echo "selected";
-
                                             }
 
                                             ?>>
@@ -1076,10 +1068,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
                                         name="name"
                                         id="nameInput"
                                         value="<?php
-                                            echo htmlspecialchars(
-                                                $data['name']
-                                            );
-                                        ?>"
+                                                echo htmlspecialchars(
+                                                    $data['name']
+                                                );
+                                                ?>"
                                         required>
 
 
@@ -1107,11 +1099,11 @@ $cat_run = mysqli_query($conn, $cat_sql);
                                     id="descriptionInput"
                                     placeholder="Enter subcategory description..."><?php
 
-                                    echo htmlspecialchars(
-                                        $data['descri']
-                                    );
+                                                                                    echo htmlspecialchars(
+                                                                                        $data['descri']
+                                                                                    );
 
-                                    ?></textarea>
+                                                                                    ?></textarea>
 
 
                             </div>
@@ -1140,13 +1132,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
                                         <?php
 
                                         if (
-                                            $data[
-                                                'status'
-                                            ] == 1
+                                            $data['status'] == 1
                                         ) {
 
                                             echo "selected";
-
                                         }
 
                                         ?>>
@@ -1162,13 +1151,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
                                         <?php
 
                                         if (
-                                            $data[
-                                                'status'
-                                            ] == 0
+                                            $data['status'] == 0
                                         ) {
 
                                             echo "selected";
-
                                         }
 
                                         ?>>
@@ -1219,19 +1205,17 @@ $cat_run = mysqli_query($conn, $cat_sql);
                             <?php
 
                             if (
-                                !empty(
-                                    $data['image']
-                                )
+                                !empty($data['image'])
                             ) {
 
-                                ?>
+                            ?>
 
                                 <img
                                     src="../images/<?php
-                                        echo htmlspecialchars(
-                                            $data['image']
-                                        );
-                                    ?>"
+                                                    echo htmlspecialchars(
+                                                        $data['image']
+                                                    );
+                                                    ?>"
                                     id="imgpreview"
                                     class="premium-preview"
                                     alt="Subcategory Image">
@@ -1240,7 +1224,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
                             } else {
 
-                                ?>
+                            ?>
 
                                 <div
                                     id="noImage"
@@ -1348,8 +1332,6 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
 
     <script>
-
-
         /*================================
         LIVE IMAGE PREVIEW
         =================================*/
@@ -1375,7 +1357,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
         input.addEventListener(
             "change",
-            function () {
+            function() {
 
 
                 if (
@@ -1462,7 +1444,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
 
                     setTimeout(
-                        function () {
+                        function() {
 
 
                             imageElement.src =
@@ -1478,7 +1460,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
 
                             setTimeout(
-                                function () {
+                                function() {
 
                                     imageElement.style.transform =
                                         "scale(1)";
@@ -1506,7 +1488,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
         uploadBox.addEventListener(
             "dragover",
-            function (e) {
+            function(e) {
 
                 e.preventDefault();
 
@@ -1522,7 +1504,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
         uploadBox.addEventListener(
             "dragleave",
-            function () {
+            function() {
 
                 uploadBox.style.background =
                     "";
@@ -1536,7 +1518,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
         uploadBox.addEventListener(
             "drop",
-            function (e) {
+            function(e) {
 
 
                 e.preventDefault();
@@ -1650,11 +1632,10 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
         nameInput.addEventListener(
             "input",
-            function () {
+            function() {
 
                 document.title =
-                    "Edit Subcategory - "
-                    +
+                    "Edit Subcategory - " +
                     (
                         this.value ||
                         "Subcategory"
@@ -1674,12 +1655,12 @@ $cat_run = mysqli_query($conn, $cat_sql);
                 ".premium-input"
             )
             .forEach(
-                function (input) {
+                function(input) {
 
 
                     input.addEventListener(
                         "focus",
-                        function () {
+                        function() {
 
                             this.parentElement.style
                                 .transform =
@@ -1691,7 +1672,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
                     input.addEventListener(
                         "blur",
-                        function () {
+                        function() {
 
                             this.parentElement.style
                                 .transform =
@@ -1715,12 +1696,12 @@ $cat_run = mysqli_query($conn, $cat_sql);
                 ".premium-box"
             )
             .forEach(
-                function (card) {
+                function(card) {
 
 
                     card.addEventListener(
                         "mousemove",
-                        function (e) {
+                        function(e) {
 
 
                             const rect =
@@ -1751,7 +1732,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
                     card.addEventListener(
                         "mouseleave",
-                        function () {
+                        function() {
 
                             card.style.background =
                                 "#fff";
@@ -1783,7 +1764,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
         form.addEventListener(
             "submit",
-            function () {
+            function() {
 
 
                 btn.disabled =
@@ -1810,7 +1791,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
         window.addEventListener(
             "load",
-            function () {
+            function() {
 
 
                 const card =
@@ -1828,7 +1809,7 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
 
                 setTimeout(
-                    function () {
+                    function() {
 
 
                         card.style.transition =
@@ -1850,12 +1831,9 @@ $cat_run = mysqli_query($conn, $cat_sql);
 
             }
         );
-
-
     </script>
 
 
 </body>
 
 </html>
-
