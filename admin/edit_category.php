@@ -7,6 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Category</title>
     <link rel="icon" type="image/png" href="weblogo.png">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
 <?php
 include "includes/db_connect.php";
 global $conn;
@@ -19,6 +21,102 @@ $data=mysqli_fetch_assoc($run);
 <link rel="stylesheet" href="../assets/bootstrap-5.3.7-dist/css/bootstrap.min.css">
 
 <style>
+
+    /* SUCCESS CARD */
+
+.success-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,.65);
+
+    z-index: 9999;
+}
+
+.success-card {
+    width: 90%;
+    max-width: 400px;
+
+    position: relative;
+
+    padding: 40px 30px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border-radius: 22px;
+
+    box-shadow: 0 25px 60px rgba(0,0,0,.4);
+
+    animation: successPopup .4s ease;
+}
+
+.success-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    background: #e7f8ed;
+    color: #28a745;
+
+    font-size: 32px;
+}
+
+.success-card h3 {
+    color: #30261c;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.success-card p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.success-card button {
+    border: none;
+
+    padding: 11px 30px;
+
+    border-radius: 10px;
+
+    background: #ff9800;
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.success-card button:hover {
+    background: #e68900;
+}
+
+@keyframes successPopup {
+    from {
+        opacity: 0;
+        transform: scale(.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
 body{
     margin:0;
     min-height:100vh;
@@ -263,14 +361,46 @@ transform:translateY(0) scale(1);
 
     </form>
 </div>
+<?php if(isset($_GET['updated'])) { ?>
+
+<div class="success-overlay" id="successOverlay">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h3>Updated Successfully!</h3>
+
+        <p>
+            The category has been updated successfully.
+        </p>
+
+        <button onclick="closeSuccessCard()">
+            Continue
+        </button>
+
+    </div>
+
+</div>
+
+<?php } ?>
+
 
 <script>
-document.getElementById('imginput').onchange = function(){
-    document.getElementById('imgpreview').src = URL.createObjectURL(this.files[0]);
+
+document.getElementById('imginput').onchange = function(){ 
+    document.getElementById('imgpreview').src = URL.createObjectURL(this.files[0]); 
 }
-</script>
 
-<script src="../assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+function closeSuccessCard() {
+    window.location.href = "category_list.php";
+}
+</script> 
 
-</body>
+<script src="../assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script> 
+
+</body> 
 </html>
+
