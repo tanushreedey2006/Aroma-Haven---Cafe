@@ -26,28 +26,44 @@ global $conn;
 
 
 
+
 /* STATUS UPDATE */
 if(isset($_GET['action']) && isset($_GET['id'])){
 
     $id = (int)$_GET['id'];
-    $status = mysqli_real_escape_string($conn,$_GET['action']);
+    $status = mysqli_real_escape_string($conn, $_GET['action']);
 
-    $allowed = ['Pending','Confirmed','Cancelled'];
+    $allowed = ['Pending', 'Confirmed', 'Cancelled'];
 
-    if(in_array($status,$allowed)){
+    if(in_array($status, $allowed)){
 
-        mysqli_query(
-            $conn,
-            "UPDATE bookings
-             SET status='$status'
-             WHERE id='$id'"
-        );
+        // Confirm korle automatically Paid hobe
+        if($status == 'Confirmed'){
+
+            mysqli_query(
+                $conn,
+                "UPDATE bookings
+                 SET status='$status',
+                     is_paid=1
+                 WHERE id='$id'"
+            );
+
+        }else{
+
+            // Pending ba Cancelled hole Unpaid thakbe
+            mysqli_query(
+                $conn,
+                "UPDATE bookings
+                 SET status='$status',
+                     is_paid=0
+                 WHERE id='$id'"
+            );
+        }
 
         header("Location: admin_manage_bookings.php");
         exit;
     }
 }
-
 
 
 $search = isset($_GET['search'])
@@ -1827,23 +1843,6 @@ echo "No Image";
 
         <ul class="dropdown-menu dropdown-menu-end shadow">
 
-
-            <!-- VIEW DETAILS -->
-
-            <li>
-
-                <button
-                    class="dropdown-item"
-                    data-bs-toggle="modal"
-                    data-bs-target="#booking">
-
-                    <i class="fas fa-eye me-2 text-primary"></i>
-
-                    View Details
-
-                </button>
-
-            </li>
 
 
             <!-- CONFIRM -->
