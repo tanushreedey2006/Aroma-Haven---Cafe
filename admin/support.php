@@ -942,16 +942,7 @@ if (!$query) {
                     </span>
 
 
-                    <a
-                        href="support_view.php?id=<?= $row['id'] ?>"
-                        class="view-btn"
-                    >
-
-                        <i class="fa-solid fa-eye"></i>
-
-                        View Request
-
-                    </a>
+                   
 
 
                 </div>
