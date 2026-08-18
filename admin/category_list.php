@@ -30,6 +30,165 @@ include_once("function.php");
                     PART 2A
 ========================================================== */
 
+/* =========================
+   CUSTOM DELETE CARD
+========================= */
+
+.delete-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    z-index: 99999;
+
+    padding: 20px;
+}
+
+.delete-overlay.show {
+    display: flex;
+}
+
+.delete-card {
+    width: 100%;
+    max-width: 420px;
+
+    position: relative;
+
+    padding: 38px 30px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    box-shadow: 0 25px 70px rgba(0,0,0,.25);
+
+    animation: deleteCardShow .3s ease;
+}
+
+.delete-close {
+    position: absolute;
+
+    top: 12px;
+    right: 18px;
+
+    border: none;
+    background: transparent;
+
+    font-size: 30px;
+
+    color: #64748b;
+
+    cursor: pointer;
+}
+
+.delete-close:hover {
+    color: #ef4444;
+}
+
+.delete-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fee2e2;
+
+    color: #ef4444;
+
+    font-size: 30px;
+}
+
+.delete-card h3 {
+    font-size: 25px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+    margin-bottom: 12px;
+}
+
+.delete-card p {
+    color: #64748b;
+
+    line-height: 1.6;
+
+    margin-bottom: 28px;
+}
+
+.delete-actions {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+}
+
+.cancel-delete,
+.confirm-delete {
+    border: none;
+
+    padding: 12px 22px;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    text-decoration: none;
+}
+
+.cancel-delete {
+    background: #e2e8f0;
+
+    color: #334155;
+}
+
+.confirm-delete {
+    background: #ef4444;
+
+    color: #ffffff;
+}
+
+.confirm-delete:hover {
+    background: #dc2626;
+
+    color: #ffffff;
+}
+
+@keyframes deleteCardShow {
+
+    from {
+        opacity: 0;
+
+        transform: scale(.85);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: scale(1);
+    }
+
+}
+
+
 body{
 
 background:
@@ -1988,10 +2147,19 @@ class="action-btn edit-btn">
 
 </a>
 
-<a
+<!-- <a
 href="delete_action.php?type=categories&id=<?php echo $row['id']; ?>&btn=user"
 class="action-btn delete-btn"
 onclick="return confirm('Delete this category?')">
+
+<i class="fa-solid fa-trash"></i>
+
+</a> -->
+
+<a
+href="delete_action.php?type=categories&id=<?php echo $row['id']; ?>&btn=user"
+class="action-btn delete-btn"
+onclick="openDeleteCard(event, this.href)">
 
 <i class="fa-solid fa-trash"></i>
 
@@ -2044,8 +2212,77 @@ onclick="return confirm('Delete this category?')">
 
     <script type="text/javascript" src="../assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 
+<div class="delete-overlay" id="deleteOverlay">
+
+    <div class="delete-card">
+
+        <button class="delete-close" onclick="closeDeleteCard()">
+            &times;
+        </button>
+
+        <div class="delete-icon">
+            <i class="fa-solid fa-trash"></i>
+        </div>
+
+        <h3>Delete Category?</h3>
+
+        <p>
+            Are you sure you want to delete this category?
+            This action cannot be undone.
+        </p>
+
+        <div class="delete-actions">
+
+            <button
+                type="button"
+                class="cancel-delete"
+                onclick="closeDeleteCard()">
+
+                Cancel
+
+            </button>
+
+            <a
+                href="#"
+                id="confirmDeleteBtn"
+                class="confirm-delete">
+
+                Yes, Delete
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function openDeleteCard(event, deleteUrl) {
+
+    event.preventDefault();
+
+    document
+        .getElementById("deleteOverlay")
+        .classList
+        .add("show");
+
+    document
+        .getElementById("confirmDeleteBtn")
+        .href = deleteUrl;
+}
 
 
+function closeDeleteCard() {
+
+    document
+        .getElementById("deleteOverlay")
+        .classList
+        .remove("show");
+}
+
+</script>
 </body>
 </html>
 
