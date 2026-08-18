@@ -66,19 +66,10 @@ Open the XAMPP Control Panel and start:
 * Apache
 * MySQL
 
-### 4. Import the Database
+### 4. Import Database
 
-1. Open phpMyAdmin:
+ The `.sql` file already included in this repository.
 
-```text
-http://localhost/phpmyadmin
-```
-
-2. Create a new database.
-3. Select the database.
-4. Click **Import**.
-5. Choose the `.sql` file included in this repository.
-6. Click **Import**.
 
 ### 5. Configure the Database Connection
 
