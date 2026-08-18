@@ -18,6 +18,134 @@
 }
 
 
+.foo-main {
+    position: relative;
+}
+
+.subscribe-card {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+
+    width: 320px;
+    padding: 30px 25px;
+
+    background: #ffffff;
+    border-radius: 18px;
+    text-align: center;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.subscribe-card.show {
+    display: block;
+    animation: cardShow 0.3s ease;
+}
+
+.subscribe-success-icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e8f5e9;
+    color: #28a745;
+
+    font-size: 28px;
+}
+
+.subscribe-card h3 {
+    color: #30261c;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.subscribe-card p {
+    color: #666;
+    margin-bottom: 0;
+}
+
+@keyframes cardShow {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+
+.subscribe-card {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+
+    width: 320px;
+    padding: 30px 25px;
+
+    background: #ffffff;
+    border-radius: 18px;
+    text-align: center;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.close-card {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    background: transparent;
+
+    color: #30261c;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-card:hover {
+    color: #c17530;
+    transform: scale(1.1);
+}
+
+.continue-btn {
+    margin-top: 18px;
+    padding: 10px 0px;
+    border: none;
+    border-radius: 25px;
+  width: 40% !important;
+    background: #30261c;
+    color: #fff;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.continue-btn:hover {
+    background: #c17530;
+}
+
+
  </style>
 </head>
 <body>
@@ -31,14 +159,41 @@
           <input type="text" placeholder=" Mail Message" style="border: none; background-color: #fff; height: 6vh;" class="rounded-5">
        
         
-        <button class="btn text-light rounded-5" type="submit"  style="height: 6vh; background-color: #30261c; border: none;" onclick="abc()" id="a1">Subscribe</button>
-        <script>
-          let a1=document.getElementById("a1");
-            function abc() {
-              // console.log(a1);
-              confirm("Thanks For Subscribe 🎉🎉")
-            }
-        </script>
+        <button class="btn text-light rounded-5" type="submit"  style="height: 6vh; background-color: #30261c; border: none;" 
+        onclick="abc()" id="a1">Subscribe</button>
+
+        
+        <div class="subscribe-card" id="subscribeCard">
+
+    <button type="button" class="close-card" onclick="closeCard()">
+        &times;
+    </button>
+
+    <div class="subscribe-success-icon">
+        <i class="fa-solid fa-check"></i>
+    </div>
+
+    <h3>Thank You!</h3>
+
+    <p>Thanks for subscribing to Aroma Haven! 🎉</p>
+
+    <button type="button" class="continue-btn" onclick="closeCard()">
+        Continue
+    </button>
+
+</div>
+
+       <script>
+function abc() {
+    document.getElementById("subscribeCard").classList.add("show");
+}
+
+function closeCard() {
+    document.getElementById("subscribeCard").classList.remove("show");
+}
+</script>
+
+
         </div>
       </div>
     </div>
