@@ -1,54 +1,106 @@
 <?php
+
 include('connect.php');
 global $conn;
+
 /** @var mysqli $conn */
 
-if($_SERVER['REQUEST_METHOD']==="POST" &&  isset($_POST['userResistrationbtn'])) {
-    $name=mysqli_real_escape_string($conn, trim($_POST['name']));
-    $email_id=mysqli_real_escape_string($conn, trim($_POST['email']));
-    $address=mysqli_real_escape_string($conn, trim($_POST['address']));
-    $password=password_hash($_POST['password'], PASSWORD_DEFAULT);
-    
+if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['userResistrationbtn'])) {
+
+    $name = mysqli_real_escape_string(
+        $conn,
+        trim($_POST['name'])
+    );
+
+    $email_id = mysqli_real_escape_string(
+        $conn,
+        trim($_POST['email'])
+    );
+
+    $mobile = mysqli_real_escape_string(
+        $conn,
+        trim($_POST['mobile'])
+    );
+
+    $address = mysqli_real_escape_string(
+        $conn,
+        trim($_POST['address'])
+    );
+
+    $password = password_hash(
+        $_POST['password'],
+        PASSWORD_DEFAULT
+    );
 
 
-     $file_name = $_FILES['image']['name'];
+    // Validate mobile number
+    if (!preg_match('/^[0-9]{10}$/', $mobile)) {
+        header(
+            "Location: register.php?error=invalid_mobile&email=" .
+            urlencode($email_id)
+        );
+        exit();
+    }
+
+
+    // Image upload
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+
+        $file_name = basename($_FILES['image']['name']);
         $tempname = $_FILES['image']['tmp_name'];
-        $folder = 'images/'. $file_name;
-         move_uploaded_file($tempname, $folder);
-         
-  $checksql ="SELECT * FROM Clients WHERE email='$email_id'";  //$email == ?
-        $run = mysqli_query($conn, $checksql);
-        if(mysqli_num_rows($run) == 0){
-            $sql = "INSERT INTO clients(name,email,address,image, password)
-                VALUES ('$name', '$email_id', '$address',' $file_name ','$password')";
 
-            if (mysqli_query($conn, $sql)) {
-                // echo "<script>alert('signin Successful!');
-                //      window.location.href='register.php';
-                // </script>";
-                header("Location: register.php?success=1 "); //redirect with success
-            } else {
-                // echo "Error: " . mysqli_error($conn);
+        $folder = 'images/' . $file_name;
+
+        move_uploaded_file($tempname, $folder);
+
+    } else {
+
+        header(
+            "Location: register.php?error=image"
+        );
+        exit();
+    }
 
 
-                //   echo "<script>alert('email already exits');
-                //  window.location.href='register.php';
-                //  </script> ";
+    // Check whether email already exists
+    $checksql = "SELECT id FROM clients WHERE email='$email_id'";
 
-                header("Location: register.php?error=database&email=" . urlencode($email_id)); // database error
+    $run = mysqli_query($conn, $checksql);
 
-            }
+
+    if (mysqli_num_rows($run) == 0) {
+
+        // Insert new user
+        $sql = "INSERT INTO clients
+                (name, email, mobile, password, address, image)
+                VALUES
+                ('$name', '$email_id', '$mobile', '$password', '$address', '$file_name')";
+
+
+        if (mysqli_query($conn, $sql)) {
+
+            header(
+                "Location: register.php?success=1"
+            );
+            exit();
+
         } else {
-            // echo "<script>alert('email already exits');
-            //     window.location.href='register.php';
-            // </script> ";
 
-                header("Location: register.php?error=email_exists&email=" . urlencode($email_id)); //email exists
-
-
+            header(
+                "Location: register.php?error=database&email=" .
+                urlencode($email_id)
+            );
+            exit();
         }
-        exit(); //important to stop scropt
-}  
+
+    } else {
+
+        // Email already exists
+        header(
+            "Location: register.php?error=email_exists&email=" .
+            urlencode($email_id)
+        );
+        exit();
+    }
+}
 ?>
-
-

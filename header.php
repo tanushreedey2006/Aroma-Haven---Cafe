@@ -325,10 +325,7 @@ include("connect.php");
             font-weight: bold;
         }
 
-        /* SIDEBAR */
-        /* =========================
-   PREMIUM CART SIDEBAR
-========================= */
+       
 
         .cart-sidebar {
 
@@ -862,7 +859,7 @@ PREMIUM PROFILE DROPDOWN
 .profile-btn{
     width:52px;
     height:52px;
-
+    margin-top: -8% !important;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -2324,13 +2321,7 @@ margin-top: 3% ;
             <a href="gallery.php" class="p-3" id="a">Gallery</a>
 
         </div>
-        <!-- <div class="maine ">
-          <div class="search-bar-container active">
-          <img class="  magnifier " style="width:20%; height:5vh;" style="width:20%; height:5vh;"  src="./images/magnifying1.png"></img>
-          <input type="text" placeholder="Search Here" class="input  ">
-          <img src="./images/micro.png"  class="mic-icon " style=" width:15%; height:4vh;">
-        </div>
-       </div> -->
+   
 
         <?php
 
@@ -2401,33 +2392,7 @@ margin-top: 3% ;
 
                 <div style="margin-left:-15%; justify-content:space-around; display:flex; width:100%; align-items:center;">
 
-                    <!-- <select onchange="redirectPage(this)" class="user-select" style="background-color: #081aa2bd; border:none; color: #fff; width:2.5em; height:6vh; border-radius:50%; padding-top:0.2em; text-align:center;">
-
-                        <option selected hidden>
-
-                            <?php
-                            echo strtoupper(substr($_SESSION['user_name'], 0, 1));
-                            ?>
-
-                        </option>
-
-                        <option value="userprofile.php" style="background-color: #fff; color: #000;">
-                            User Profile
-                        </option>
-
-                        <option value="userorder.php" style="background-color: #fff; color: #000;">
-                            User Order
-                        </option>
-
-                        <option value="userwishlist.php" style="background-color: #fff; color: #000;">
-                            Wishlist
-                        </option>
-                        <option value="logout.php" style="background-color: #fff; color: #000;">
-                            <i class="fa fa-sign-out logicon"></i> Logout
-
-                        </option>
-
-                    </select> -->
+                 
 
                     <div class="profile-dropdown">
 

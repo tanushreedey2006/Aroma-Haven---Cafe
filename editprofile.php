@@ -46,11 +46,16 @@ if(isset($_POST['update'])){
 
     $run_update = mysqli_query($conn,$update);
 
-    if($run_update){
-        $_SESSION['user_name'] = $name;
-        echo "<script>alert('Profile Updated Successfully 🎉')</script>";
-        echo "<script>window.location.href='userprofile.php'</script>";
-    }
+   if($run_update){ 
+    $_SESSION['user_name'] = $name; 
+
+    echo "<script>
+        window.location.href='editprofile.php?updated=1';
+    </script>";
+
+    exit();
+}
+
 }
 ?>
 <style>
@@ -311,6 +316,129 @@ body{
 
 }
 
+/* =========================================
+   CUSTOM SUCCESS CARD
+========================================= */
+
+.success-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:99999;
+}
+
+.success-card{
+    width:420px;
+    max-width:90%;
+
+    background:rgba(255,255,255,0.97);
+
+    border-radius:30px;
+
+    padding:40px 30px;
+
+    text-align:center;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.3);
+
+    animation:successCardShow .45s ease;
+}
+
+.success-icon{
+    width:85px;
+    height:85px;
+
+    margin:0 auto 20px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        #5b2c06,
+        #8b4513
+    );
+
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:40px;
+
+    box-shadow:
+        0 10px 30px rgba(91,44,6,0.35);
+}
+
+.success-card h2{
+    color:#5b2c06;
+    font-size:28px;
+    font-weight:700;
+
+    margin-bottom:10px;
+}
+
+.success-card p{
+    color:#777;
+    font-size:16px;
+
+    margin-bottom:25px;
+}
+
+.success-card button{
+    border:none;
+
+    padding:13px 40px;
+
+    border-radius:50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b2c06,
+            #8b4513
+        );
+
+    color:white;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.success-card button:hover{
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(91,44,6,0.3);
+}
+
+@keyframes successCardShow{
+
+    from{
+        opacity:0;
+        transform:scale(.7) translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+
+}
+
 </style>
 </head>
 
@@ -417,7 +545,49 @@ body{
 
 </div>
 
+<!-- SUCCESS CARD -->
+<div id="successOverlay" class="success-overlay">
+    
+    <div class="success-card">
+        
+        <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h2>Profile Updated!</h2>
+
+        <p>
+            Your profile has been updated successfully 🎉
+        </p>
+
+        <button type="button" onclick="continueToProfile()">
+            Continue
+        </button>
+
+    </div>
+
+</div>
+
 <script src="../CoffeeShop2/assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function continueToProfile(){
+
+    window.location.href = "userprofile.php";
+
+}
+
+<?php if(isset($_GET['updated']) && $_GET['updated'] == '1'): ?>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    document.getElementById("successOverlay").style.display = "flex";
+
+});
+
+<?php endif; ?>
+</script>
+
 
 </body>
 </html>

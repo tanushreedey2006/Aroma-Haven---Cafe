@@ -373,6 +373,48 @@ body{
     animation:pop .3s ease;
 }
 
+
+/* ================= RESULT CARD ================= */
+
+.result-card{
+    max-width:420px;
+}
+
+.success-result-icon{
+    background:#e8f8ee;
+    color:#28a745;
+    box-shadow:0 10px 30px rgba(40,167,69,.20);
+}
+
+.error-result-icon{
+    background:#fff0f0;
+    color:#dc3545;
+    box-shadow:0 10px 30px rgba(220,53,69,.18);
+}
+
+.result-continue-btn{
+
+    background:
+        linear-gradient(
+            135deg,
+            #4a2410,
+            #8b4513
+        );
+
+    color:white;
+
+    box-shadow:
+        0 8px 20px
+        rgba(74,36,16,.25);
+
+}
+
+.result-continue-btn:hover{
+
+    transform:translateY(-3px);
+
+}
+
 @keyframes pop{
     from{transform:scale(.7);opacity:0;}
     to{transform:scale(1);opacity:1;}
@@ -923,6 +965,148 @@ body{
 .btn-confirm:hover{
     transform: translateY(-3px);
 }
+
+/* ================= CUSTOM CONFIRMATION MODALS ================= */
+
+.custom-confirm-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(35,20,12,.55);
+    backdrop-filter:blur(8px);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    padding:20px;
+}
+
+.custom-confirm-card{
+    width:100%;
+    max-width:430px;
+    background:#fff;
+    border-radius:28px;
+    padding:35px 30px;
+    text-align:center;
+    box-shadow:0 25px 80px rgba(0,0,0,.25);
+    animation:confirmPop .35s ease;
+}
+
+@keyframes confirmPop{
+    from{
+        opacity:0;
+        transform:scale(.8) translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+}
+
+.confirm-icon{
+    width:80px;
+    height:80px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:32px;
+}
+
+.delete-icon{
+    background:#fff0f0;
+    color:#dc3545;
+}
+
+.cancel-icon{
+    background:#fff3f3;
+    color:#dc3545;
+}
+
+.custom-confirm-card h2{
+    color:#4a2410;
+    font-size:27px;
+    margin-bottom:12px;
+}
+
+.custom-confirm-card p{
+    color:#777;
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:20px;
+}
+
+.confirm-order-box{
+    background:#fff6ef;
+    border:1px dashed #d9b7a1;
+    padding:13px;
+    border-radius:14px;
+    margin-bottom:25px;
+}
+
+.confirm-order-box span{
+    display:block;
+    font-size:12px;
+    color:#888;
+    margin-bottom:4px;
+}
+
+.confirm-order-box strong{
+    color:#4a2410;
+    font-size:15px;
+}
+
+.custom-confirm-actions{
+    display:flex;
+    gap:12px;
+}
+
+.custom-btn{
+    flex:1;
+    border:none;
+    padding:13px 10px;
+    border-radius:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.keep-btn{
+    background:#f1f1f1;
+    color:#555;
+}
+
+.keep-btn:hover{
+    background:#e4e4e4;
+    transform:translateY(-2px);
+}
+
+.confirm-delete-btn,
+.confirm-cancel-btn{
+    background:linear-gradient(135deg,#dc3545,#ff6b6b);
+    color:white;
+    box-shadow:0 8px 20px rgba(220,53,69,.25);
+}
+
+.confirm-delete-btn:hover,
+.confirm-cancel-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 28px rgba(220,53,69,.35);
+}
+
+@media(max-width:500px){
+
+    .custom-confirm-actions{
+        flex-direction:column;
+    }
+
+    .custom-confirm-card{
+        padding:30px 20px;
+    }
+}
+
+
 </style>
 </head>
 
@@ -1202,10 +1386,16 @@ $orderDetails = mysqli_fetch_assoc($detailsQuery);
             </button>
             <?php } ?>
 
-         <button class="action-btn delete-btn"
+         <!-- <button class="action-btn delete-btn"
             onclick="deleteOrder('<?php echo $order_number; ?>')">
             Delete Order
-            </button>
+            </button> -->
+
+            <button class="action-btn delete-btn"
+    onclick="openDeleteModal('<?php echo $order_number; ?>')">
+    <i class="fa-solid fa-trash"></i>
+    Delete Order
+</button>
 
         </div>
 
@@ -1231,37 +1421,130 @@ $orderDetails = mysqli_fetch_assoc($detailsQuery);
 <?php } ?>   <!-- ✅ END IF ORDER LIST -->
 
 <!-- ================= CANCEL MODAL (ALWAYS OUTSIDE IF) ================= -->
+<!-- ================= CANCEL MODAL ================= -->
 <div id="cancelModal" class="modal">
+
     <div class="modal-box">
 
         <h2>Cancel Order</h2>
+
         <p>Tell us why you're cancelling</p>
 
-        <form method="POST" action="order_action.php" onsubmit="setTimeout(()=>location.reload(),200);">
+        <form id="cancelOrderForm"
+              method="POST"
+              action="order_action.php">
 
-            <input type="hidden" name="order_number" id="order_number">
-            <input type="hidden" name="customer_id" value="<?php echo $user_id; ?>">
-            <input type="hidden" name="action" value="cancel">
+            <input type="hidden"
+                   name="order_number"
+                   id="order_number">
 
-            <select name="reason" required>
+            <input type="hidden"
+                   name="customer_id"
+                   value="<?php echo $user_id; ?>">
+
+            <input type="hidden"
+                   name="action"
+                   value="cancel">
+
+            <select name="reason" id="cancel_reason" required>
+
                 <option value="">Select Reason</option>
+
                 <option>Changed my mind</option>
+
                 <option>Too expensive</option>
+
                 <option>Ordered by mistake</option>
+
                 <option>Late delivery</option>
+
                 <option>Other</option>
+
             </select>
 
-            <textarea name="note" placeholder="Optional note"></textarea>
+            <textarea name="note"
+                      placeholder="Optional note"></textarea>
 
             <div class="modal-actions">
-                <button type="button" class="btn-cancel" onclick="closeModal()">Close</button>
-                <button type="submit" class="btn-confirm">Cancel Order</button>
+
+                <button type="button"
+                        class="btn-cancel"
+                        onclick="closeModal()">
+
+                    Close
+
+                </button>
+
+                <button type="button"
+                        class="btn-confirm"
+                        onclick="showCancelConfirmation()">
+
+                    Continue
+
+                </button>
+
             </div>
 
         </form>
 
     </div>
+
+</div>
+
+
+<!-- ================= CANCEL CONFIRMATION MODAL ================= -->
+
+<div id="cancelConfirmModal"
+     class="custom-confirm-overlay">
+
+    <div class="custom-confirm-card">
+
+        <div class="confirm-icon cancel-icon">
+
+            <i class="fa-solid fa-ban"></i>
+
+        </div>
+
+        <h2>Cancel This Order?</h2>
+
+        <p>
+            Are you sure you want to cancel this order?
+            Once cancelled, this action cannot be undone.
+        </p>
+
+        <div class="confirm-order-box">
+
+            <span>Order Number</span>
+
+            <strong id="cancelOrderNumberText"></strong>
+
+        </div>
+
+        <div class="custom-confirm-actions">
+
+            <button type="button"
+                    class="custom-btn keep-btn"
+                    onclick="backToCancelModal()">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Go Back
+
+            </button>
+
+
+            <button type="button"
+                    class="custom-btn confirm-cancel-btn"
+                    onclick="submitCancelOrder()">
+
+                <i class="fa-solid fa-ban"></i>
+                Yes, Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 </div>
 
@@ -1299,7 +1582,101 @@ $orderDetails = mysqli_fetch_assoc($detailsQuery);
     </div>
 </div>
    <?php include('footer.php') ?>
+<!-- ================= DELETE ORDER MODAL ================= -->
+<div id="deleteModal" class="custom-confirm-overlay">
 
+    <div class="custom-confirm-card">
+
+        <div class="confirm-icon delete-icon">
+            <i class="fa-solid fa-trash-can"></i>
+        </div>
+
+        <h2>Delete Order?</h2>
+
+        <p>
+            Are you sure you want to delete this order?
+            This order will be moved from your active orders.
+        </p>
+
+        <div class="confirm-order-box">
+            <span>Order Number</span>
+            <strong id="deleteOrderNumberText"></strong>
+        </div>
+
+        <div class="custom-confirm-actions">
+
+            <button type="button"
+                    class="custom-btn keep-btn"
+                    onclick="closeDeleteModal()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Keep Order
+            </button>
+
+            <button type="button"
+                    class="custom-btn confirm-delete-btn"
+                    onclick="confirmDeleteOrder()">
+                <i class="fa-solid fa-trash"></i>
+                Yes, Delete
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= ACTION RESULT MODAL ================= -->
+
+<div id="actionResultModal"
+     class="custom-confirm-overlay">
+
+    <div class="custom-confirm-card result-card">
+
+        <!-- Dynamic Icon -->
+
+        <div id="resultIcon"
+             class="confirm-icon success-result-icon">
+
+            <i class="fa-solid fa-check"></i>
+
+        </div>
+
+
+        <!-- Dynamic Title -->
+
+        <h2 id="resultTitle">
+
+            Success!
+
+        </h2>
+
+
+        <!-- Dynamic Message -->
+
+        <p id="resultMessage">
+
+            Your action was completed successfully.
+
+        </p>
+
+
+        <div class="custom-confirm-actions">
+
+            <button type="button"
+                    class="custom-btn result-continue-btn"
+                    onclick="closeActionResult()">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to My Orders
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script src="script.js"></script>
     <script src="search.js"></script>
@@ -1307,118 +1684,557 @@ $orderDetails = mysqli_fetch_assoc($detailsQuery);
     <script src="../CoffeeShop2/assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-function openCancelModal(order_number){
-    document.getElementById("cancelModal").style.display="flex";
-    document.getElementById("order_number").value = order_number;
-}
-function closeModal(){
-    document.getElementById("cancelModal").style.display="none";
-}
-window.onclick=function(e){
-    if(e.target.classList.contains("modal")){
-        closeModal();
+
+/* =========================================================
+   ACTION RESULT CARD
+========================================================= */
+
+function showActionResult(type, title, message){
+
+    const modal = document.getElementById("actionResultModal");
+    const icon = document.getElementById("resultIcon");
+    const titleElement = document.getElementById("resultTitle");
+    const messageElement = document.getElementById("resultMessage");
+
+    titleElement.innerText = title;
+    messageElement.innerText = message;
+
+    if(type === "success"){
+
+        icon.className = "confirm-icon success-result-icon";
+
+        icon.innerHTML =
+            '<i class="fa-solid fa-check"></i>';
+
+    }else{
+
+        icon.className = "confirm-icon error-result-icon";
+
+        icon.innerHTML =
+            '<i class="fa-solid fa-xmark"></i>';
+
     }
+
+    modal.style.display = "flex";
 }
 
-let selectedRating = 0;
 
-/* OPEN REVIEW MODAL */
-function openReviewModal(product_id, order_number, product_name){
+/* =========================================================
+   CLOSE RESULT CARD
+========================================================= */
 
-    document.getElementById("reviewModal").style.display = "flex";
+function closeActionResult(){
 
-    document.getElementById("review_product_id").value = product_id;
-    document.getElementById("review_order_number").value = order_number;
+    window.location.href = "userorder.php";
 
-    document.getElementById("review_product_name").innerText = product_name || "";
 }
 
-/* CLOSE */
-function closeReview(){
-    document.getElementById("reviewModal").style.display = "none";
-}
 
-/* STAR CLICK */
-const stars = document.querySelectorAll("#starBox i");
-const ratingInput = document.getElementById("rating_input");
-
-stars.forEach(star => {
-    star.addEventListener("click", function(){
-
-        selectedRating = this.getAttribute("data-value");
-
-        ratingInput.value = selectedRating;
-
-        updateStars(selectedRating);
-    });
-
-    star.addEventListener("mouseover", function(){
-        updateStars(this.getAttribute("data-value"));
-    });
-
-    star.addEventListener("mouseout", function(){
-        updateStars(selectedRating);
-    });
-});
-
-function updateStars(rating){
-
-    stars.forEach(star => {
-        if(star.getAttribute("data-value") <= rating){
-            star.classList.add("active");
-        } else {
-            star.classList.remove("active");
-        }
-    });
-}
-
-/* CLOSE MODAL OUTSIDE CLICK */
-window.addEventListener("click", function(e){
-    if(e.target.classList.contains("modal")){
-        closeReview();
-    }
-});
-
-function toggleOrder(btn){
-    btn.closest(".order-item").classList.toggle("active");
-}
-
+/* =========================================================
+   TOGGLE ORDER DETAILS
+========================================================= */
 
 function toggleOrder(button){
 
     const card = button.closest(".order-item");
 
     if(card){
+
         card.classList.toggle("active");
+
     }
 
 }
 
-function deleteOrder(order_number){
 
-    if(!confirm("Move this order to trash?")){
+/* =========================================================
+   CANCEL ORDER MODAL
+========================================================= */
+
+function openCancelModal(order_number){
+
+    document.getElementById("cancelModal").style.display = "flex";
+
+    document.getElementById("order_number").value = order_number;
+
+}
+
+
+function closeModal(){
+
+    document.getElementById("cancelModal").style.display = "none";
+
+}
+
+
+/* =========================================================
+   CANCEL CONFIRMATION
+========================================================= */
+
+function showCancelConfirmation(){
+
+    const orderNumber =
+        document.getElementById("order_number").value;
+
+    const reason =
+        document.getElementById("cancel_reason").value;
+
+
+    /* CUSTOM ERROR CARD INSTEAD OF ALERT */
+
+    if(reason === ""){
+
+        showActionResult(
+            "error",
+            "Select a Reason",
+            "Please select a cancellation reason before continuing."
+        );
+
         return;
+
     }
 
+
+    document.getElementById("cancelOrderNumberText").innerText =
+        "#" + orderNumber;
+
+
+    document.getElementById("cancelModal").style.display =
+        "none";
+
+
+    document.getElementById("cancelConfirmModal").style.display =
+        "flex";
+
+}
+
+
+function backToCancelModal(){
+
+    document.getElementById("cancelConfirmModal").style.display =
+        "none";
+
+
+    document.getElementById("cancelModal").style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   SUBMIT CANCEL ORDER
+========================================================= */
+
+function submitCancelOrder(){
+
+    const form =
+        document.getElementById("cancelOrderForm");
+
+
+    const formData =
+        new FormData(form);
+
+
     fetch("order_action.php", {
+
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "order_number=" + order_number + "&action=delete"
+
+        body: formData
+
     })
+
     .then(res => res.text())
+
     .then(res => {
 
         if(res.trim() === "success"){
-            location.reload();   // hides deleted order
-        } else {
-            alert("Delete failed");
+
+            document.getElementById(
+                "cancelConfirmModal"
+            ).style.display = "none";
+
+
+            showActionResult(
+                "success",
+                "Order Cancelled!",
+                "Your order has been cancelled successfully."
+            );
+
+        }else{
+
+            document.getElementById(
+                "cancelConfirmModal"
+            ).style.display = "none";
+
+
+            showActionResult(
+                "error",
+                "Cancellation Failed!",
+                "Something went wrong. Please try again."
+            );
+
         }
 
     })
-    .catch(err => console.error(err));
+
+    .catch(err => {
+
+        console.error(err);
+
+
+        document.getElementById(
+            "cancelConfirmModal"
+        ).style.display = "none";
+
+
+        showActionResult(
+            "error",
+            "Something Went Wrong!",
+            "Unable to process your request."
+        );
+
+    });
+
 }
+
+
+/* =========================================================
+   DELETE ORDER
+========================================================= */
+
+let selectedDeleteOrder = null;
+
+
+/* OPEN DELETE MODAL */
+
+function openDeleteModal(order_number){
+
+    selectedDeleteOrder = order_number;
+
+
+    document.getElementById(
+        "deleteOrderNumberText"
+    ).innerText = "#" + order_number;
+
+
+    document.getElementById(
+        "deleteModal"
+    ).style.display = "flex";
+
+}
+
+
+/* CLOSE DELETE MODAL */
+
+function closeDeleteModal(){
+
+    document.getElementById(
+        "deleteModal"
+    ).style.display = "none";
+
+
+    selectedDeleteOrder = null;
+
+}
+
+
+/* CONFIRM DELETE */
+
+function confirmDeleteOrder(){
+
+    if(!selectedDeleteOrder){
+
+        return;
+
+    }
+
+
+    fetch("order_action.php", {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type":
+                "application/x-www-form-urlencoded"
+
+        },
+
+        body:
+
+            "order_number=" +
+            encodeURIComponent(selectedDeleteOrder) +
+
+            "&action=delete"
+
+    })
+
+    .then(res => res.text())
+
+    .then(res => {
+
+        if(res.trim() === "success"){
+
+            closeDeleteModal();
+
+
+            showActionResult(
+
+                "success",
+
+                "Order Deleted!",
+
+                "Your order has been deleted successfully."
+
+            );
+
+        }else{
+
+            closeDeleteModal();
+
+
+            showActionResult(
+
+                "error",
+
+                "Delete Failed!",
+
+                "Something went wrong. Please try again."
+
+            );
+
+        }
+
+    })
+
+    .catch(err => {
+
+        console.error(err);
+
+
+        closeDeleteModal();
+
+
+        showActionResult(
+
+            "error",
+
+            "Something Went Wrong!",
+
+            "Unable to process your request."
+
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   REVIEW MODAL
+========================================================= */
+
+let selectedRating = 0;
+
+
+function openReviewModal(
+    product_id,
+    order_number,
+    product_name
+){
+
+    document.getElementById(
+        "reviewModal"
+    ).style.display = "flex";
+
+
+    document.getElementById(
+        "review_product_id"
+    ).value = product_id;
+
+
+    document.getElementById(
+        "review_order_number"
+    ).value = order_number;
+
+
+    document.getElementById(
+        "review_product_name"
+    ).innerText = product_name || "";
+
+}
+
+
+function closeReview(){
+
+    document.getElementById(
+        "reviewModal"
+    ).style.display = "none";
+
+}
+
+
+/* =========================================================
+   STAR RATING
+========================================================= */
+
+const stars =
+    document.querySelectorAll("#starBox i");
+
+
+const ratingInput =
+    document.getElementById("rating_input");
+
+
+stars.forEach(star => {
+
+    star.addEventListener(
+        "click",
+
+        function(){
+
+            selectedRating =
+                this.getAttribute("data-value");
+
+
+            ratingInput.value =
+                selectedRating;
+
+
+            updateStars(selectedRating);
+
+        }
+
+    );
+
+
+    star.addEventListener(
+        "mouseover",
+
+        function(){
+
+            updateStars(
+                this.getAttribute("data-value")
+            );
+
+        }
+
+    );
+
+
+    star.addEventListener(
+        "mouseout",
+
+        function(){
+
+            updateStars(selectedRating);
+
+        }
+
+    );
+
+});
+
+
+function updateStars(rating){
+
+    stars.forEach(star => {
+
+        if(
+            star.getAttribute("data-value")
+            <= rating
+        ){
+
+            star.classList.add("active");
+
+        }else{
+
+            star.classList.remove("active");
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   CLOSE MODALS WHEN CLICKING OUTSIDE
+========================================================= */
+
+window.addEventListener(
+    "click",
+
+    function(e){
+
+
+        /* NORMAL CANCEL MODAL */
+
+        if(
+            e.target ===
+            document.getElementById("cancelModal")
+        ){
+
+            closeModal();
+
+        }
+
+
+        /* DELETE MODAL */
+
+        if(
+            e.target ===
+            document.getElementById("deleteModal")
+        ){
+
+            closeDeleteModal();
+
+        }
+
+
+        /* CANCEL CONFIRMATION MODAL */
+
+        if(
+            e.target ===
+            document.getElementById("cancelConfirmModal")
+        ){
+
+            document.getElementById(
+                "cancelConfirmModal"
+            ).style.display = "none";
+
+        }
+
+
+        /* REVIEW MODAL */
+
+        if(
+            e.target ===
+            document.getElementById("reviewModal")
+        ){
+
+            closeReview();
+
+        }
+
+
+        /* RESULT MODAL */
+
+        if(
+            e.target ===
+            document.getElementById("actionResultModal")
+        ){
+
+            document.getElementById(
+                "actionResultModal"
+            ).style.display = "none";
+
+        }
+
+    }
+
+);
+
 </script>
 
 </body>

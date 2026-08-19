@@ -1190,11 +1190,10 @@ Remove
 
 </div>
 
-<button class="checkout-btn">
-
-Proceed To Checkout
-
-</button>
+<a href="prepare_checkout.php" class="checkout-btn"
+   style="display:block;text-align:center;text-decoration:none;">
+    Proceed To Checkout
+</a>
 
 </div>
 

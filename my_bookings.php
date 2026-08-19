@@ -331,7 +331,11 @@ foreach ($bookings as $booking) {
 <title>
     My Reservations | Aroma Haven
 </title>
-
+<link
+    rel="icon"
+    type="image/png"
+    href="weblogo.png"
+>
 
 <style>
 
@@ -1264,6 +1268,173 @@ body{
 
 }
 
+/* =====================================================
+   CANCEL CONFIRMATION MODAL
+===================================================== */
+
+.cancel-modal-overlay{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(36,24,18,.55);
+
+    backdrop-filter:blur(7px);
+    -webkit-backdrop-filter:blur(7px);
+
+    opacity:0;
+    transition:opacity .25s ease;
+}
+
+.cancel-modal-overlay.show{
+    display:flex;
+    opacity:1;
+}
+
+.cancel-modal{
+    width:min(440px,100%);
+
+    padding:35px 32px 30px;
+
+    background:#fff;
+
+    border:1px solid rgba(90,56,40,.12);
+
+    border-radius:28px;
+
+    box-shadow:
+        0 30px 100px
+        rgba(36,24,18,.25);
+
+    text-align:center;
+
+    transform:translateY(20px) scale(.96);
+
+    transition:transform .25s ease;
+}
+
+.cancel-modal-overlay.show .cancel-modal{
+    transform:translateY(0) scale(1);
+}
+
+.cancel-modal-icon{
+    width:68px;
+    height:68px;
+
+    margin:0 auto 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:20px;
+
+    background:#fbeeee;
+
+    color:#a34848;
+
+    font-size:30px;
+}
+
+.cancel-modal h3{
+    margin:0 0 10px;
+
+    color:#241812;
+
+    font-size:25px;
+    font-weight:700;
+}
+
+.cancel-modal p{
+    max-width:340px;
+
+    margin:0 auto 25px;
+
+    color:#82746b;
+
+    font-size:14px;
+    line-height:1.7;
+}
+
+.cancel-modal-actions{
+    display:flex;
+    gap:12px;
+}
+
+.cancel-modal-btn{
+    flex:1;
+
+    min-height:46px;
+
+    padding:12px 18px;
+
+    border:0;
+    border-radius:13px;
+
+    font-size:13px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.cancel-modal-btn:hover{
+    transform:translateY(-2px);
+}
+
+.cancel-modal-no{
+    background:#f3eee9;
+    color:#5a3828;
+}
+
+.cancel-modal-yes{
+    background:#a34848;
+    color:#fff;
+
+    box-shadow:
+        0 8px 22px
+        rgba(163,72,72,.22);
+}
+
+.cancel-modal-yes:hover{
+    box-shadow:
+        0 10px 28px
+        rgba(163,72,72,.30);
+}
+
+
+/* MOBILE */
+
+@media(max-width:500px){
+
+    .cancel-modal{
+        padding:30px 22px 24px;
+        border-radius:24px;
+    }
+
+    .cancel-modal h3{
+        font-size:22px;
+    }
+
+    .cancel-modal-actions{
+        flex-direction:column;
+    }
+
+    .cancel-modal-btn{
+        width:100%;
+    }
+
+}
+
 </style>
 
 </head>
@@ -1952,28 +2123,14 @@ body{
                         ) {
 
                         ?>
-
-                            <a
-                                class="cancel"
-                                href="cancel_booking.php?id=<?php
-                                    echo urlencode(
-                                        $bookingId
-                                    );
-                                ?>"
-                                onclick="
-                                    return confirm(
-                                        'Are you sure you want to cancel this reservation?'
-                                    );
-                                "
-                            >
-
-                                <span>
-                                    ×
-                                </span>
-
-                                Cancel Reservation
-
-                            </a>
+<a 
+    class="cancel"
+    href="cancel_booking.php?id=<?php echo urlencode($bookingId); ?>"
+    onclick="openCancelModal(this.href); return false;"
+>
+    <span>×</span>
+    Cancel Reservation
+</a>
 
                         <?php } ?>
 
@@ -2046,6 +2203,57 @@ body{
 
 </section>
 
+<!-- =====================================================
+     CANCEL CONFIRMATION MODAL
+===================================================== -->
+
+<div 
+    class="cancel-modal-overlay" 
+    id="cancelModal"
+    onclick="closeCancelModal(event)"
+>
+
+    <div 
+        class="cancel-modal"
+        onclick="event.stopPropagation();"
+    >
+
+        <div class="cancel-modal-icon">
+            ⚠
+        </div>
+
+        <h3>
+            Cancel Reservation?
+        </h3>
+
+        <p>
+            Are you sure you want to cancel this reservation?
+            This action cannot be undone.
+        </p>
+
+        <div class="cancel-modal-actions">
+
+            <button
+                type="button"
+                class="cancel-modal-btn cancel-modal-no"
+                onclick="closeCancelModal()"
+            >
+                Keep Reservation
+            </button>
+
+            <button
+                type="button"
+                class="cancel-modal-btn cancel-modal-yes"
+                id="confirmCancelBtn"
+            >
+                Yes, Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 

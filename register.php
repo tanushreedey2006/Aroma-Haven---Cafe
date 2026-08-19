@@ -787,6 +787,16 @@ h1{
       <h1>Create Account</h1>
       <input type="text" placeholder="Name"   name="name" id="name"  />
       <input type="text" placeholder="Email" name="email" id="email_id"  />
+      <input 
+    type="tel" 
+    placeholder="Mobile Number" 
+    name="mobile" 
+    id="mobile" 
+    maxlength="10"
+    pattern="[0-9]{10}"
+    inputmode="numeric"
+    required
+/>
       <input type="text" placeholder="Address" name="address" id="address"  />
       <div class="upload-box">
 
@@ -875,20 +885,25 @@ signUpButton.addEventListener('click', () => {
 
 
 
-        function signup(){
-            const name=document.getElementById('name').value;
-            const email=document.getElementById('email_id').value;
-            const address=document.getElementById('address').value;
-            const password=document.getElementById('signup_password').value;
+ function signup(){ 
+    const name = document.getElementById('name').value.trim(); 
+    const email = document.getElementById('email_id').value.trim(); 
+    const mobile = document.getElementById('mobile').value.trim();
+    const address = document.getElementById('address').value.trim(); 
+    const password = document.getElementById('signup_password').value; 
 
-            if(name=="" || email=="" || address == "" || password==""){
-                alert("All field are mandatory");
-                return false;
-            }
-           
-                return true;
-            
-        }
+    if(name === "" || email === "" || mobile === "" || address === "" || password === ""){ 
+        alert("All fields are mandatory"); 
+        return false; 
+    }
+
+    if(!/^[0-9]{10}$/.test(mobile)){
+        alert("Please enter a valid 10-digit mobile number");
+        return false;
+    }
+
+    return true; 
+}
 
         // Image
          const imgInput =

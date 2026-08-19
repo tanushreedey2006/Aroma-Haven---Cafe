@@ -1,926 +1,1338 @@
-
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout</title>
-    <link rel="icon" type="image/png" href="weblogo.png">
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-
 <?php
+
 session_start();
+
 include("connect.php");
-/** @var mysqli $conn */
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-if(!isset($_SESSION['user_email'])){
-    header("location:register.php");
+global $conn;
+
+
+/* =====================================
+   CHECK LOGIN
+===================================== */
+
+if (!isset($_SESSION['user_email'])) {
+
+    header("Location: register.php");
     exit();
+
 }
 
-$email = $_SESSION['user_email'];
 
-$userQuery = mysqli_query($conn,
-"SELECT * FROM clients WHERE email='$email'"
+/* =====================================
+   GET LOGGED-IN USER
+===================================== */
+
+$email = mysqli_real_escape_string(
+    $conn,
+    $_SESSION['user_email']
 );
+
+
+$userQuery = mysqli_query(
+    $conn,
+    "SELECT *
+     FROM clients
+     WHERE email='$email'
+     LIMIT 1"
+);
+
 
 $user = mysqli_fetch_assoc($userQuery);
 
-if(!$user){
+
+if (!$user) {
+
     die("User not found");
+
 }
 
-$user_id = $user['id'];
 
-$source = $_GET['source'] ?? '';
-$id     = $_GET['id'] ?? 0;
+$user_id = (int)$user['id'];
 
-$product_id = 0;
-$qty = 1;
 
-/* STEP CONTROL */
-$current_step = 1;
+/* =====================================
+   CHECKOUT SESSION
+===================================== */
 
-/* WISHLIST */
-if($source == "wishlist"){
+if (
+    !isset($_SESSION['checkout_items']) ||
+    !is_array($_SESSION['checkout_items']) ||
+    empty($_SESSION['checkout_items'])
+) {
 
-    $current_step = 2;
+    header("Location: catalogue.php");
+    exit();
 
-    $q = mysqli_query($conn,
-    "SELECT * FROM wishlist
-     WHERE wishlist_id='$id'
-     AND user_id='$user_id'"
+}
+
+
+/* =====================================
+   VALIDATE CHECKOUT PRODUCTS
+===================================== */
+
+$valid_items = [];
+
+
+foreach (
+    $_SESSION['checkout_items']
+    as $checkoutItem
+) {
+
+    $product_id = (int)(
+        $checkoutItem['product_id'] ?? 0
     );
 
-    $item = mysqli_fetch_assoc($q);
-    $product_id = $item['product_id'];
-}
 
-/* CART */
-elseif($source == "cart"){
-
-    $current_step = 2;
-
-    $q = mysqli_query($conn,
-    "SELECT * FROM addtocart
-     WHERE id='$id'
-     AND user_id='$user_id'"
+    $quantity = max(
+        1,
+        (int)(
+            $checkoutItem['quantity'] ?? 1
+        )
     );
 
-    $item = mysqli_fetch_assoc($q);
 
-    $product_id = $item['product_id'];
-    $qty = $item['quantity'];
-}
-
-
-elseif($source == "session"){
-
-    $current_step = 2;
-
-    if(!empty($_SESSION['checkout_items'])){
-
-        $firstItem = $_SESSION['checkout_items'][0];
-
-        $product_id = $firstItem['product_id'];
-        $qty = $firstItem['quantity'];
-
-    }else{
-
-        header("Location: catalogue.php");
-        exit();
+    if ($product_id <= 0) {
+        continue;
     }
-}
-/* DIRECT PRODUCT */
-elseif($source == "product"){
 
-    $current_step = 2;
-    $product_id = $id;
-}
-else{
 
-    if(isset($_SESSION['checkout_items']) &&
-       count($_SESSION['checkout_items']) > 0){
+    /* Get latest product information */
 
-        $current_step = 2;
+    $productQuery = mysqli_query(
+        $conn,
+        "SELECT *
+         FROM products
+         WHERE id='$product_id'
+         LIMIT 1"
+    );
 
-        $firstItem = $_SESSION['checkout_items'][0];
 
-        $product_id = $firstItem['product_id'];
-        $qty = $firstItem['quantity'];
+    $product = mysqli_fetch_assoc(
+        $productQuery
+    );
 
-    }else{
 
-        die("Invalid source");
+    if ($product) {
+
+        $valid_items[] = [
+
+            'product_id' =>
+                (int)$product['id'],
+
+            'name' =>
+                $product['name'],
+
+            'image' =>
+                $product['image'],
+
+            'price' =>
+                (float)$product['price'],
+
+            'quantity' =>
+                $quantity
+        ];
+
     }
-}
 
-/* PRODUCT */
-$pq = mysqli_query($conn,
-"SELECT * FROM products WHERE id='$product_id'"
-);
-
-$product = mysqli_fetch_assoc($pq);
-
-if(!$product){
-    die("Product Not Found");
 }
 
 
+/* =====================================
+   UPDATE CHECKOUT SESSION
+===================================== */
+
+$_SESSION['checkout_items'] = $valid_items;
 
 
+/* =====================================
+   CHECK EMPTY CHECKOUT
+===================================== */
 
-/* =========================
-   CHECKOUT SESSION SYSTEM
-========================= */
+if (
+    empty($_SESSION['checkout_items'])
+) {
 
-if(!isset($_SESSION['checkout_items'])){
-    $_SESSION['checkout_items'] = [];
-}
+    header("Location: catalogue.php");
+    exit();
 
-/* first item add only once */
-$exists = false;
-
-foreach($_SESSION['checkout_items'] as $item){
-
-    if($item['product_id'] == $product_id){
-
-        $exists = true;
-        break;
-    }
-}
-
-if(!$exists){
-
-    $_SESSION['checkout_items'][] = [
-
-        'product_id' => $product['id'],
-        'name'       => $product['name'],
-        'image'      => $product['image'],
-        'price'      => $product['price'],
-        'quantity'   => $qty
-
-    ];
 }
 
 
+/* =====================================
+   CURRENT CHECKOUT STEP
+===================================== */
+
+$current_step = 2;
 
 
-$delivery_charge = 50;
+/* =====================================
+   CALCULATE SUBTOTAL
+===================================== */
 
 $subtotal = 0;
 
-foreach($_SESSION['checkout_items'] as $item){
+
+foreach (
+    $_SESSION['checkout_items']
+    as $checkoutItem
+) {
+
+    $price = (float)(
+        $checkoutItem['price'] ?? 0
+    );
+
+
+    $quantity = (int)(
+        $checkoutItem['quantity'] ?? 1
+    );
+
 
     $subtotal +=
-        $item['price'] *
-        $item['quantity'];
+        $price * $quantity;
+
 }
 
-$total = $subtotal + $delivery_charge;
+
+/* =====================================
+   DELIVERY CHARGE
+===================================== */
+
+$delivery_charge = 0;
+
+
+/* =====================================
+   FINAL TOTAL
+===================================== */
+
+$total =
+    $subtotal +
+    $delivery_charge;
+
 ?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Checkout | Aroma Haven</title>
+
+<link
+    rel="icon"
+    type="image/png"
+    href="weblogo.png"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
 <style>
 
-/* ---------- BASE ---------- */
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+/* =========================
+   BASE
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-background:linear-gradient(135deg,#fff8f2,#f5ece6);
-padding:40px;
-  font-family: 'Poppins', sans-serif;
+
+body {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8f2,
+            #f5ece6
+        );
+
+    padding: 40px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
 }
 
-/* soft animation background */
-body::before {
+
+/* =========================
+   STEPS
+========================= */
+
+.checkout-steps {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    position: relative;
+
+    max-width: 1400px;
+
+    margin:
+        0 auto
+        35px;
+
+}
+
+
+.checkout-steps::before {
+
     content: "";
-    position: fixed;
-    width: 300px;
-    height: 300px;
-    background: #a65935;
-    filter: blur(150px);
-    opacity: 0.15;
-    top: -100px;
-    left: -100px;
-    z-index: -1;
+
+    position: absolute;
+
+    top: 22px;
+
+    width: 100%;
+
+    height: 4px;
+
+    background: #ddd;
+
+    z-index: 0;
+
 }
 
-/* ---------- LAYOUT ---------- */
-.checkout-container{
-max-width:1400px;
-margin:auto;
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:35px;
+
+.progress-line {
+
+    position: absolute;
+
+    top: 22px;
+
+    left: 0;
+
+    width: 33.33%;
+
+    height: 4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #58260f,
+            #c17530
+        );
+
+    z-index: 1;
+
 }
 
-@media(max-width:900px){
-.checkout-container{grid-template-columns:1fr;}
+
+.step {
+
+    text-align: center;
+
+    flex: 1;
+
+    z-index: 2;
+
 }
 
-/* ---------- CARD ---------- */
-.checkout-card{
-background:white;
-padding:35px;
-border-radius:30px;
-box-shadow:0 20px 50px rgba(0,0,0,0.08);
+
+.step-circle {
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: #ddd;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: auto;
+
 }
 
-.title{
-font-size:35px;
-font-weight:800;
-color:#58260f;
-margin-bottom:25px;
+
+.step.active .step-circle {
+
+    background: #58260f;
+
+    color: white;
+
 }
 
-/* ---------- INPUT ---------- */
-.input-group{margin-bottom:20px;}
-.input-group label{display:block;margin-bottom:8px;font-weight:600;}
-.input-group input{
-width:100%;
-padding:15px;
-border-radius:15px;
-border:1px solid #ddd;
+
+.step-label {
+
+    margin-top: 10px;
+
+    font-size: 14px;
+
 }
 
-/* ---------- STEPS ---------- */
-.checkout-steps{
-display:flex;
-justify-content:space-between;
-position:relative;
-margin-bottom:35px;
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.checkout-container {
+
+    max-width: 1400px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr;
+
+    gap: 35px;
+
 }
 
-.checkout-steps::before{
-content:'';
-position:absolute;
-top:22px;
-width:100%;
-height:4px;
-background:#ddd;
-z-index:0;
-}
 
 .checkout-card,
 .summary-card {
-    transition: 0.3s ease;
+
+    background: white;
+
+    border-radius: 25px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.08);
+
 }
 
-.checkout-card:hover,
-.summary-card:hover {
-    transform: translateY(-5px);
+
+/* =========================
+   LEFT CARD
+========================= */
+
+.checkout-card {
+
+    padding: 35px;
+
 }
 
-.payment-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
+
+.title {
+
+    font-size: 32px;
+
+    color: #58260f;
+
+    margin-bottom: 25px;
+
+}
+
+
+.coffee-info-box {
+
+    background: #fff3e8;
+
+    border-left:
+        5px solid #a65935;
+
+    padding: 16px;
+
     border-radius: 12px;
-    transition: 0.3s;
-}
 
-.payment-option:hover {
-    background: #fff3ea;
-    border-color: #58260f;
-}
-
-
-.progress-line{
-position:absolute;
-top:22px;
-left:0;
-height:4px;
-background:linear-gradient(90deg,#58260f,#c17530);
-transition:.6s;
-z-index:1;
-border-radius:10px;
-}
-
-.step{
-text-align:center;
-flex:1;
-z-index:2;
-
-transition: transform 0.3s ease;
+    margin-bottom: 25px;
 
 }
 
-.step-circle{
-width:45px;
-height:45px;
-border-radius:50%;
-background:#ddd;
-display:flex;
-align-items:center;
-justify-content:center;
-margin:auto;
-transition:.4s;
+
+.shipping-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+
 }
 
-.step-label{margin-top:10px;font-size:14px;}
 
-.step.active .step-circle{
-background:#58260f;
-color:white;
-animation:pulse 1s infinite;
+.full-width {
+
+    grid-column: 1 / -1;
+
 }
 
-.step.completed .step-circle{
-background:#198754;
-color:white;
+
+.input-group {
+
+    margin-bottom: 10px;
+
 }
 
-/* animations */
-@keyframes pulse{
-0%{box-shadow:0 0 0 0 rgba(88,38,15,0.5);}
-70%{box-shadow:0 0 0 12px rgba(88,38,15,0);}
-100%{box-shadow:0 0 0 0 rgba(88,38,15,0);}
+
+.input-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #58260f;
+
+    font-weight: bold;
+
 }
 
-/* ---------- BUTTON ---------- */
-.place-btn{
-width:100%;
-padding:20px;
-border:none;
-border-radius:15px;
-background:linear-gradient(135deg,#58260f,#a65935);
-color:white;
-font-size:18px;
-cursor:pointer;
-   position: relative;
-    overflow: hidden;
-}
 
-.place-btn::after {
-    content: "";
-    position: absolute;
+.input-group input {
+
     width: 100%;
-    height: 100%;
-    top: 0;
-    left: -100%;
-    background: rgba(255,255,255,0.2);
-    transition: 0.5s;
+
+    padding: 15px;
+
+    border:
+        2px solid #ead8cb;
+
+    border-radius: 14px;
+
+    outline: none;
+
 }
 
-.place-btn:hover::after {
-    left: 100%;
-}
-.place-btn:hover{
-transform:translateY(-3px);
+
+.input-group input:focus {
+
+    border-color: #a65935;
+
 }
 
-/* ---------- SUMMARY ---------- */
-.summary-card{
-background:white;
-padding:25px;
-border-radius:25px;
-position:sticky;
-top:20px;
+
+/* =========================
+   PAYMENT
+========================= */
+
+.payment-title {
+
+    margin:
+        25px 0 15px;
+
+    color: #58260f;
+
 }
 
-/* .product-img{
-width:100%;
-height:250px;
-object-fit:cover;
-border-radius:20px;
-} */
 
-.product-image-box{
-    height:350px;
-    padding:5px;
-    border-radius:20px;
-    overflow:hidden;
+.payment-options {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
 }
 
-.product-img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center;
-    
-}
-.product-img:hover{
-    transform:scale(1.05);
-}
-.summary-row{
-display:flex;
-justify-content:space-between;
-margin-top:15px;
+
+.payment-card {
+
+    cursor: pointer;
+
 }
 
-.total{
-font-size:22px;
-font-weight:bold;
-margin-top:20px;
+
+.payment-card input {
+
+    display: none;
+
 }
 
-.shipping-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
+
+.payment-content {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px;
+
+    border:
+        2px solid #ead8cb;
+
+    border-radius: 18px;
+
 }
 
-.full-width{
-    grid-column:1/-1;
+
+.payment-content i {
+
+    font-size: 25px;
+
+    color: #a65935;
+
 }
 
-.input-group label{
-    display:block;
-    margin-bottom:8px;
-    color:#58260f;
-    font-weight:600;
+
+.payment-card
+input:checked
++ .payment-content {
+
+    border-color: #a65935;
+
+    background: #fff6ef;
+
 }
 
-.input-group label i{
-    margin-right:8px;
-    color:#a65935;
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary-card {
+
+    padding: 25px;
+
+    height: fit-content;
+
+    position: sticky;
+
+    top: 20px;
+
 }
 
-.input-group input{
-    width:100%;
-    padding:16px;
-    border:2px solid #ead8cb;
-    border-radius:16px;
-    background:#fffaf6;
-    transition:.3s;
+
+.checkout-product {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding:
+        15px 0;
+
+    border-bottom:
+        1px solid #eee;
+
 }
 
-.input-group input:focus{
-    outline:none;
-    border-color:#a65935;
-    box-shadow:0 0 20px rgba(166,89,53,.15);
+
+.summary-product-img {
+
+    width: 75px;
+
+    height: 75px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+
 }
 
-.coffee-info-box{
-    background:#fff3e8;
-    border-left:5px solid #a65935;
-    padding:16px;
-    border-radius:15px;
-    margin-bottom:25px;
-    color:#6a3a1b;
+
+.product-info {
+
+    flex: 1;
+
 }
 
-.coffee-delivery-note{
-    background:#f6f0ea;
-    padding:15px;
-    border-radius:15px;
-    margin:25px 0;
-    color:#6a3a1b;
-    font-weight:600;
+
+.product-info h4 {
+
+    color: #58260f;
+
+    margin-bottom: 5px;
+
 }
 
-.payment-title{
-    margin-bottom:15px;
-    color:#58260f;
+
+.product-info p {
+
+    color: #666;
+
+    margin: 3px 0;
+
 }
 
-.payment-options{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
+
+.remove-item-btn {
+
+    width: 35px;
+
+    height: 35px;
+
+    border-radius: 50%;
+
+    background: #ffefef;
+
+    color: #dc3545;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-decoration: none;
+
 }
 
-.payment-card{
-    cursor:pointer;
+
+.add-more-btn {
+
+    display: block;
+
+    text-align: center;
+
+    margin: 20px 0;
+
+    padding: 13px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    background: #f5ece6;
+
+    color: #58260f;
+
+    font-weight: bold;
+
 }
 
-.payment-card input{
-    display:none;
+
+.summary-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 15px;
+
 }
 
-.payment-content{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    padding:18px;
-    border:2px solid #ead8cb;
-    border-radius:18px;
-    background:#fff;
-    transition:.3s;
+
+.total {
+
+    font-size: 22px;
+
+    font-weight: bold;
+
 }
 
-.payment-content i{
-    font-size:28px;
-    color:#a65935;
+
+.place-btn {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 18px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #58260f,
+            #a65935
+        );
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
 }
 
-.payment-card input:checked + .payment-content{
-    border-color:#a65935;
-    background:#fff6ef;
-    box-shadow:0 10px 25px rgba(166,89,53,.15);
+
+/* =========================
+   CUSTOM ALERT
+========================= */
+
+.custom-alert-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(40,20,10,.45);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 9999;
+
+    backdrop-filter:
+        blur(5px);
+
 }
 
-.payment-content h4{
-    margin:0;
-    color:#58260f;
+
+.custom-alert-overlay.show {
+
+    display: flex;
+
 }
 
-.payment-content p{
-    margin:4px 0 0;
-    color:#777;
-    font-size:13px;
+
+.custom-alert-card {
+
+    width: 100%;
+
+    max-width: 420px;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 25px;
+
+    text-align: center;
+
 }
 
-@media(max-width:768px){
-    .shipping-grid{
-        grid-template-columns:1fr;
+
+.custom-alert-icon {
+
+    width: 70px;
+
+    height: 70px;
+
+    margin:
+        0 auto
+        20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fff0ee;
+
+    color: #dc3545;
+
+    font-size: 32px;
+
+}
+
+
+.custom-alert-card h3 {
+
+    color: #58260f;
+
+    margin-bottom: 12px;
+
+}
+
+
+.custom-alert-card p {
+
+    color: #777;
+
+    margin-bottom: 25px;
+
+}
+
+
+.custom-alert-btn {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #58260f;
+
+    color: white;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px) {
+
+    body {
+        padding: 20px;
     }
 
-    .full-width{
-        grid-column:auto;
+    .checkout-container {
+        grid-template-columns: 1fr;
     }
-}
-.add-more-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    text-decoration:none;
-    background:#fff3ea;
-    color:#58260f;
-    padding:15px;
-    border-radius:15px;
-    border:2px solid #ead8cb;
-    margin-top:20px;
-    margin-bottom:20px;
-    font-weight:600;
-    transition:.3s;
+
 }
 
-.add-more-btn:hover{
-    background:#58260f;
-    color:white;
-}
-.cart-info{
-    background:#fff3ea;
-    padding:12px;
-    border-radius:12px;
-    text-align:center;
-    margin-bottom:15px;
-    font-weight:700;
-    color:#58260f;
-}
-.mini-product{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-top:15px;
-    padding:10px;
-    border-radius:12px;
-    background:#fafafa;
+
+@media(max-width:600px) {
+
+    .shipping-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .step-label {
+        font-size: 11px;
+    }
+
 }
 
-.mini-product-img{
-    width:60px;
-    height:60px;
-    object-fit:cover;
-    border-radius:10px;
-}
-.checkout-item{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:12px 0;
-    border-bottom:1px solid #eee;
-}
-
-.checkout-item-img{
-    width:65px;
-    height:65px;
-    object-fit:cover;
-    border-radius:12px;
-}
-
-.checkout-item-info{
-    flex:1;
-}
-
-.checkout-item-info h4{
-    margin:0;
-    font-size:15px;
-    color:#58260f;
-}
-
-.checkout-item-info p{
-    margin-top:4px;
-    color:#666;
-    font-size:13px;
-}
-
-.checkout-item-price{
-    font-weight:700;
-    color:#58260f;
-}
-
-.checkout-product{
-    display:flex;
-    gap:15px;
-    margin-bottom:20px;
-    padding-bottom:15px;
-    border-bottom:1px solid #eee;
-}
-
-.summary-product-img{
-    width:90px;
-    height:90px;
-    object-fit:cover;
-    border-radius:12px;
-}
-
-.product-info h4{
-    margin-bottom:5px;
-    color:#58260f;
-}
-
-.product-info p{
-    margin:2px 0;
-}
-
-.add-more-btn{
-    display:block;
-    text-align:center;
-    margin:20px 0;
-    padding:12px;
-    border-radius:12px;
-    text-decoration:none;
-    background:#f5ece6;
-    color:#58260f;
-    font-weight:600;
-}
-
-.checkout-product{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    position:relative;
-}
-
-.remove-item-btn{
-    margin-left:auto;
-    width:35px;
-    height:35px;
-    border-radius:50%;
-    background:#ffefef;
-    color:#dc3545;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-decoration:none;
-    transition:.3s;
-}
-
-.remove-item-btn:hover{
-    background:#dc3545;
-    color:#fff;
-    transform:rotate(90deg);
-}
 </style>
+
 </head>
+
 
 <body>
 
-<form id="checkoutForm" action="place_order.php" method="POST">
 
-<input type="hidden" name="source" value="<?php echo $source; ?>">
-<input type="hidden" name="id" value="<?php echo $id; ?>">
-<input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
-<input type="hidden" name="quantity" value="<?php echo $qty; ?>">
-<input type="hidden" name="total_amount" id="totalAmount" value="<?php echo $total; ?>">
+<form
+    id="checkoutForm"
+    action="place_order.php"
+    method="POST"
+>
 
-<!-- STEPS -->
+
+<input
+    type="hidden"
+    name="total_amount"
+    id="totalAmount"
+    value="<?php echo $total; ?>"
+>
+
+
+<!-- =====================
+     STEPS
+===================== -->
+
 <div class="checkout-steps">
 
-<div class="progress-line"
-style="width:<?php echo (($current_step-1)/3)*100; ?>%;"></div>
+    <div class="progress-line"></div>
 
-<?php
-$steps = ["Cart","Checkout","Payment","Complete"];
-for($i=1;$i<=4;$i++){
-?>
-<div class="step <?php echo $current_step>=$i?'active':''; ?>">
-<div class="step-circle"><?php echo $i; ?></div>
-<div class="step-label"><?php echo $steps[$i-1]; ?></div>
-</div>
-<?php } ?>
+    <?php
+
+    $steps = [
+        "Cart",
+        "Checkout",
+        "Payment",
+        "Complete"
+    ];
+
+    for ($i = 1; $i <= 4; $i++) {
+
+    ?>
+
+        <div
+            class="step
+            <?php echo $i <= $current_step ? 'active' : ''; ?>"
+        >
+
+            <div class="step-circle">
+
+                <?php echo $i; ?>
+
+            </div>
+
+            <div class="step-label">
+
+                <?php echo $steps[$i - 1]; ?>
+
+            </div>
+
+        </div>
+
+    <?php } ?>
 
 </div>
+
+
 
 <div class="checkout-container">
 
-<!-- LEFT -->
+
+<!-- =====================
+     DELIVERY DETAILS
+===================== -->
+
 <div class="checkout-card">
 
 <h2 class="title">
+
     <i class="fa-solid fa-mug-hot"></i>
+
     Brewing Delivery Details
+
 </h2>
 
+
 <div class="coffee-info-box">
+
     <i class="fa-solid fa-seedling"></i>
+
     Freshly roasted coffee delivered safely to your doorstep.
+
 </div>
+
 
 <div class="shipping-grid">
 
-    <div class="input-group">
-        <label>
-            <i class="fa-solid fa-user"></i>
-            Full Name
-        </label>
-        <input type="text"
-               name="customer_name"
-               value="<?php echo $user['name']; ?>"
-               required>
-    </div>
 
-    <div class="input-group">
-        <label>
-            <i class="fa-solid fa-phone"></i>
-            Mobile Number
-        </label>
-        <input type="text"
-               name="phone"
-               value="<?php echo $user['mobile']; ?>"
-               required>
-    </div>
+<div class="input-group">
 
-    <div class="input-group full-width">
-        <label>
-            <i class="fa-solid fa-envelope"></i>
-            Email Address
-        </label>
-        <input type="email"
-               name="email"
-               value="<?php echo $email; ?>"
-               required>
-    </div>
+<label>
 
-    <div class="input-group full-width">
-        <label>
-            <i class="fa-solid fa-location-dot"></i>
-            Delivery Address
-        </label>
-        <input type="text"
-               name="address"
-               value="<?php echo $user['address']; ?>"
-               required>
-    </div>
+    <i class="fa-solid fa-user"></i>
+
+    Full Name
+
+</label>
+
+<input
+    type="text"
+    name="customer_name"
+    value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>"
+    required
+>
 
 </div>
 
-<div class="coffee-delivery-note">
-    <i class="fa-solid fa-truck-fast"></i>
-    Estimated Delivery: 2-4 Days
+
+
+<div class="input-group">
+
+<label>
+
+    <i class="fa-solid fa-phone"></i>
+
+    Mobile Number
+
+</label>
+
+<input
+    type="text"
+    name="phone"
+    value="<?php echo htmlspecialchars($user['mobile'] ?? ''); ?>"
+    required
+>
+
 </div>
+
+
+
+<div class="input-group full-width">
+
+<label>
+
+    <i class="fa-solid fa-envelope"></i>
+
+    Email Address
+
+</label>
+
+<input
+    type="email"
+    name="email"
+    value="<?php echo htmlspecialchars($email); ?>"
+    required
+>
+
+</div>
+
+
+
+<div class="input-group full-width">
+
+<label>
+
+    <i class="fa-solid fa-location-dot"></i>
+
+    Delivery Address
+
+</label>
+
+<input
+    type="text"
+    name="address"
+    value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>"
+    required
+>
+
+</div>
+
+
+</div>
+
 
 <h3 class="payment-title">
+
     <i class="fa-solid fa-wallet"></i>
+
     Choose Payment Method
+
 </h3>
+
 
 <div class="payment-options">
 
-    <label class="payment-card">
-        <input type="radio"
-               name="payment_method"
-               value="COD"
-               checked>
 
-        <div class="payment-content">
-            <i class="fa-solid fa-money-bill-wave"></i>
-            <div>
-                <h4>Cash On Delivery</h4>
-                <p>Pay when your coffee arrives</p>
-            </div>
-        </div>
-    </label>
+<label class="payment-card">
 
-    <label class="payment-card">
-        <input type="radio"
-               name="payment_method"
-               value="RAZORPAY">
+<input
+    type="radio"
+    name="payment_method"
+    value="COD"
+    checked
+>
 
+<div class="payment-content">
 
-               
-<label><input type="radio" name="payment_method" value="RAZORPAY"> Online Payment</label>
+    <i class="fa-solid fa-money-bill-wave"></i>
 
-        <div class="payment-content">
-            <i class="fa-solid fa-credit-card"></i>
-            <div>
-                <h4>Online Payment</h4>
-                <p>UPI, Card, Net Banking & Wallets</p>
-            </div>
-        </div>
-    </label>
+    <div>
 
-</div>
-
-</div>
-
-<!-- RIGHT -->
-<!-- RIGHT -->
-<div class="summary-card">
-
-<h2 style="margin-bottom:20px;">
-    Order Summary
-</h2>
-
-<?php
-
-if(isset($_SESSION['checkout_items'])){
-
-    $grand_total = 0;
-
-    foreach($_SESSION['checkout_items'] as $item){
-
-        $line_total =
-            $item['price'] *
-            $item['quantity'];
-
-        $grand_total += $line_total;
-?>
-
-<div class="checkout-product">
-
-    <img src="images/<?php echo $item['image']; ?>"
-         class="summary-product-img">
-
-    <div class="product-info">
-
-        <h4>
-            <?php echo $item['name']; ?>
-        </h4>
+        <h4>Cash On Delivery</h4>
 
         <p>
-            Qty :
-            <?php echo $item['quantity']; ?>
-        </p>
-
-        <p>
-            ₹<?php echo $line_total; ?>
+            Pay when your coffee arrives
         </p>
 
     </div>
 
-    <a href="remove_checkout_item.php?id=<?php echo $item['product_id']; ?>"
-       class="remove-item-btn"
-       onclick="return confirm('Remove this item from order?')">
+</div>
 
-        <i class="fa-solid fa-xmark"></i>
+</label>
 
-    </a>
+
+
+<label class="payment-card">
+
+<input
+    type="radio"
+    name="payment_method"
+    value="RAZORPAY"
+>
+
+<div class="payment-content">
+
+    <i class="fa-solid fa-credit-card"></i>
+
+    <div>
+
+        <h4>Online Payment</h4>
+
+        <p>
+            UPI, Card, Net Banking & Wallets
+        </p>
+
+    </div>
 
 </div>
 
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- =====================
+     ORDER SUMMARY
+===================== -->
+
+<div class="summary-card">
+
+<h2>
+
+    Order Summary
+
+</h2>
+
+
+<?php foreach ($_SESSION['checkout_items'] as $item): ?>
+
 <?php
-    }
+
+$line_total =
+    (float)$item['price']
+    *
+    (int)$item['quantity'];
+
 ?>
 
-<a href="catalogue.php"
-class="add-more-btn">
 
-<i class="fa-solid fa-plus"></i>
-Add More Items
+<div class="checkout-product">
+
+
+<img
+    src="images/<?php echo htmlspecialchars($item['image']); ?>"
+    class="summary-product-img"
+>
+
+
+<div class="product-info">
+
+<h4>
+
+    <?php
+    echo htmlspecialchars($item['name']);
+    ?>
+
+</h4>
+
+
+<p>
+
+    Qty:
+    <?php echo (int)$item['quantity']; ?>
+
+</p>
+
+
+<p>
+
+    ₹<?php echo number_format($line_total, 2); ?>
+
+</p>
+
+</div>
+
+
+<a
+    href="remove_checkout_item.php?id=<?php echo (int)$item['product_id']; ?>"
+    class="remove-item-btn"
+    title="Remove Item"
+>
+
+    <i class="fa-solid fa-xmark"></i>
 
 </a>
 
-<hr>
 
-<div class="summary-row total">
-    <span>Subtotal</span>
-    <span>₹<?php echo $grand_total; ?></span>
 </div>
 
-<input
-type="hidden"
-name="total_amount"
-id="totalAmount"
-value="<?php echo $grand_total; ?>">
 
-<?php
-}
-?>
+<?php endforeach; ?>
 
-<button type="submit"
-class="place-btn">
 
-Place Order
+<a
+    href="catalogue.php"
+    class="add-more-btn"
+>
+
+    <i class="fa-solid fa-plus"></i>
+
+    Add More Items
+
+</a>
+
+
+<hr>
+
+
+<div class="summary-row">
+
+<span>
+
+    Subtotal
+
+</span>
+
+<span>
+
+    ₹<?php echo number_format($subtotal, 2); ?>
+
+</span>
+
+</div>
+
+
+<?php if ($delivery_charge > 0): ?>
+
+<div class="summary-row">
+
+<span>
+
+    Delivery
+
+</span>
+
+<span>
+
+    ₹<?php echo number_format($delivery_charge, 2); ?>
+
+</span>
+
+</div>
+
+<?php endif; ?>
+
+
+<div class="summary-row total">
+
+<span>
+
+    Total
+
+</span>
+
+<span>
+
+    ₹<?php echo number_format($total, 2); ?>
+
+</span>
+
+</div>
+
+
+<button
+    type="submit"
+    class="place-btn"
+>
+
+    Place Order
 
 </button>
+
 
 </div>
 
@@ -928,153 +1340,411 @@ Place Order
 
 </form>
 
+
+
+<!-- =====================
+     CUSTOM ALERT
+===================== -->
+
+<div
+    id="customAlert"
+    class="custom-alert-overlay"
+>
+
+<div class="custom-alert-card">
+
+
+<div class="custom-alert-icon">
+
+    <i class="fa-solid fa-circle-exclamation"></i>
+
+</div>
+
+
+<h3 id="customAlertTitle">
+
+    Oops!
+
+</h3>
+
+
+<p id="customAlertMessage">
+
+    Something went wrong.
+
+</p>
+
+
+<button
+    type="button"
+    class="custom-alert-btn"
+    onclick="closeCustomAlert()"
+>
+
+    Continue
+
+</button>
+
+
+</div>
+
+</div>
+
+
+
 <script>
 
-window.addEventListener("DOMContentLoaded", () => {
 
-    const form = document.getElementById("checkoutForm");
-    if (!form) return;
+/* =========================
+   CUSTOM ALERT
+========================= */
 
-    // =========================
-    // STEP ANIMATION (premium)
-    // =========================
-    const steps = document.querySelectorAll(".step");
+function showCustomAlert(title, message) {
 
-    steps.forEach((step, i) => {
-        setTimeout(() => {
-            step.style.transform = "translateY(-6px)";
-            step.style.opacity = "1";
+    document
+        .getElementById("customAlertTitle")
+        .innerText = title;
 
-            setTimeout(() => {
-                step.style.transform = "translateY(0px)";
-            }, 200);
+    document
+        .getElementById("customAlertMessage")
+        .innerText = message;
 
-        }, i * 120);
-    });
+    document
+        .getElementById("customAlert")
+        .classList
+        .add("show");
+}
 
-    // =========================
-    // FORM SUBMIT CONTROL
-    // =========================
-    form.addEventListener("submit", function (e) {
 
-        const selected = document.querySelector('input[name="payment_method"]:checked');
+function closeCustomAlert() {
 
-        if (!selected) {
-            e.preventDefault();
-            alert("Please select payment method");
-            return;
+    document
+        .getElementById("customAlert")
+        .classList
+        .remove("show");
+}
+
+
+
+/* =========================
+   FORM SUBMIT
+========================= */
+
+document
+    .getElementById("checkoutForm")
+    .addEventListener(
+        "submit",
+        function(e) {
+
+            const selected =
+                document.querySelector(
+                    'input[name="payment_method"]:checked'
+                );
+
+
+            if (!selected) {
+
+                e.preventDefault();
+
+                showCustomAlert(
+                    "Payment Method Required",
+                    "Please select a payment method."
+                );
+
+                return;
+            }
+
+
+            /*
+             COD
+            */
+
+            if (
+                selected.value === "COD"
+            ) {
+
+                return true;
+            }
+
+
+            /*
+             RAZORPAY
+            */
+
+            if (
+                selected.value === "RAZORPAY"
+            ) {
+
+                e.preventDefault();
+
+                startRazorpay();
+            }
+
         }
-
-        // COD → normal submit
-        if (selected.value === "COD") {
-            return true;
-        }
-
-        // Razorpay → stop submit
-        if (selected.value === "RAZORPAY") {
-            e.preventDefault();
-            startRazorpay();
-        }
-    });
-});
+    );
 
 
-// =========================
-// RAZORPAY FLOW (PRO)
-// =========================
+
+/* =========================
+   RAZORPAY
+========================= */
+
 function startRazorpay() {
 
-    const btn = document.querySelector(".place-btn");
-    btn.innerHTML = "Processing Payment...";
+    const btn =
+        document.querySelector(".place-btn");
+
+
     btn.disabled = true;
 
-    let amount = document.getElementById("totalAmount").value;
+    btn.innerHTML =
+        "Processing Payment...";
 
-    fetch("create_order.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "amount=" + amount
-    })
+
+    const amount =
+        document.getElementById("totalAmount").value;
+
+
+    fetch(
+        "create_order.php",
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/x-www-form-urlencoded"
+
+            },
+
+            body:
+                "amount=" +
+                encodeURIComponent(amount)
+
+        }
+    )
+
     .then(res => res.text())
+
     .then(text => {
 
-        console.log("RAW RESPONSE:", text);
-
         let data;
+
+
         try {
-            data = JSON.parse(text);
-        } catch (e) {
-            alert("Server error in create_order.php");
-            btn.innerHTML = "Place Order";
+
+            data =
+                JSON.parse(text);
+
+        }
+
+        catch(error) {
+
+            showCustomAlert(
+                "Server Error",
+                "Unable to create payment order."
+            );
+
             btn.disabled = false;
+
+            btn.innerHTML =
+                "Place Order";
+
             return;
         }
 
+
         const options = {
+
             key: data.key,
+
             amount: data.amount,
+
             currency: "INR",
+
             order_id: data.order_id,
 
-            name: "Your Coffee Shop",
-            description: "Secure Payment",
+            name: "Aroma Haven",
+
+            description:
+                "Coffee Order Payment",
+
 
             theme: {
+
                 color: "#58260f"
+
             },
 
-            handler: function (response) {
 
-                btn.innerHTML = "Verifying Payment...";
+            handler:
+            function(response) {
 
-                fetch("verify_payment.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body:
-                        "razorpay_payment_id=" + response.razorpay_payment_id +
-                        "&razorpay_order_id=" + response.razorpay_order_id +
-                        "&razorpay_signature=" + response.razorpay_signature +
-                        "&amount=" + amount
-                })
-                .then(res => res.text())
-                .then(res => {
+                verifyPayment(
+                    response,
+                    amount,
+                    btn
+                );
 
-                    console.log("VERIFY:", res);
-
-                    if (res.trim() === "success") {
-                        btn.innerHTML = "Success!";
-                        window.location = "order_success.php";
-                    } else {
-                        alert("Payment verification failed");
-                        btn.innerHTML = "Place Order";
-                        btn.disabled = false;
-                    }
-
-                });
             },
+
 
             modal: {
-                ondismiss: function () {
-                    btn.innerHTML = "Place Order";
+
+                ondismiss:
+                function() {
+
                     btn.disabled = false;
+
+                    btn.innerHTML =
+                        "Place Order";
+
                 }
+
             }
+
         };
 
-        const rzp = new Razorpay(options);
+
+        const rzp =
+            new Razorpay(options);
+
+
         rzp.open();
 
-        btn.innerHTML = "Place Order";
-        btn.disabled = false;
     })
-    .catch(err => {
-        console.error(err);
-        alert("Payment error");
-        btn.innerHTML = "Place Order";
+
+
+    .catch(() => {
+
+        showCustomAlert(
+            "Payment Error",
+            "Something went wrong. Please try again."
+        );
+
         btn.disabled = false;
+
+        btn.innerHTML =
+            "Place Order";
+
     });
+
 }
+
+
+
+/* =========================
+   VERIFY PAYMENT
+========================= */
+
+function verifyPayment(
+    response,
+    amount,
+    btn
+) {
+
+    btn.innerHTML =
+        "Verifying Payment...";
+
+
+    fetch(
+        "verify_payment.php",
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/x-www-form-urlencoded"
+
+            },
+
+
+            body:
+
+                "razorpay_payment_id=" +
+                encodeURIComponent(
+                    response.razorpay_payment_id
+                )
+
+                +
+
+                "&razorpay_order_id=" +
+                encodeURIComponent(
+                    response.razorpay_order_id
+                )
+
+                +
+
+                "&razorpay_signature=" +
+                encodeURIComponent(
+                    response.razorpay_signature
+                )
+
+                +
+
+                "&amount=" +
+                encodeURIComponent(
+                    amount
+                )
+
+        }
+    )
+
+    .then(res => res.text())
+
+    .then(result => {
+
+        if (
+            result.trim() === "success"
+        ) {
+
+            /*
+             Submit actual order
+            */
+
+            document
+                .getElementById("checkoutForm")
+                .submit();
+
+        }
+
+        else {
+
+            showCustomAlert(
+                "Payment Failed",
+                "Payment verification failed. Please try again."
+            );
+
+            btn.disabled = false;
+
+            btn.innerHTML =
+                "Place Order";
+
+        }
+
+    })
+
+    .catch(() => {
+
+        showCustomAlert(
+            "Verification Error",
+            "Unable to verify payment."
+        );
+
+        btn.disabled = false;
+
+        btn.innerHTML =
+            "Place Order";
+
+    });
+
+}
+
 </script>
 
 </body>
+
 </html>

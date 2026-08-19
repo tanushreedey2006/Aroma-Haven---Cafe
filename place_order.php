@@ -1,122 +1,194 @@
-
 <?php
+
 session_start();
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
-include("connect.php");
 global $conn;
+include("connect.php");
+
+/** @var mysqli $conn */
+
+
 /* ==============================
    STYLISH ERROR PAGE
 ================================ */
+
 function showError(string $message): void
 {
     exit('
     <!DOCTYPE html>
     <html lang="en">
+
     <head>
+
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="weblogo.png">
+
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0">
+
+        <link rel="icon"
+              type="image/png"
+              href="weblogo.png">
 
         <title>Order Error | Aroma Haven</title>
 
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+
+            *{
+                margin:0;
+                padding:0;
+                box-sizing:border-box;
             }
 
-            body {
-                min-height: 100vh;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 20px;
-                font-family: Arial, sans-serif;
-                background: linear-gradient(135deg, #f5ebe0, #d6b89c);
+            body{
+                min-height:100vh;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                padding:20px;
+                font-family:Arial,sans-serif;
+
+                background:
+                linear-gradient(
+                    135deg,
+                    #f5ebe0,
+                    #d6b89c
+                );
             }
 
-            .error-box {
-                width: 100%;
-                max-width: 520px;
-                background: #fff;
-                padding: 50px 35px;
-                text-align: center;
-                border-radius: 20px;
-                box-shadow: 0 15px 45px rgba(70, 40, 20, 0.18);
+            .error-box{
+                width:100%;
+                max-width:520px;
+
+                background:#fff;
+
+                padding:50px 35px;
+
+                text-align:center;
+
+                border-radius:25px;
+
+                box-shadow:
+                0 15px 45px
+                rgba(70,40,20,.18);
             }
 
-            .logo {
-                color: #6f4e37;
-                font-size: 14px;
-                font-weight: bold;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-                margin-bottom: 25px;
+            .logo{
+                color:#6f4e37;
+
+                font-size:14px;
+
+                font-weight:bold;
+
+                letter-spacing:2px;
+
+                text-transform:uppercase;
+
+                margin-bottom:25px;
             }
 
-            .icon {
-                width: 80px;
-                height: 80px;
-                margin: 0 auto 25px;
-                border-radius: 50%;
-                background: #fde8e8;
-                color: #c0392b;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 42px;
-                font-weight: bold;
+            .icon{
+                width:80px;
+                height:80px;
+
+                margin:0 auto 25px;
+
+                border-radius:50%;
+
+                background:#fde8e8;
+
+                color:#c0392b;
+
+                display:flex;
+
+                align-items:center;
+
+                justify-content:center;
+
+                font-size:42px;
+
+                font-weight:bold;
             }
 
-            h2 {
-                color: #3e2723;
-                margin-bottom: 15px;
+            h2{
+                color:#3e2723;
+
+                margin-bottom:15px;
             }
 
-            p {
-                color: #666;
-                line-height: 1.7;
-                margin-bottom: 30px;
+            p{
+                color:#666;
+
+                line-height:1.7;
+
+                margin-bottom:30px;
             }
 
-            .back-btn {
-                display: inline-block;
-                background: #6f4e37;
-                color: white;
-                text-decoration: none;
-                padding: 13px 30px;
-                border-radius: 8px;
+            .back-btn{
+
+                display:inline-block;
+
+                background:#6f4e37;
+
+                color:white;
+
+                text-decoration:none;
+
+                padding:13px 30px;
+
+                border-radius:10px;
+
+                transition:.3s;
             }
 
-            .back-btn:hover {
-                background: #4e342e;
+            .back-btn:hover{
+
+                background:#4e342e;
+
+                transform:translateY(-2px);
             }
+
         </style>
+
     </head>
+
 
     <body>
 
         <div class="error-box">
 
-            <div class="logo">Aroma Haven</div>
+            <div class="logo">
+                Aroma Haven
+            </div>
 
-            <div class="icon">!</div>
 
-            <h2>Oops! Something went wrong</h2>
+            <div class="icon">
+                !
+            </div>
 
-            <p>' . htmlspecialchars($message) . '</p>
 
-            <a href="javascript:history.back()" class="back-btn">
+            <h2>
+                Oops! Something went wrong
+            </h2>
+
+
+            <p>
+                ' . htmlspecialchars($message) . '
+            </p>
+
+
+            <a href="javascript:history.back()"
+               class="back-btn">
+
                 Go Back
+
             </a>
 
         </div>
 
     </body>
+
     </html>
     ');
 }
@@ -125,10 +197,14 @@ function showError(string $message): void
 /* ==============================
    CHECK LOGIN
 ================================ */
+
 if (!isset($_SESSION['user_email'])) {
+
     header("Location: register.php");
+
     exit();
 }
+
 
 $email = mysqli_real_escape_string(
     $conn,
@@ -139,47 +215,68 @@ $email = mysqli_real_escape_string(
 /* ==============================
    GET USER
 ================================ */
+
 $user_query = mysqli_query(
     $conn,
-    "SELECT * FROM clients WHERE email='$email' LIMIT 1"
+    "SELECT *
+     FROM clients
+     WHERE email='$email'
+     LIMIT 1"
 );
 
-if (!$user_query || mysqli_num_rows($user_query) === 0) {
-    showError("User not found. Please log in again.");
+
+if (
+    !$user_query ||
+    mysqli_num_rows($user_query) === 0
+) {
+
+    showError(
+        "User not found. Please log in again."
+    );
 }
 
+
 $user = mysqli_fetch_assoc($user_query);
+
 $user_id = (int)$user['id'];
 
 
 /* ==============================
    CHECK CHECKOUT ITEMS
 ================================ */
+
 if (
     empty($_SESSION['checkout_items']) ||
     !is_array($_SESSION['checkout_items'])
 ) {
-    showError("No items found in checkout.");
+
+    showError(
+        "No items found in checkout."
+    );
 }
 
 
 /* ==============================
    GET FORM DATA
 ================================ */
+
 $name = mysqli_real_escape_string(
     $conn,
     trim($_POST['customer_name'] ?? '')
 );
+
 
 $phone = mysqli_real_escape_string(
     $conn,
     trim($_POST['phone'] ?? '')
 );
 
+
 $customer_email = mysqli_real_escape_string(
     $conn,
     trim($_POST['email'] ?? '')
 );
+
 
 $address = mysqli_real_escape_string(
     $conn,
@@ -190,225 +287,500 @@ $address = mysqli_real_escape_string(
 /* ==============================
    VALIDATE FORM
 ================================ */
+
 if (
     $name === '' ||
     $phone === '' ||
     $customer_email === '' ||
     $address === ''
 ) {
-    showError("Please fill in all delivery details.");
+
+    showError(
+        "Please fill in all delivery details."
+    );
 }
 
 
 /* ==============================
    PAYMENT METHOD
 ================================ */
-$payment_method = $_POST['payment_method'] ?? 'COD';
+
+$payment_method =
+    $_POST['payment_method'] ?? 'COD';
+
 
 $allowed_methods = [
+
     'COD',
+
     'RAZORPAY'
+
 ];
 
-if (!in_array($payment_method, $allowed_methods, true)) {
+
+if (
+    !in_array(
+        $payment_method,
+        $allowed_methods,
+        true
+    )
+) {
+
     $payment_method = 'COD';
+
 }
 
-$payment_method = mysqli_real_escape_string(
-    $conn,
-    $payment_method
-);
+
+$payment_method =
+    mysqli_real_escape_string(
+        $conn,
+        $payment_method
+    );
 
 
 /* ==============================
    GENERATE ORDER NUMBER
 ================================ */
-$order_number = "ORD" . time() . rand(1000, 9999);
+
+$order_number =
+    "ORD" .
+    time() .
+    rand(1000, 9999);
 
 
 /* ==============================
    CHECK STOCK
+   VALIDATE PRODUCTS
    CALCULATE TOTAL
 ================================ */
+
 $grand_total = 0;
+
 $validated_items = [];
+
 
 foreach ($_SESSION['checkout_items'] as $item) {
 
-    $product_id = (int)($item['product_id'] ?? 0);
-    $qty = (int)($item['quantity'] ?? 0);
 
-    if ($product_id <= 0 || $qty <= 0) {
-        showError("Invalid product or quantity.");
+    /* GET PRODUCT ID */
+
+    $product_id =
+        (int)($item['product_id'] ?? 0);
+
+
+    /* GET QUANTITY */
+
+    $qty =
+        (int)($item['quantity'] ?? 0);
+
+
+    /* VALIDATE */
+
+    if (
+        $product_id <= 0 ||
+        $qty <= 0
+    ) {
+
+        showError(
+            "Invalid product or quantity."
+        );
+
     }
+
+
+    /* ==============================
+       GET PRODUCT FROM DATABASE
+    ============================== */
 
     $product_query = mysqli_query(
+
         $conn,
-        "SELECT * FROM products
+
+        "SELECT *
+         FROM products
          WHERE id='$product_id'
-         AND status=1
          LIMIT 1"
+
     );
 
+
     if (!$product_query) {
-        showError("Unable to verify product information.");
+
+        showError(
+            "Unable to verify product information."
+        );
+
     }
 
-    $product = mysqli_fetch_assoc($product_query);
+
+    $product =
+        mysqli_fetch_assoc(
+            $product_query
+        );
+
+
+    /* PRODUCT NOT FOUND */
 
     if (!$product) {
-        showError("A product in your checkout is no longer available.");
+
+        $product_name =
+            $item['name'] ??
+            'Unknown Product';
+
+
+        showError(
+
+            "Product ID " .
+            $product_id .
+            " (" .
+            htmlspecialchars($product_name) .
+            ") is no longer available."
+
+        );
+
     }
+
+
+    /* ==============================
+       CHECK STOCK
+    ============================== */
+
+    $available_stock =
+        (int)$product['stock'];
+
 
     /* OUT OF STOCK */
-    if ((int)$product['stock'] <= 0) {
+
+    if ($available_stock <= 0) {
+
         showError(
-            "Sorry! " . $product['name'] .
-                " is currently out of stock and cannot be ordered at the moment."
+
+            "Sorry! " .
+
+            $product['name'] .
+
+            " is currently out of stock."
+
         );
+
     }
+
 
     /* NOT ENOUGH STOCK */
-    if ($qty > (int)$product['stock']) {
+
+    if ($qty > $available_stock) {
+
         showError(
+
             "Sorry! Only " .
-                $product['stock'] .
-                " item(s) of " .
-                $product['name'] .
-                " are currently available."
+
+            $available_stock .
+
+            " item(s) of " .
+
+            $product['name'] .
+
+            " are currently available."
+
         );
+
     }
 
-    $price = (float)$product['price'];
-    $total = $price * $qty;
+
+    /* ==============================
+       PRICE FROM DATABASE
+    ============================== */
+
+    $price =
+        (float)$product['price'];
+
+
+    /* ITEM TOTAL */
+
+    $total =
+        $price * $qty;
+
+
+    /* ADD GRAND TOTAL */
 
     $grand_total += $total;
 
+
+    /* ==============================
+       SAVE VALIDATED ITEM
+    ============================== */
+
     $validated_items[] = [
-        'product' => $product,
-        'product_id' => $product_id,
-        'qty' => $qty,
-        'price' => $price,
-        'total' => $total
+
+        'product' =>
+            $product,
+
+        'product_id' =>
+            $product_id,
+
+        'qty' =>
+            $qty,
+
+        'price' =>
+            $price,
+
+        'total' =>
+            $total
+
     ];
+
 }
 
 
 /* ==============================
    START TRANSACTION
 ================================ */
+
 mysqli_begin_transaction($conn);
+
 
 try {
 
+
+    /* ==============================
+       INSERT EVERY PRODUCT
+       WITH SAME ORDER NUMBER
+    ============================== */
+
     foreach ($validated_items as $item) {
 
-        $product = $item['product'];
-        $product_id = $item['product_id'];
-        $qty = $item['qty'];
-        $price = $item['price'];
-        $total = $item['total'];
 
-        $product_name = mysqli_real_escape_string(
-            $conn,
-            $product['name']
-        );
-
-        $product_image = mysqli_real_escape_string(
-            $conn,
-            $product['image']
-        );
+        $product =
+            $item['product'];
 
 
-        /* INSERT ORDER */
+        $product_id =
+            $item['product_id'];
+
+
+        $qty =
+            $item['qty'];
+
+
+        $price =
+            $item['price'];
+
+
+        $total =
+            $item['total'];
+
+
+        /* PRODUCT NAME */
+
+        $product_name =
+            mysqli_real_escape_string(
+
+                $conn,
+
+                $product['name']
+
+            );
+
+
+        /* PRODUCT IMAGE */
+
+        $product_image =
+            mysqli_real_escape_string(
+
+                $conn,
+
+                $product['image']
+
+            );
+
+
+        /* ==============================
+           INSERT ORDER ITEM
+        ============================== */
+
         $insert = mysqli_query(
+
             $conn,
+
             "INSERT INTO userorder
+
             (
+
                 order_number,
+
                 customer_id,
+
                 customer_name,
+
                 product_id,
+
                 product_name,
+
                 product_image,
+
                 quantity,
+
                 item_price,
+
                 total_amount,
+
                 grand_total,
+
                 customer_number,
+
                 shipping_address,
+
                 payment_method,
+
                 payment_status,
+
                 order_status
+
             )
+
             VALUES
+
             (
+
                 '$order_number',
+
                 '$user_id',
+
                 '$name',
+
                 '$product_id',
+
                 '$product_name',
+
                 '$product_image',
+
                 '$qty',
+
                 '$price',
+
                 '$total',
+
                 '$grand_total',
+
                 '$phone',
+
                 '$address',
+
                 '$payment_method',
+
                 'Pending',
+
                 'Processing'
+
             )"
+
         );
+
+
+        /* INSERT FAILED */
 
         if (!$insert) {
+
             throw new Exception(
+
                 "Unable to place your order. Please try again."
+
             );
+
         }
 
 
-        /* UPDATE STOCK */
-        $update_stock = mysqli_query(
-            $conn,
-            "UPDATE products
-             SET stock = stock - $qty
-             WHERE id = $product_id
-             AND stock >= $qty"
-        );
+        /* ==============================
+           UPDATE PRODUCT STOCK
+        ============================== */
+
+        $update_stock =
+            mysqli_query(
+
+                $conn,
+
+                "UPDATE products
+
+                 SET stock = stock - $qty
+
+                 WHERE id = $product_id
+
+                 AND stock >= $qty"
+
+            );
+
+
+        /* STOCK UPDATE FAILED */
 
         if (
+
             !$update_stock ||
+
             mysqli_affected_rows($conn) === 0
+
         ) {
+
             throw new Exception(
-                "Sorry! " . $product['name'] .
-                    " is no longer available in the requested quantity."
+
+                "Sorry! " .
+
+                $product['name'] .
+
+                " is no longer available in the requested quantity."
+
             );
+
         }
+
     }
 
 
-    /* SAVE ALL CHANGES */
+    /* ==============================
+       COMMIT TRANSACTION
+    ============================== */
+
     mysqli_commit($conn);
 
 
-    /* CLEAR CHECKOUT */
-    unset($_SESSION['checkout_items']);
+    /* ==============================
+       CLEAR CHECKOUT SESSION
+    ============================== */
 
-
-    /* REDIRECT */
-    header(
-        "Location: order_success.php?order_no=" .
-            urlencode($order_number)
+    unset(
+        $_SESSION['checkout_items']
     );
 
+
+    /* ==============================
+       REDIRECT SUCCESS PAGE
+    ============================== */
+
+    header(
+
+        "Location: order_success.php?order_no=" .
+
+        urlencode($order_number)
+
+    );
+
+
     exit();
+
+
 } catch (Exception $e) {
+
+
+    /* ==============================
+       ROLLBACK EVERYTHING
+    ============================== */
 
     mysqli_rollback($conn);
 
-    showError($e->getMessage());
-}
-?>
 
+    showError(
+        $e->getMessage()
+    );
+
+}
+
+?>
