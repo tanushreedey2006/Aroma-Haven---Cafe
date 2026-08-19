@@ -1,11 +1,11 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SignUp/SignIn Form</title>  
-    <link rel="stylesheet"  type="text/css" href="../CoffeeShop2/assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"  />
+    <link rel="stylesheet"  type="text/css" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"  />
     <link rel="icon" type="image/png" href="weblogo.png">
 
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
@@ -848,7 +848,7 @@ id="signup_password" />
     <div class="overlay">
       <div class="overlay-panel overlay-left ">
         <div class="img1">
-        <img src="../CoffeeShop2/images/IMG-20250823-WA0048.jpg" ></div>
+        <img src="images/IMG-20250823-WA0048.jpg" ></div>
         <div class="hello1">
         <h1>Welcome Back!!! Glad to see you🤩</h1>
         <p>Get wide range of speciality coffee, tea and beverage.</p></div>
@@ -857,7 +857,7 @@ id="signup_password" />
 
       <div class="overlay-panel overlay-right">
         <div class="img">
-        <img src="../CoffeeShop2/images/IMG-20250823-WA0032.jpg" ></div>
+        <img src="images/IMG-20250823-WA0032.jpg" ></div>
         <div class="hello">
         <h1>Hello, Friend!</h1>
         <h4>Create your account</h4>
@@ -926,7 +926,7 @@ imgInput.addEventListener("change",function(){
 });
 
 </script>
-<script src="../CoffeeShop2/assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

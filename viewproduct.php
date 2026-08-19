@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="coffee.css"  />
     <link rel="icon" type="image/png" href="weblogo.png">
-    <link rel="stylesheet"  type="text/css" href="../CoffeeShop2/assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"  />
+    <link rel="stylesheet"  type="text/css" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"  />
     <link rel="stylesheet" href="coffee.css">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 <title>
@@ -14,7 +14,7 @@ viewproduct
 </title>
 
 <link rel="stylesheet"
-href="../CoffeeShop2/assets/bootstrap-5.3.7-dist/css/bootstrap.min.css">
+href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
@@ -2303,7 +2303,7 @@ Buy Now
  <script src="script.js"></script>
     <script src="search.js"></script>
    
-    <script src="../CoffeeShop2/assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
 function changeImage(src){

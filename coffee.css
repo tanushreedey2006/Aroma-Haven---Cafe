@@ -1,4 +1,4 @@
-* {
+﻿* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -215,7 +215,7 @@ a {
 }
 
 .tesi1 {
-  background-image: url("../CoffeeShop2/images/tesi1.jpg");
+  background-image: url("images/tesi1.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
@@ -226,7 +226,7 @@ a {
 }
 
 .tesi2 {
-  background-image: url("../CoffeeShop2/images/tesi2.jpg");
+  background-image: url("images/tesi2.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
@@ -236,7 +236,7 @@ a {
   margin-top: -4%;
 }
 .tesi3 {
-  background-image: url("../CoffeeShop2/images/tesi3.jpg");
+  background-image: url("images/tesi3.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
@@ -246,7 +246,7 @@ a {
   margin-top: -4%;
 }
 .footer {
-  background-image: url("../CoffeeShop2/images/footer4.jpg");
+  background-image: url("images/footer4.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   width: 100%;
@@ -264,7 +264,7 @@ a {
 } */
 
 .footer2 {
-  background-image: url("../CoffeeShop2/images/footer2.jpg");
+  background-image: url("images/footer2.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   margin-top: 5%;
@@ -273,7 +273,7 @@ a {
 }
 
 .footer3 {
-  background-image: url("../CoffeeShop2/images/footer.jpg");
+  background-image: url("images/footer.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   margin-top: 5%;
@@ -281,7 +281,7 @@ a {
   height: 40vh;
 }
 .footer4 {
-  background-image: url("../CoffeeShop2/images/loc.jpg");
+  background-image: url("images/loc.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   margin-top: 5%;

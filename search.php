@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -208,7 +208,7 @@ if ($search !== '') {
 
     <link
         rel="stylesheet"
-        href="../CoffeeShop2/assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"
+        href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"
     >
 
     <link
@@ -707,7 +707,7 @@ if ($search !== '') {
 
 <script src="search.js"></script>
 
-<script src="../CoffeeShop2/assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 
 
 </body>
