@@ -7,6 +7,7 @@
     <title>Catalogue</title>
 
     <link rel="stylesheet" href="coffee.css">
+    <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />
     <link rel="icon" href="weblogo.png">
 
     <link rel="stylesheet" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css">

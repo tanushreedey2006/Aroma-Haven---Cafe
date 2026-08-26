@@ -200,6 +200,7 @@ if ($search !== '') {
         rel="stylesheet"
         href="coffee.css"
     >
+    <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />
 
     <link
         rel="icon"

@@ -258,6 +258,7 @@
           }
       </style>
       <link rel="stylesheet" type="text/css" href="coffee.css" />
+    <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />
       <link rel="icon" type="image/png" href="weblogo.png">
       <link rel="stylesheet" type="text/css" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css" />
 

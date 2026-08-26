@@ -1,0 +1,787 @@
+﻿/* ============================================================
+   AROMA HAVEN — MOBILE RESPONSIVE FIXES
+   Targets: <=768px (tablet/mobile) and <=480px (small phones)
+   IMPORTANT: Does NOT change any desktop styles.
+   ============================================================ */
+
+/* ============================================================
+   BASE — PREVENT HORIZONTAL SCROLL
+   ============================================================ */
+@media (max-width: 768px) {
+
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+
+  img, video {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* ============================================================
+     NAVBAR
+     ============================================================ */
+  .nav {
+    height: auto !important;
+    min-height: 60px !important;
+    padding: 8px 10px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .img, .nav .img {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 4px !important;
+  }
+
+  .maine {
+    height: auto !important;
+  }
+
+  .search-bar-container {
+    width: 42px !important;
+  }
+
+  .search-bar-container.active {
+    width: 180px !important;
+  }
+
+  /* Cart sidebar full-width on mobile */
+  .cart-sidebar {
+    width: 100vw !important;
+    right: -100vw !important;
+  }
+  .cart-sidebar.active {
+    right: 0 !important;
+  }
+
+  /* ============================================================
+     HERO SECTION
+     ============================================================ */
+  .respon {
+    margin-top: 0 !important;
+  }
+
+  .about {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 24px 16px 20px !important;
+    margin: 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    gap: 20px !important;
+  }
+
+  .left {
+    width: 100% !important;
+    order: 2 !important;
+  }
+
+  .left h1 { font-size: 34px !important; }
+  .left h5 { font-size: 16px !important; }
+  .left p { font-size: 14px !important; }
+
+  .left .d-flex.gap-4 {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+
+  #button, #button1 {
+    width: 155px !important;
+    text-align: center !important;
+    justify-content: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    height: auto !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+  }
+
+  .Slider-Right {
+    width: 100% !important;
+    height: 220px !important;
+    order: 1 !important;
+    overflow: hidden !important;
+  }
+
+  .Slider-Right img {
+    width: 180px !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* Feature cards: hide on mobile to avoid absolute overlap */
+  .abc { display: none !important; }
+
+  .special {
+    position: static !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 16px !important;
+    width: 100% !important;
+  }
+
+  .special > div {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* ============================================================
+     VIDEO SECTION
+     ============================================================ */
+  .mainvideo {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 30px 12px !important;
+    overflow-x: hidden !important;
+  }
+
+  .mainvideo .video {
+    width: 100% !important;
+    height: 210px !important;
+    min-width: unset !important;
+    max-width: 100% !important;
+    border-radius: 10px !important;
+    margin: 0 !important;
+  }
+
+  /* ============================================================
+     OUR DELICIOUS OFFER (coffee type grid)
+     ============================================================ */
+  .details {
+    margin-top: 0 !important;
+    padding: 0 12px !important;
+    overflow: hidden !important;
+  }
+
+  .details h1 { font-size: 24px !important; }
+  .details h5 { font-size: 14px !important; }
+
+  .need {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px 14px !important;
+    width: 100% !important;
+    padding: 20px 14px !important;
+  }
+
+  .need .type {
+    width: 100% !important;
+    text-align: center !important;
+    margin: 0 !important;
+  }
+
+  .need .type .logo {
+    width: 55px !important;
+    height: auto !important;
+  }
+
+  .need .type h4 { font-size: 12px !important; }
+  .need .type p  { font-size: 11px !important; }
+
+  /* ============================================================
+     ABOUT US (.featur / .picture / .explain)
+     ============================================================ */
+  .about_details {
+    margin-top: 0 !important;
+    padding: 0 12px !important;
+    overflow: hidden !important;
+  }
+
+  .featur {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    height: auto !important;
+    padding: 20px 12px !important;
+    margin-top: 0 !important;
+    gap: 20px !important;
+  }
+
+  .picture {
+    width: 100% !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    margin-top: 0 !important;
+  }
+
+  .abimg, .abimg1 {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: cover !important;
+    margin: 0 !important;
+  }
+
+  .explain {
+    width: 100% !important;
+    padding: 16px 12px !important;
+    margin-top: 0 !important;
+    text-align: center !important;
+  }
+
+  .explain h1 { font-size: 24px !important; }
+
+  .explain p {
+    font-size: 13px !important;
+    display: block !important;
+    margin: 0 0 6px !important;
+    text-align: center !important;
+    justify-content: center !important;
+    line-height: 1.6 !important;
+    margin-left: 0 !important;
+  }
+
+  .line {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 60px !important;
+  }
+
+  #button3 {
+    width: auto !important;
+    padding: 10px 28px !important;
+    margin: 18px auto !important;
+    display: block !important;
+    font-size: 14px !important;
+  }
+
+  /* ============================================================
+     INDIAN NEW EXCLUSIVE COFFEE (.new)
+     ============================================================ */
+  .new {
+    flex-direction: column !important;
+    height: auto !important;
+    padding: 20px 16px !important;
+    margin-top: 0 !important;
+    text-align: center !important;
+    gap: 16px !important;
+  }
+
+  .new > div { width: 100% !important; }
+
+  .new > div:first-child img {
+    width: 100% !important;
+    height: 240px !important;
+    object-fit: cover !important;
+  }
+
+  .new h1 { font-size: 20px !important; margin: 0 !important; }
+  .new p  { font-size: 13px !important; margin-left: 0 !important; }
+  .new .pt-5 { padding-top: 14px !important; }
+  .new button { font-size: 13px !important; padding: 8px 18px !important; }
+
+  /* ============================================================
+     FOOTER BANNER IMAGES
+     ============================================================ */
+  .footer2, .footer3, .footer4 {
+    height: 180px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    margin-top: 0 !important;
+  }
+
+  /* ============================================================
+     POPULAR CATEGORIES
+     ============================================================ */
+  .popular {
+    padding: 20px 12px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .popular h1 {
+    font-size: 20px !important;
+    text-align: center !important;
+    padding-top: 0 !important;
+  }
+
+  .popular > div { width: 100% !important; }
+
+  .popular > div > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 14px !important;
+    padding-top: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Each inner row (pair of images) */
+  .popular > div > div > div {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .popular img.scrol {
+    width: 47% !important;
+    height: 170px !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+  }
+
+  .popular img.scroll {
+    width: 47% !important;
+    height: 130px !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ============================================================
+     SHOP SECTION (.SHOP / .test)
+     ============================================================ */
+  .SHOP { width: 100% !important; overflow: hidden !important; }
+
+  .test {
+    height: auto !important;
+    width: 100% !important;
+    flex-direction: column !important;
+    padding: 20px 12px !important;
+    gap: 20px !important;
+  }
+
+  .SHOP .test > div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 14px !important;
+    margin-top: 0 !important;
+  }
+
+  .SHOP .test > div > div {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .SHOP .test img {
+    width: 100% !important;
+    height: 210px !important;
+    object-fit: cover !important;
+  }
+
+  .img1, .img2 {
+    width: 100% !important;
+    padding: 0 !important;
+    text-align: center !important;
+  }
+
+  .img1 h1, .img2 h1 { font-size: 22px !important; }
+  .img1 p,  .img2 p  { font-size: 13px !important; }
+
+  /* ============================================================
+     OPENING HOURS
+     ============================================================ */
+  .open {
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 12px !important;
+    text-align: center !important;
+  }
+
+  /* Slight right shift as requested */
+  .open img {
+    width: 86% !important;
+    max-width: 340px !important;
+    height: auto !important;
+    display: block !important;
+    margin-left: 10% !important;
+    margin-right: auto !important;
+  }
+
+  .hr { margin: 14px 5% !important; font-size: 14px !important; }
+
+  /* ============================================================
+     SEATING ARRANGEMENT
+     ============================================================ */
+  .seat-title {
+    font-size: 24px !important;
+    padding: 24px 0 14px !important;
+  }
+
+  .seat-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    padding: 10px !important;
+  }
+
+  .seat-card { width: 100% !important; }
+
+  .img-box { height: 165px !important; }
+
+  .img-box img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .seat-info { padding: 10px !important; }
+  .seat-info h3 { font-size: 15px !important; }
+  .seat-info p  { font-size: 11px !important; }
+  .book-btn { font-size: 11px !important; padding: 7px !important; }
+
+  /* ============================================================
+     BOOKING SECTION — slight right shift as requested
+     ============================================================ */
+  .seat-grid {
+    padding-left: 14px !important;
+    padding-right: 10px !important;
+  }
+
+  /* book.php class image */
+  .class {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 240px !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 auto 0 5% !important;
+  }
+
+  /* ============================================================
+     CATEGORY / PRODUCT CARDS
+     ============================================================ */
+  .category-section { padding: 18px 12px 36px !important; }
+
+  .category-head {
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .category-head h1 { font-size: 22px !important; }
+
+  .category-products {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  .product-image-box { height: 180px !important; }
+  .product-name  { font-size: 0.85rem !important; }
+  .product-title { font-size: 0.95rem !important; }
+  .new-price     { font-size: 18px !important; }
+
+  /* ============================================================
+     TESTIMONIAL CAROUSEL
+     ============================================================ */
+  .contact1 {
+    margin-top: 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .contact1 .container-fluid { padding: 0 !important; }
+
+  .tesi1, .tesi2, .tesi3 {
+    width: 100% !important;
+    margin-left: 0 !important;
+    height: auto !important;
+    min-height: 280px !important;
+    padding: 14px !important;
+    border-radius: 10px !important;
+    margin-top: 0 !important;
+    background-size: cover !important;
+  }
+
+  .carousel-item { padding: 8px 10px !important; }
+
+  .bg, .bg1, .bg3, .bg5 {
+    position: static !important;
+    width: 90% !important;
+    height: auto !important;
+    margin: 8px auto !important;
+    padding: 10px !important;
+  }
+
+  .carousel-item .d-flex {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .carousel-item img {
+    width: 90px !important;
+    height: 90px !important;
+    object-fit: cover !important;
+    margin: auto !important;
+  }
+
+  .tesi1 h1, .tesi2 h1, .tesi3 h1 {
+    font-size: 20px !important;
+    padding-top: 8px !important;
+    text-align: center !important;
+  }
+
+  /* ============================================================
+     CONTACT / GET IN TOUCH (.neww)
+     ============================================================ */
+  .neww {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .neww > div { width: 100% !important; }
+
+  .neww h1 {
+    font-size: 22px !important;
+    padding: 16px 12px !important;
+  }
+
+  /* Row: map + meet + contact form */
+  .neww .d-flex.gap-5.p-5,
+  .neww > div > .d-flex {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    padding: 14px 12px !important;
+    width: 100% !important;
+  }
+
+  /* Map */
+  .neww .map {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .neww .map iframe {
+    width: 100% !important;
+    height: 220px !important;
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  /* Meet Us */
+  .neww .meet {
+    width: 100% !important;
+    text-align: left !important;
+    margin: 0 !important;
+  }
+
+  .neww .meet h1 { font-size: 20px !important; padding: 8px 0 !important; }
+  .neww .meet p  { font-size: 13px !important; }
+
+  /* Contact form */
+  .neww .cont {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  .neww .cont h2 { font-size: 18px !important; padding: 6px 10px !important; }
+
+  .cont input {
+    width: calc(100% - 20px) !important;
+    margin: 6px 10px !important;
+    height: 44px !important;
+    padding: 0 10px !important;
+    border-radius: 6px !important;
+    display: block !important;
+  }
+
+  .cont textarea {
+    width: calc(100% - 20px) !important;
+    margin: 6px 10px !important;
+    height: 100px !important;
+    padding: 10px !important;
+    border-radius: 6px !important;
+    resize: none !important;
+    display: block !important;
+  }
+
+  .cont button {
+    width: auto !important;
+    min-width: 100px !important;
+    margin: 8px 10px !important;
+    padding: 10px 22px !important;
+    height: auto !important;
+    border-radius: 25px !important;
+    font-size: 14px !important;
+  }
+
+  /* ============================================================
+     FOOTER SUBSCRIBE BANNER (.footer)
+     ============================================================ */
+  .footer {
+    height: auto !important;
+    min-height: 160px !important;
+    padding: 20px 16px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    margin-top: 0 !important;
+  }
+
+  .footer h1 { font-size: 20px !important; }
+  .footer p  { font-size: 13px !important; }
+
+  /* Subscribe row */
+  .footer .respon,
+  .d-flex.gap-3.respon {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+
+  .footer input[type="text"] {
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+
+  .footer .respon button,
+  .footer button {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 8px 22px !important;
+  }
+
+  /* ============================================================
+     FOOTER BOTTOM (.foolast) — slightly shifted right
+     ============================================================ */
+  .foolast {
+    height: auto !important;
+    padding: 20px 0 14px !important;
+  }
+
+  /* Main footer row */
+  .foolast .d-flex.text-light.justify-content-evenly.org,
+  .foolast .org {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 22px !important;
+    padding: 0 24px !important;  /* right shift */
+    width: 100% !important;
+  }
+
+  .foolast .aro {
+    width: 100% !important;
+    text-align: left !important;
+  }
+
+  .foolast .aro h1 { font-size: 20px !important; text-align: left !important; }
+
+  .check {
+    padding-top: 0 !important;
+    min-width: 120px !important;
+    padding-left: 0 !important;
+  }
+
+  .check h4 { font-size: 13px !important; }
+  .check p  { font-size: 12px !important; }
+
+  .share-container {
+    padding-top: 10px !important;
+    gap: 7px !important;
+  }
+
+  .copylast { padding: 8px 24px !important; }
+  .copylast p { font-size: 12px !important; text-align: center !important; padding-top: 0 !important; }
+
+} /* end @media 768px */
+
+
+/* ============================================================
+   SMALL PHONES — <=480px
+   ============================================================ */
+@media (max-width: 480px) {
+
+  .left h1 { font-size: 28px !important; }
+  .left h5 { font-size: 14px !important; }
+
+  .Slider-Right { height: 190px !important; }
+  .Slider-Right img { width: 150px !important; }
+
+  /* Offer: 1-column */
+  .need {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    padding: 14px !important;
+  }
+
+  /* About images */
+  .abimg, .abimg1 {
+    width: 95px !important;
+    height: 95px !important;
+  }
+
+  .explain h1 { font-size: 20px !important; }
+  .explain p  { font-size: 12px !important; }
+
+  /* Seat: 1-column */
+  .seat-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    padding: 8px !important;
+  }
+
+  .img-box { height: 190px !important; }
+
+  /* Category/product: 1-column */
+  .category-products {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* Popular: stack images */
+  .popular > div > div > div {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .popular img.scrol,
+  .popular img.scroll {
+    width: 90% !important;
+    height: 180px !important;
+  }
+
+  /* Opening: center on tiny phones */
+  .open img {
+    width: 90% !important;
+    margin-left: 5% !important;
+  }
+
+  /* Footer bottom: full-column on tiny phones */
+  .foolast .org {
+    flex-direction: column !important;
+    padding: 0 16px !important;
+    gap: 18px !important;
+  }
+
+  .check { width: 100% !important; min-width: unset !important; }
+
+  .mainvideo .video { height: 180px !important; }
+
+  .new > div:first-child img { height: 200px !important; }
+
+  .SHOP .test img { height: 180px !important; }
+
+  .img1 h1, .img2 h1 { font-size: 18px !important; }
+
+  .tesi1, .tesi2, .tesi3 { min-height: 240px !important; }
+
+  .neww .map iframe { height: 190px !important; }
+
+  .cont input { height: 40px !important; }
+  .cont textarea { height: 90px !important; }
+
+  .footer h1 { font-size: 17px !important; }
+  .seat-title { font-size: 21px !important; }
+  .category-head h1 { font-size: 20px !important; }
+
+}
