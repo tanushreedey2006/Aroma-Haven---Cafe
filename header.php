@@ -1161,9 +1161,9 @@ PREMIUM PROFILE DROPDOWN
 
     order:10;
 
-    width:70% !important;
+    width:100% !important;
 
-    margin:-11% 0 0 !important;
+    margin:3% 19%  !important;
 
     display:flex;
 
@@ -1182,7 +1182,7 @@ PREMIUM PROFILE DROPDOWN
 
 .search-bar-container .input{
 
-    width:100%;
+    width:100% !important;
 
     border:none;
 
@@ -1639,14 +1639,15 @@ PREMIUM PROFILE DROPDOWN
 }
 
 .sign{
-    /* margin:0; */
-    margin-top:-2.4em !important;
-
-    width:95px;
+    margin: -30% 20% 6%;
+    /* margin-top:-25% !important; */
+    /* padding: 3% !important; */
+    width:5px !important;
     height:40px;
     font-size:15px;
     transform:none;
 }
+
 
 }
 
@@ -2489,22 +2490,6 @@ margin-top: 3% ;
         </div>
     </div>
     
- <!-- <div class="mobile-overlay" id="overlay" onclick="closeMenu()"></div> -->
-
-<!-- <div class="Alllink" id="mobileMenu">
-
-    <div class="close-menu" onclick="closeMenu()">
-        <i class="fas fa-times"></i>
-    </div>
-
-    <a href="index.php">Home</a>
-    <a href="about.php">About</a>
-    <a href="catalogue.php">Catalogue</a>
-    <a href="service.php">Service</a>
-    <a href="gallery.php">Gallery</a>
-
-</div> -->
-
 
 
     <script src="script.js"></script>
