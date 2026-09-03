@@ -1,4 +1,4 @@
-﻿        <?php
+﻿﻿        <?php
         include('connect.php');
         session_start();
 
@@ -1775,6 +1775,631 @@
 
 
                 }
+                
+                
+                
+              
+  /* =========================================
+   MOBILE COFFEE SLIDER
+   ONE IMAGE AT A TIME
+   2 SECONDS EACH
+   ========================================= */
+
+@media screen and (max-width: 750px) {
+
+    .Slider-Right {
+        position: relative !important;
+
+        width: 100% !important;
+        height: 240px !important;
+
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+    }
+
+    .Slider-Right-inner {
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 320px !important;
+
+        height: 240px !important;
+
+        margin: 0 auto !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+    }
+
+    .Slider-Right-inner img {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 50% !important;
+
+        width: 100% !important;
+        max-width: 320px !important;
+
+        height: 240px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        object-fit: contain !important;
+
+        transform: translateX(-50%) !important;
+
+        display: block !important;
+
+        opacity: 0 !important;
+
+        animation: none !important;
+
+        transition: opacity 0.15s linear !important;
+
+        pointer-events: none !important;
+    }
+
+    .Slider-Right-inner img.mobile-slide-active {
+        opacity: 1 !important;
+    }
+}
+
+
+/* SMALL PHONE */
+
+@media screen and (max-width: 360px) {
+
+    .Slider-Right {
+        height: 215px !important;
+    }
+
+    .Slider-Right-inner {
+        max-width: 280px !important;
+        height: 215px !important;
+    }
+
+    .Slider-Right-inner img {
+        max-width: 280px !important;
+        height: 215px !important;
+    }
+}             
+                
+
+                
+                
+                
+                
+/* =====================================================
+   FINAL MOBILE COFFEE SLIDER
+   ONE IMAGE AT A TIME
+   2 SECONDS EACH
+   ===================================================== */
+
+.coffee-mobile-slider {
+    position: relative !important;
+    width: 100% !important;
+    height: 300px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.coffee-slide {
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 50% !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    max-width: 380px !important;
+    max-height: 300px !important;
+
+    object-fit: contain !important;
+
+    transform: translateX(-50%) !important;
+
+    opacity: 0 !important;
+    visibility: hidden !important;
+
+    display: block !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    animation: none !important;
+    transition: none !important;
+
+    pointer-events: none !important;
+
+    z-index: 1 !important;
+}
+
+.coffee-slide.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 2 !important;
+}
+
+
+/* ===============================
+   MOBILE
+   =============================== */
+
+@media screen and (max-width: 750px) {
+
+    .coffee-mobile-slider {
+        width: 100% !important;
+        height: 250px !important;
+
+        min-height: 250px !important;
+        max-height: 250px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        position: relative !important;
+
+        overflow: hidden !important;
+
+        display: block !important;
+    }
+
+    .coffee-slide {
+        top: 0 !important;
+        left: 50% !important;
+
+        width: 100% !important;
+        height: 250px !important;
+
+        max-width: 330px !important;
+        max-height: 250px !important;
+
+        object-fit: contain !important;
+
+        transform: translateX(-50%) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        animation: none !important;
+        transition: opacity 0.15s ease !important;
+    }
+
+    .coffee-slide.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+
+/* ===============================
+   SMALL PHONES
+   =============================== */
+
+@media screen and (max-width: 400px) {
+
+    .coffee-mobile-slider {
+        height: 220px !important;
+        min-height: 220px !important;
+        max-height: 220px !important;
+    }
+
+    .coffee-slide {
+        width: 100% !important;
+        height: 220px !important;
+
+        max-width: 290px !important;
+        max-height: 220px !important;
+    }
+}
+                
+                
+             /* =========================================
+   MOBILE VIDEO HORIZONTAL SCROLL
+   CSS ONLY — NO JAVASCRIPT
+========================================= */
+
+@media (max-width: 576px) {
+
+    .mainvideo {
+        width: 100% !important;
+        display: flex !important;
+
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+
+        justify-content: flex-start !important;
+        align-items: center !important;
+
+        gap: 15px !important;
+
+        padding: 40px 15px !important;
+        margin: 0 !important;
+
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+
+        -webkit-overflow-scrolling: touch !important;
+
+        scroll-snap-type: x mandatory !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .mainvideo .video {
+        flex: 0 0 90% !important;
+
+        width: 90% !important;
+        min-width: 90% !important;
+        max-width: 90% !important;
+
+        height: 230px !important;
+
+        object-fit: cover !important;
+
+        border-radius: 10px !important;
+
+        margin: 0 !important;
+
+        scroll-snap-align: center !important;
+    }
+
+    /* scrollbar */
+    .mainvideo::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    .mainvideo::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .mainvideo::-webkit-scrollbar-thumb {
+        background: #8b5e3c;
+        border-radius: 20px;
+    }
+}
+
+
+/* SMALL MOBILE */
+
+@media (max-width: 400px) {
+
+    .mainvideo {
+        gap: 12px !important;
+        padding: 30px 12px !important;
+    }
+
+    .mainvideo .video {
+        flex: 0 0 88% !important;
+        width: 88% !important;
+        min-width: 88% !important;
+        max-width: 88% !important;
+        height: 210px !important;
+    }
+    
+
+}
+                
+                
+                
+                
+
+
+@media (max-width: 750px) {
+
+    /* FULL ABOUT SECTION */
+    .about_details {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 25px 12px 35px !important;
+
+        background: #f4eee3 !important;
+
+        overflow: hidden !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* MAIN ABOUT ROW */
+    .about_details .featur {
+        width: 100% !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        flex-wrap: nowrap !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        gap: 20px !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        height: auto !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+
+
+    .about_details .picture {
+        width: 100% !important;
+
+        display: flex !important;
+
+        flex-direction: row !important;
+
+        flex-wrap: nowrap !important;
+
+        justify-content: center !important;
+
+        align-items: center !important;
+
+        gap: 18px !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        height: auto !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* REMOVE OLD POSITIONS */
+    .about_details .abimg,
+    .about_details .abimg1 {
+
+        width: 115px !important;
+
+        height: 115px !important;
+
+        max-width: 115px !important;
+
+        max-height: 115px !important;
+
+        min-width: 115px !important;
+
+        min-height: 115px !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        object-fit: cover !important;
+
+        display: block !important;
+
+        border-radius: 50% !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================================
+       ABOUT TEXT
+       ===================================================== */
+
+    .about_details .explain {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 0 8px !important;
+
+        text-align: center !important;
+
+        box-sizing: border-box !important;
+
+        overflow: visible !important;
+    }
+
+
+    /* ABOUT HEADING */
+
+    .about_details .explain h1 {
+
+        width: 100% !important;
+
+        display: flex !important;
+
+        justify-content: center !important;
+
+        align-items: center !important;
+
+        font-size: 28px !important;
+
+        line-height: 1.2 !important;
+
+        margin: 5px 0 10px !important;
+
+        padding: 0 !important;
+
+    }
+
+
+    /* YELLOW LINE */
+
+    .about_details .line {
+
+        width: 75px !important;
+
+        height: 4px !important;
+
+        margin: 0 auto 22px !important;
+
+        padding: 0 !important;
+
+    }
+
+
+    /* ABOUT PARAGRAPHS */
+
+    .about_details .explain p {
+
+        width: 100% !important;
+
+        display: block !important;
+
+        margin: 0 auto 5px !important;
+
+        padding: 0 !important;
+
+        font-size: 14px !important;
+
+        line-height: 1.6 !important;
+
+        text-align: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* EXPLORE BUTTON */
+
+    .about_details #button3 {
+
+        width: 140px !important;
+
+        height: 42px !important;
+
+        display: block !important;
+
+        margin: 20px auto 0 !important;
+
+        padding: 8px 12px !important;
+
+        font-size: 13px !important;
+
+        box-sizing: border-box !important;
+    }
+}
+                
+                
+                
+                #style{
+                    width: 35%; height: 60vh; margin-left: 33%;
+                    
+                }
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .about_details {
+        padding: 20px 10px 40px !important;
+    }
+
+
+    .about_details .picture {
+        gap: 12px !important;
+        margin-top:3% !important;
+    }
+
+
+    .about_details .abimg,
+    .about_details .abimg1 {
+
+        width: 100px !important;
+
+        height: 100px !important;
+
+        max-width: 100px !important;
+
+        max-height: 100px !important;
+
+        min-width: 100px !important;
+
+        min-height: 100px !important;
+    }
+
+
+    .about_details .explain h1 {
+        font-size: 25px !important;
+    }
+
+
+    .about_details .explain p {
+        font-size: 13px !important;
+
+        line-height: 1.55 !important;
+    }
+
+
+    .about_details #button3 {
+        width: 125px !important;
+
+        height: 40px !important;
+
+        font-size: 12px !important;
+    }
+   
+    
+    #n{
+    	margin-top: 3em !important;
+    }
+    
+    #style{
+        margin-left: -0.8em !important;
+    }
+
+    
+    .seat-card{
+    	margin-left:6% !important;
+    }
+    #anil{
+    	margin-top: -11em !important;
+    }
+    
+    #jacob{
+    margin-top: -10em !important;
+    }
+    #anna{
+        margin-top: -10em !important;
+    }
+    
+    
+ #meet{
+     margin-top: 3em !important;
+    }
+    
+    #cont{
+        margin-top:-3em !important;
+    }
+
+
+}
+                
+                
+                
+       	         
+ 
             </style>
 
 
@@ -1824,13 +2449,25 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="Slider-Right gap-4">
+                    <!--     <div class="Slider-Right gap-4">
                             <div class="Slider-Right-inner">
                                 <img src="./images/cup1.png" />
                                 <img src="./images/cup2.png" />
                                 <img src="./images/cup3.png" />
                             </div>
-                        </div>
+                        </div>   -->
+                        
+                        <div class="coffee-mobile-slider">
+
+    <img src="./images/cup1.png" class="coffee-slide active" alt="Coffee">
+
+    <img src="./images/cup2.png" class="coffee-slide" alt="Coffee">
+
+    <img src="./images/cup3.png" class="coffee-slide" alt="Coffee">
+
+</div>
+                        
+                        
                     </div>
 
 
@@ -1846,7 +2483,7 @@
                         <div class="bg-light rounded-3  border  abc" style="width: 100%; height: 30vh;">
                             <div class="d-flex justify-content-between p-2">
                                 <h3 class="paragraph">The food</h3>
-                                <img src="./images/burger.png" style="width: 15%; height: 9vh;" />
+                                <img src="./Png/burger.png" style="width: 15%; height: 9vh;" />
                             </div>
                             <p class="px-3 " style="width: 90%; font-size: 17px;">Coffee snacks range from sweet treats like donuts, croissants, and chocolate to savory options such as bacon, grilled cheese, and hard cheeses. </p>
                         </div>
@@ -1963,7 +2600,7 @@
 
 
 
-                <div class="new d-flex ">
+                <div class="new d-flex "  id="n">
                     <div class="" style="width: 50%;">
                         <img src="./images/realman.jpg" style="width: 80%; height: 60vh;" />
                     </div>
@@ -2056,7 +2693,7 @@
                             <p class="text-warning fs-2" style="padding-top: 8px;">...Opening hours...</p>
                         </div>
                         <div class="open" style="width: 100%; height: 60vh;">
-                            <img src="./images/time.png" style="width: 35%; height: 60vh; margin-left: 33%;">
+                            <img src="./images/time.png" id="style" >
                         </div>
                     </div>
                 </div>
@@ -2399,10 +3036,10 @@
                                                     <p class=" m-0 p-0 fs-4 text-center text-warning-emphasis fw-bold">- Olivia Wilson</p>
                                                 </div>
 
-                                                <div class="">
+                                                <div class="an"  >
                                                     <img src="./images/tes2.jpg" class="rounded-top-5 rounded-end-0 d-flex" style="width: 80%; height: 23vh; margin-left: -26%;">
                                                 </div>
-                                                <div class="bg5 position-absolute rounded-3   anil" style="width: 21%; height: 42vh; margin-left: 47%; margin-top: 4%;">
+                                                <div class="bg5 position-absolute rounded-3   anil"  id="anil" style="width: 21%; height: 42vh; margin-left: 47%; margin-top: 4%;">
                                                     <p class="pt-3 text-center fs-5 m-0 p-2"><i class="fa-solid fa-quote-left text-warning "></i> It's a great experience to be part of Tanushree's this <span class="text-warning">"Aroma Haven"</span>.
                                                         She is a amazing person and powerful source of support. It's her supportive throughtout the journey. <i class="fa-solid fa-quote-right text-warning"></i>
                                                     <div class="m-0 p-0 text-warning text-center"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star text-light"></i></div>
@@ -2434,7 +3071,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="">
-                                                    <div class="position-relative z-3 pt-3">
+                                                    <div class="position-relative z-3 pt-3" id="jacob">
                                                         <img src="./images/tes4.jpeg " class="rounded-circle d-flex bg4 " style="width: 100%; height: 17vh; margin-left: -14%;">
                                                     </div>
                                                     <div class="bg3 opacity-75 position-absolute rounded-3" style="width:   28%; height: 40vh;  margin-left: -11%; margin-top: -5%; ">
@@ -2478,7 +3115,7 @@
                                                         </div>
                                                         <p class="fs-4 text-center m-0 p-0">- Anna Jacob</p>
                                                     </div>
-                                                    <div class="bg1 position-relative  rounded-3 " style=" margin-top: 7.5%; width: 32%; height: 30vh;   margin-left: -19%; ">
+                                                    <div class="bg1 position-relative  rounded-3 " id="anna" style=" margin-top: 7.5%; width: 32%; height: 30vh;   margin-left: -19%; ">
                                                         <p class="m-0 p-2 fs-5 "> <i class="fa-solid fa-quote-left text-warning "></i> It's a great experience to be part of Tanushree's this <span class="text-warning">"Aroma Haven"</span>.
                                                             She is a amazing person and powerful source of support. It's her supportive throughtout the journey. <i class="fa-solid fa-quote-right text-warning"></i></p>
                                                         <div class="" style="padding-left: 29%;">
@@ -2518,7 +3155,7 @@
                                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29660.96048245819!2d87.56314247175585!3d21.67863239395886!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a032d15a99538cf%3A0x2cbfb146e598b778!2sRamnagar%20I%2C%20West%20Bengal%20721441!5e0!3m2!1sen!2sin!4v1761633902809!5m2!1sen!2sin" width="470" height="270" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                                 </div>
 
-                                <div class="meet ">
+                                <div class="meet "  id="meet">
                                     <h1 class="fw-bold py-4">Meet Us</h1>
                                     <div class="d-flex gap-2 ">
                                         <i class="fa-solid fa-phone p-1"></i>
@@ -2533,7 +3170,7 @@
                                         <p>1784 Ramnagar Road</p>
                                     </div>
                                 </div>
-                                <div class="cont">
+                                <div class="cont" id="cont">
 
                                     <h2 class="p-3 fw-bold">Contact Us</h2>
 
@@ -2613,6 +3250,44 @@
 
             <script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
             <script>
+                
+                
+         document.addEventListener("DOMContentLoaded", function () {
+
+    const slides = document.querySelectorAll(".coffee-slide");
+
+    if (!slides.length) {
+        return;
+    }
+
+    let currentSlide = 0;
+
+   
+    slides.forEach(function (slide, index) {
+        slide.classList.toggle("active", index === 0);
+    });
+
+  
+    setInterval(function () {
+
+        slides[currentSlide].classList.remove("active");
+
+        currentSlide++;
+
+        if (currentSlide >= slides.length) {
+            currentSlide = 0;
+        }
+
+        slides[currentSlide].classList.add("active");
+
+    }, 2000);
+
+});       
+                
+                
+                
+                
+                
                 function redirectPage(select) {
 
                     let page = select.value;

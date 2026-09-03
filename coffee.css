@@ -1,4 +1,4 @@
-﻿* {
+﻿﻿* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -9,10 +9,13 @@
   background-color: #4e2613;
   box-shadow: 0 0 40px #a65935;
 }
+
 .nav head {
   margin-bottom: 4em;
   width: 30%;
 }
+
+
 .Alllink #a {
   text-decoration: none;
   color: #fff;
@@ -2640,4 +2643,15 @@ html {
     right: -10px;
     top: -8px;
   }
+}
+
+
+@media (max-width: 750px) {
+.search-bar-container {
+ 
+  padding: 15px !important;
+  height: 20px  !important;
+  width: 20px !important; /* Initial collapsed width */
+ 
+}
 }

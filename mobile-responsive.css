@@ -1,13 +1,4 @@
-﻿/* ============================================================
-   AROMA HAVEN — MOBILE RESPONSIVE FIXES
-   Targets: <=768px (tablet/mobile) and <=480px (small phones)
-   IMPORTANT: Does NOT change any desktop styles.
-   ============================================================ */
-
-/* ============================================================
-   BASE — PREVENT HORIZONTAL SCROLL
-   ============================================================ */
-@media (max-width: 768px) {
+﻿@media (max-width: 750px) {
 
   html, body {
     overflow-x: hidden !important;
@@ -27,10 +18,10 @@
      NAVBAR
      ============================================================ */
   .nav {
-    height: 10vh !important;
+    height: 5vh !important;
     /* min-height: 40px !important; */
     padding: 8px 10px !important;
-    flex-wrap: wrap !important;
+
     width: 100%;
   }
 
@@ -45,11 +36,12 @@
   }
 
   .search-bar-container {
-    width: 42px !important;
+    width: 22px !important;
+     
   }
 
   .search-bar-container.active {
-    width: 180px !important;
+    width: 22px !important;
   }
 
   /* Cart sidebar full-width on mobile */

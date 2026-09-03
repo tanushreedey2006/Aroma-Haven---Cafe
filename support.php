@@ -262,8 +262,8 @@ $user_id = $_SESSION['user_id'];
             }
 
             .support-wrapper{
-                width: 90%;
-                margin-left: -2%;
+                width: 100%;
+
             }
 
         }

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,6 +27,9 @@ session_start();
   .service{
   margin-top: 3em !important;
   }
+    .ourser img{
+        height:8vh !important;
+    }
 
 }
 </style>

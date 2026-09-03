@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -146,6 +146,1337 @@
         .continue-btn:hover {
             background: #c17530;
         }
+
+
+
+
+/* ==========================================
+   FINAL MOBILE FOOTER - 2 ITEMS PER ROW
+========================================== */
+
+@media (max-width: 750px) {
+
+    .foolast {
+        width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .foolast .org {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+
+        width: 100% !important;
+        padding: 25px 18px !important;
+        margin: 0 !important;
+
+        gap: 22px 18px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* Aroma Haven */
+    .foolast .aro {
+        grid-column: 1 / 3 !important;
+
+        width: 100% !important;
+        text-align: center !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .foolast .aro h1 {
+        font-size: 25px !important;
+        margin: 0 !important;
+    }
+
+    .foolast .share-container {
+        padding-top: 15px !important;
+
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+
+        gap: 7px !important;
+    }
+
+    /* FOUR FOOTER BLOCKS */
+    .foolast .check {
+        width: auto !important;
+        min-width: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        text-align: left !important;
+    }
+
+    .foolast .check h4 {
+        font-size: 16px !important;
+
+        margin: 0 0 8px 0 !important;
+        padding: 0 !important;
+    }
+
+    .foolast .check p {
+        font-size: 13px !important;
+
+        line-height: 1.55 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* COPYRIGHT */
+    .foolast .copylast {
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 12px 15px 18px !important;
+
+        text-align: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .foolast .copylast p {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+
+        margin: 0 !important;
+    }
+}
+
+
+/* ==========================================
+   SMALL PHONES
+========================================== */
+
+@media (max-width: 400px) {
+
+    .foolast .org {
+        grid-template-columns: 1fr 1fr !important;
+
+        padding: 22px 14px !important;
+
+        gap: 18px 12px !important;
+    }
+
+    .foolast .check h4 {
+        font-size: 15px !important;
+    }
+
+    .foolast .check p {
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+    }
+
+    .foolast .aro h1 {
+        font-size: 23px !important;
+    }
+}
+
+
+/* =========================================================
+   FINAL FORCE MOBILE FOOTER
+   PRIVACY + SERVICES
+   ABOUT US + INFORMATION
+========================================================= */
+
+@media screen and (max-width: 750px) {
+
+    /* FOOTER BACKGROUND */
+    .foolast {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* MAIN FOOTER GRID */
+    .foolast .org {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        display: grid !important;
+
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+
+        grid-template-rows: auto auto auto !important;
+
+        grid-template-areas:
+            "logo logo"
+            "privacy services"
+            "about information" !important;
+
+        gap: 22px 14px !important;
+
+        margin: 0 !important;
+        padding: 25px 18px !important;
+
+        box-sizing: border-box !important;
+
+        justify-content: stretch !important;
+        align-items: start !important;
+    }
+
+    /* =========================
+       AROMA HAVEN
+    ========================= */
+
+    .foolast .org > .aro {
+        grid-area: logo !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: block !important;
+
+        text-align: center !important;
+    }
+
+    .foolast .org > .aro h1 {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 24px !important;
+        line-height: 1.2 !important;
+    }
+
+    .foolast .org > .aro .share-container {
+        width: 100% !important;
+
+        display: flex !important;
+        flex-direction: row !important;
+
+        justify-content: center !important;
+        align-items: center !important;
+
+        flex-wrap: nowrap !important;
+
+        gap: 7px !important;
+
+        margin: 0 !important;
+        padding: 15px 0 0 !important;
+    }
+
+
+    /* =========================
+       ALL FOUR SECTIONS
+    ========================= */
+
+    .foolast .org > .check {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        display: block !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        flex: none !important;
+
+        text-align: left !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =========================
+       EXPLICIT POSITIONS
+    ========================= */
+
+    /* PRIVACY */
+    .foolast .org > .check:nth-child(2) {
+        grid-area: privacy !important;
+    }
+
+    /* SERVICES */
+    .foolast .org > .check:nth-child(3) {
+        grid-area: services !important;
+    }
+
+    /* ABOUT US */
+    .foolast .org > .check:nth-child(4) {
+        grid-area: about !important;
+    }
+
+    /* INFORMATION */
+    .foolast .org > .check:nth-child(5) {
+        grid-area: information !important;
+    }
+
+
+    /* =========================
+       HEADINGS
+    ========================= */
+
+    .foolast .check h4 {
+        margin: 0 0 8px 0 !important;
+        padding: 0 !important;
+
+        font-size: 15px !important;
+        line-height: 1.2 !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    /* =========================
+       PARAGRAPHS
+    ========================= */
+
+    .foolast .check p {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 12px !important;
+        line-height: 1.6 !important;
+
+        white-space: normal !important;
+    }
+
+
+    /* =========================
+       COPYRIGHT
+    ========================= */
+
+    .foolast .copylast {
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 10px 15px 18px !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+    }
+
+    .foolast .copylast p {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 11px !important;
+        line-height: 1.5 !important;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media screen and (max-width: 400px) {
+
+    .foolast .org {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+
+        gap: 20px 12px !important;
+
+        padding: 22px 14px !important;
+    }
+
+    .foolast .org > .aro h1 {
+        font-size: 22px !important;
+    }
+
+    .foolast .check h4 {
+        font-size: 14px !important;
+    }
+
+    .foolast .check p {
+        font-size: 11px !important;
+        line-height: 1.55 !important;
+    }
+}
+
+
+
+/* ============================================
+   FOOTER MOBILE - FORCE 2 ITEMS PER ROW
+============================================ */
+
+.footer-grid{
+    display:flex;
+    justify-content:space-evenly;
+    align-items:flex-start;
+}
+
+
+/* ============================================
+   MOBILE
+============================================ */
+
+@media screen and (max-width:750px){
+
+    .foolast{
+        width:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+    }
+
+    .footer-grid{
+        width:100% !important;
+
+        display:grid !important;
+
+        grid-template-columns:50% 50% !important;
+
+        grid-template-rows:auto auto auto !important;
+
+        margin:0 !important;
+
+        padding:25px 10px !important;
+
+        box-sizing:border-box !important;
+
+        gap:0 !important;
+
+        justify-content:initial !important;
+        align-items:start !important;
+    }
+
+
+    /* =====================================
+       AROMA HAVEN
+    ===================================== */
+
+    .footer-grid .aro{
+
+        grid-column:1 / 3 !important;
+        grid-row:1 !important;
+
+        width:100% !important;
+
+        margin:0 !important;
+        padding:0 0 25px 0 !important;
+
+        text-align:center !important;
+
+        box-sizing:border-box !important;
+    }
+
+    .footer-grid .aro h1{
+
+        margin:0 !important;
+        padding:0 !important;
+
+        font-size:23px !important;
+    }
+
+    .footer-grid .aro .share-container{
+
+        width:100% !important;
+
+        display:flex !important;
+
+        justify-content:center !important;
+        align-items:center !important;
+
+        flex-wrap:nowrap !important;
+
+        gap:8px !important;
+
+        margin:0 !important;
+        padding:15px 0 0 0 !important;
+    }
+
+
+    /* =====================================
+       PRIVACY
+    ===================================== */
+
+    .footer-grid .check:nth-child(2){
+
+        grid-column:1 !important;
+        grid-row:2 !important;
+
+        width:100% !important;
+
+        margin:0 !important;
+        padding:0 5px !important;
+
+        box-sizing:border-box !important;
+
+        text-align:left !important;
+    }
+
+
+    /* =====================================
+       SERVICES
+    ===================================== */
+
+    .footer-grid .check:nth-child(3){
+
+        grid-column:2 !important;
+        grid-row:2 !important;
+
+        width:100% !important;
+
+        margin:0 !important;
+        padding:0 5px !important;
+
+        box-sizing:border-box !important;
+
+        text-align:left !important;
+    }
+
+
+    /* =====================================
+       ABOUT US
+    ===================================== */
+
+    .footer-grid .check:nth-child(4){
+
+        grid-column:1 !important;
+        grid-row:3 !important;
+
+        width:100% !important;
+
+        margin:20px 0 0 0 !important;
+        padding:0 5px !important;
+
+        box-sizing:border-box !important;
+
+        text-align:left !important;
+    }
+
+
+    /* =====================================
+       INFORMATION
+    ===================================== */
+
+    .footer-grid .check:nth-child(5){
+
+        grid-column:2 !important;
+        grid-row:3 !important;
+
+        width:100% !important;
+
+        margin:20px 0 0 0 !important;
+        padding:0 5px !important;
+
+        box-sizing:border-box !important;
+
+        text-align:left !important;
+    }
+
+
+    /* =====================================
+       HEADINGS
+    ===================================== */
+
+    .footer-grid .check h4{
+
+        margin:0 0 8px 0 !important;
+        padding:0 !important;
+
+        font-size:14px !important;
+
+        line-height:1.2 !important;
+
+        white-space:nowrap !important;
+    }
+
+
+    /* =====================================
+       TEXT
+    ===================================== */
+
+    .footer-grid .check p{
+
+        display:block !important;
+
+        width:100% !important;
+
+        margin:0 !important;
+        padding:0 !important;
+
+        font-size:11px !important;
+
+        line-height:1.6 !important;
+
+        white-space:normal !important;
+    }
+
+
+    /* =====================================
+       COPYRIGHT
+    ===================================== */
+
+    .foolast .copylast{
+
+        width:100% !important;
+
+        margin:0 !important;
+
+        padding:12px 10px 18px !important;
+
+        text-align:center !important;
+
+        box-sizing:border-box !important;
+    }
+
+    .foolast .copylast p{
+
+        margin:0 !important;
+        padding:0 !important;
+
+        font-size:10px !important;
+
+        line-height:1.4 !important;
+    }
+
+}
+
+
+/* ============================================
+   VERY SMALL MOBILE
+============================================ */
+
+@media screen and (max-width:400px){
+
+    .footer-grid{
+
+        grid-template-columns:50% 50% !important;
+
+        padding:22px 8px !important;
+    }
+
+    .footer-grid .check:nth-child(4),
+    .footer-grid .check:nth-child(5){
+
+        margin-top:18px !important;
+    }
+
+    .footer-grid .check h4{
+
+        font-size:13px !important;
+    }
+
+    .footer-grid .check p{
+
+        font-size:10px !important;
+    }
+
+    .footer-grid .aro h1{
+
+        font-size:21px !important;
+    }
+}
+
+
+/* =========================================================
+   FINAL MOBILE FOOTER FIX
+   NO HTML CHANGE REQUIRED
+   AROMA HAVEN = FULL ROW
+   PRIVACY | SERVICES
+   ABOUT US | INFORMATION
+   ========================================================= */
+
+@media screen and (max-width: 750px) {
+
+    /* FOOTER */
+    .foolast {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* MAIN FOOTER CONTAINER */
+    .foolast .org {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        display: flex !important;
+
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+
+        gap: 0 !important;
+
+        margin: 0 !important;
+        padding: 25px 18px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================================
+       AROMA HAVEN
+       FULL WIDTH FIRST ROW
+       ===================================================== */
+
+    .foolast .org > .aro {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        flex: 0 0 100% !important;
+        flex-basis: 100% !important;
+
+        margin: 0 0 25px 0 !important;
+        padding: 0 !important;
+
+        text-align: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .foolast .org > .aro h1 {
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 24px !important;
+        line-height: 1.2 !important;
+
+        text-align: center !important;
+    }
+
+
+    /* SOCIAL ICONS */
+
+    .foolast .org > .aro .share-container {
+        width: 100% !important;
+
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+
+        justify-content: center !important;
+        align-items: center !important;
+
+        gap: 8px !important;
+
+        margin: 0 !important;
+        padding: 12px 0 0 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================================
+       ALL FOUR SECTIONS
+       EACH = EXACTLY 50%
+       ===================================================== */
+
+    .foolast .org > .check {
+
+        display: block !important;
+
+        width: 50% !important;
+        max-width: 50% !important;
+        min-width: 0 !important;
+
+        flex: 0 0 50% !important;
+        flex-basis: 50% !important;
+
+        margin: 0 !important;
+        padding: 0 8px !important;
+
+        box-sizing: border-box !important;
+
+        text-align: left !important;
+
+        float: none !important;
+    }
+
+
+    /* =====================================================
+       PRIVACY
+       ===================================================== */
+
+    .foolast .org > .check:nth-child(2) {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+        flex-basis: 50% !important;
+
+        margin: 0 !important;
+        padding: 0 8px !important;
+    }
+
+
+    /* =====================================================
+       SERVICES
+       ===================================================== */
+
+    .foolast .org > .check:nth-child(3) {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+        flex-basis: 50% !important;
+
+        margin: 0 !important;
+        padding: 0 8px !important;
+    }
+
+
+    /* =====================================================
+       ABOUT US
+       ===================================================== */
+
+    .foolast .org > .check:nth-child(4) {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+        flex-basis: 50% !important;
+
+        margin: 25px 0 0 0 !important;
+        padding: 0 8px !important;
+    }
+
+
+    /* =====================================================
+       INFORMATION
+       ===================================================== */
+
+    .foolast .org > .check:nth-child(5) {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+        flex-basis: 50% !important;
+
+        margin: 25px 0 0 0 !important;
+        padding: 0 8px !important;
+    }
+
+
+    /* =====================================================
+       HEADINGS
+       ===================================================== */
+
+    .foolast .org > .check h4 {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 0 8px 0 !important;
+        padding: 0 !important;
+
+        font-size: 14px !important;
+        line-height: 1.2 !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    /* =====================================================
+       TEXT
+       ===================================================== */
+
+    .foolast .org > .check p {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 11px !important;
+        line-height: 1.6 !important;
+
+        white-space: normal !important;
+    }
+
+
+    /* =====================================================
+       COPYRIGHT
+       ===================================================== */
+
+    .foolast .copylast {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 12px 15px 18px !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+    }
+
+    .foolast .copylast p {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 10px !important;
+        line-height: 1.5 !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONE
+   ========================================================= */
+
+@media screen and (max-width: 400px) {
+
+    .foolast .org {
+        padding: 22px 12px !important;
+    }
+
+    .foolast .org > .aro h1 {
+        font-size: 21px !important;
+    }
+
+    .foolast .org > .check {
+        padding: 0 6px !important;
+    }
+
+    .foolast .org > .check h4 {
+        font-size: 13px !important;
+    }
+
+    .foolast .org > .check p {
+        font-size: 10px !important;
+        line-height: 1.5 !important;
+    }
+}
+
+/* =========================================================
+   ABSOLUTE FINAL MOBILE FOOTER
+   HTML CHANGE NOT REQUIRED
+   PRIVACY | SERVICES
+   ABOUT US | INFORMATION
+   ========================================================= */
+
+@media screen and (max-width: 750px) {
+
+    /* FOOTER AREA */
+    .foolast {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        background: #30261c !important;
+    }
+
+    /* MAIN .org CONTAINER */
+    .foolast > .org {
+        position: relative !important;
+
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: 430px !important;
+        min-height: 430px !important;
+
+        margin: 0 !important;
+        padding: 20px 15px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* =====================================================
+       AROMA HAVEN
+       ===================================================== */
+
+    .foolast > .org > .aro {
+        position: absolute !important;
+
+        top: 18px !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 115px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: block !important;
+
+        text-align: center !important;
+        box-sizing: border-box !important;
+
+        z-index: 10 !important;
+    }
+
+    .foolast > .org > .aro h1 {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 24px !important;
+        line-height: 1.2 !important;
+
+        text-align: center !important;
+    }
+
+    /* SOCIAL ICONS */
+    .foolast > .org > .aro .share-container {
+        position: static !important;
+
+        width: 100% !important;
+
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+
+        justify-content: center !important;
+        align-items: center !important;
+
+        gap: 8px !important;
+
+        margin: 0 !important;
+        padding: 12px 0 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================================
+       ALL FOUR CHECK SECTIONS
+       ===================================================== */
+
+    .foolast > .org > .check {
+
+        position: absolute !important;
+
+        display: block !important;
+
+        width: 45% !important;
+        max-width: 45% !important;
+        min-width: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        text-align: left !important;
+
+        transform: none !important;
+        float: none !important;
+        flex: none !important;
+
+        z-index: 5 !important;
+    }
+
+
+    /* =====================================================
+       PRIVACY — LEFT TOP
+       ===================================================== */
+
+    .foolast > .org > .check:nth-child(2) {
+        top: 145px !important;
+        left: 15px !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+
+    /* =====================================================
+       SERVICES — RIGHT TOP
+       ===================================================== */
+
+    .foolast > .org > .check:nth-child(3) {
+        top: 145px !important;
+        left: 55% !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+
+    /* =====================================================
+       ABOUT US — LEFT BOTTOM
+       ===================================================== */
+
+    .foolast > .org > .check:nth-child(4) {
+        top: 285px !important;
+        left: 15px !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+
+    /* =====================================================
+       INFORMATION — RIGHT BOTTOM
+       ===================================================== */
+
+    .foolast > .org > .check:nth-child(5) {
+        top: 285px !important;
+        left: 55% !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+
+    /* =====================================================
+       HEADINGS
+       ===================================================== */
+
+    .foolast > .org > .check h4 {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 0 8px 0 !important;
+        padding: 0 !important;
+
+        font-size: 15px !important;
+        line-height: 1.2 !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    /* =====================================================
+       FOOTER TEXT
+       ===================================================== */
+
+    .foolast > .org > .check p {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 11px !important;
+        line-height: 1.6 !important;
+
+        white-space: normal !important;
+    }
+
+
+    /* =====================================================
+       COPYRIGHT
+       ===================================================== */
+
+    .foolast > .copylast {
+        position: relative !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 12px 15px 20px !important;
+
+        text-align: center !important;
+
+        box-sizing: border-box !important;
+
+        background: #30261c !important;
+    }
+
+    .foolast > .copylast p {
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: 10px !important;
+        line-height: 1.5 !important;
+
+        text-align: center !important;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media screen and (max-width: 400px) {
+
+    .foolast > .org {
+        height: 410px !important;
+        min-height: 410px !important;
+        padding: 18px 12px !important;
+    }
+
+    .foolast > .org > .aro {
+        top: 15px !important;
+        height: 105px !important;
+    }
+
+    .foolast > .org > .aro h1 {
+        font-size: 21px !important;
+    }
+
+    .foolast > .org > .check {
+        width: 45% !important;
+        max-width: 45% !important;
+    }
+
+    .foolast > .org > .check:nth-child(2) {
+        top: 130px !important;
+        left: 12px !important;
+    }
+
+    .foolast > .org > .check:nth-child(3) {
+        top: 130px !important;
+        left: 55% !important;
+    }
+
+    .foolast > .org > .check:nth-child(4) {
+        top: 265px !important;
+        left: 12px !important;
+    }
+
+    .foolast > .org > .check:nth-child(5) {
+        top: 265px !important;
+        left: 55% !important;
+    }
+
+    .foolast > .org > .check h4 {
+        font-size: 13px !important;
+    }
+
+    .foolast > .org > .check p {
+        font-size: 10px !important;
+ 
+    }
+}
+
+
+/* =====================================================
+   FINAL COMPACT MOBILE FOOTER
+   শুধু GAP কমানো
+===================================================== */
+
+@media screen and (max-width: 750px) {
+
+    .foolast > .org {
+        height: 350px !important;
+        min-height: 350px !important;
+
+        padding: 15px 15px !important;
+    }
+
+    /* Aroma Haven */
+    .foolast > .org > .aro {
+        top: 12px !important;
+        height: 105px !important;
+    }
+
+    .foolast > .org > .aro h1 {
+        font-size: 24px !important;
+    }
+
+    .foolast > .org > .aro .share-container {
+        padding-top: 10px !important;
+        gap: 7px !important;
+    }
+
+    /* PRIVACY */
+    .foolast > .org > .check:nth-child(2) {
+        top: 125px !important;
+        left: 15px !important;
+    }
+
+    /* SERVICES */
+    .foolast > .org > .check:nth-child(3) {
+        top: 125px !important;
+        left: 55% !important;
+    }
+
+    /* ABOUT US */
+    .foolast > .org > .check:nth-child(4) {
+        top: 235px !important;
+        left: 15px !important;
+    }
+
+    /* INFORMATION */
+    .foolast > .org > .check:nth-child(5) {
+        top: 235px !important;
+        left: 55% !important;
+    }
+
+    /* Heading */
+    .foolast > .org > .check h4 {
+        font-size: 14px !important;
+        margin-bottom: 6px !important;
+    }
+
+    /* Text */
+    .foolast > .org > .check p {
+        font-size: 11px !important;
+        line-height: 1.45 !important;
+    }
+
+    /* Copyright */
+    .foolast > .copylast {
+        padding: 8px 12px 15px !important;
+    }
+
+    .foolast > .copylast p {
+        font-size: 10px !important;
+        line-height: 1.4 !important;
+    }
+}
+
+
+/* SMALL PHONE */
+@media screen and (max-width: 400px) {
+
+    .foolast > .org {
+        height: 335px !important;
+        min-height: 335px !important;
+        padding: 12px !important;
+    }
+
+    .foolast > .org > .aro {
+        top: 10px !important;
+    }
+
+    .foolast > .org > .check:nth-child(2) {
+        top: 118px !important;
+        left: 12px !important;
+    }
+
+    .foolast > .org > .check:nth-child(3) {
+        top: 118px !important;
+        left: 55% !important;
+    }
+
+    .foolast > .org > .check:nth-child(4) {
+        top: 220px !important;
+        left: 12px !important;
+    }
+
+    .foolast > .org > .check:nth-child(5) {
+        top: 220px !important;
+        left: 55% !important;
+    }
+
+    .foolast > .org > .check h4 {
+        font-size: 13px !important;
+    }
+
+    .foolast > .org > .check p {
+        font-size: 10px !important;
+        line-height: 1.4 !important;
+    }
+}
     </style>
 </head>
 

@@ -1,4 +1,4 @@
-﻿  <?php
+﻿﻿  <?php
     session_start();
     ?>
   <!DOCTYPE html>
@@ -186,13 +186,13 @@
               .section-desc {
                   font-size: 16px;
                   padding: 25px;
-                  margin-left: -12%;
+                  margin-left: -10%;
               }
 
               .timeline-card {
                   width: 100%;
                   max-width: 350px;
-                  margin-left: -14%;
+                 
               }
 
 
@@ -220,7 +220,8 @@
 
               video {
                   height: 70vh !important;
-                  margin-left: -1em !important;
+                  margin-top:-1% !important;
+
               }
 
               .explain h1 {
@@ -248,14 +249,217 @@
     .you{
         margin-top: 9%;
     }
-
-
-
-              /* .feature{
-    margin-top: -4em !important;
-  } */
-
           }
+
+@media screen and (max-width: 750px) {
+
+    /* ABOUT SECTION */
+    .about_details {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 30px 12px 25px !important;
+        overflow: hidden !important;
+        background: #f8f1ea !important;
+        box-sizing: border-box !important;
+    }
+
+    /* MAIN ABOUT ROW */
+    .about_details .featur {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        align-items: center !important;
+        justify-content: flex-start !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        gap: 25px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* =========================================
+       IMAGE CONTAINER
+    ========================================= */
+
+    .about_details .featur .picture {
+        width: 100% !important;
+        height: auto !important;
+
+        display: flex !important;
+        flex-direction: row !important;
+
+        justify-content: center !important;
+        align-items: center !important;
+
+        flex-wrap: nowrap !important;
+
+        gap: 22px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        position: static !important;
+        transform: none !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* =========================================
+       BOTH IMAGES
+    ========================================= */
+
+    .about_details .featur .picture .abimg,
+    .about_details .featur .picture .abimg1 {
+
+        width: 125px !important;
+        height: 125px !important;
+
+        max-width: 125px !important;
+        max-height: 125px !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        flex: 0 0 125px !important;
+
+        display: block !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        object-fit: cover !important;
+
+        position: static !important;
+        transform: none !important;
+    }
+
+    /* =========================================
+       ABOUT TEXT
+    ========================================= */
+
+    .about_details .featur .explain {
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 8px !important;
+
+        position: static !important;
+        transform: none !important;
+
+        text-align: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .about_details .featur .explain h1 {
+
+        width: 100% !important;
+
+        margin: 0 0 12px 0 !important;
+        padding: 0 !important;
+
+        font-size: 28px !important;
+        line-height: 1.2 !important;
+
+        text-align: center !important;
+
+        display: block !important;
+    }
+
+    .about_details .featur .explain .line {
+
+        width: 70px !important;
+        height: 4px !important;
+
+        margin: 0 auto 20px auto !important;
+    }
+
+    .about_details .featur .explain p {
+
+        width: 100% !important;
+
+        display: block !important;
+
+        margin: 0 0 7px 0 !important;
+        padding: 0 !important;
+
+        font-size: 14px !important;
+        line-height: 1.6 !important;
+
+        text-align: center !important;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 450px) {
+
+    .about_details {
+        padding: 25px 8px 20px !important;
+    }
+
+    .about_details .featur .picture {
+        gap: 15px !important;
+    }
+
+    .about_details .featur .picture .abimg,
+    .about_details .featur .picture .abimg1 {
+
+        width: 112px !important;
+        height: 112px !important;
+
+        max-width: 112px !important;
+        max-height: 112px !important;
+
+        flex: 0 0 112px !important;
+    }
+
+    .about_details .featur .explain h1 {
+        font-size: 26px !important;
+    }
+
+    .about_details .featur .explain p {
+        font-size: 13px !important;
+        line-height: 1.55 !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONE
+   ========================================================= */
+
+@media screen and (max-width: 360px) {
+
+    .about_details .featur .picture {
+        gap: 10px !important;
+        margin-top: 3% !important;
+    }
+
+    .about_details .featur .picture .abimg,
+    .about_details .featur .picture .abimg1 {
+
+        width: 100px !important;
+        height: 100px !important;
+
+        max-width: 100px !important;
+        max-height: 100px !important;
+
+        flex: 0 0 100px !important;
+    }
+}
+          
+          
       </style>
       <link rel="stylesheet" type="text/css" href="coffee.css" />
     <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />

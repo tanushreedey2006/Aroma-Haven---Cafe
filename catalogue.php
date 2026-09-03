@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -63,13 +63,20 @@
 }
 
 .category-products{
-    margin-left: -2%;
+margin-left:4% !important;
+    
     width: 90%;
 }
 
 h1{
-    margin-right: 2em;
+    margin-right: 1em;
 }
+
+ #cataup .buttons{
+    margin-left: 3em !important;
+}
+
+
 }
 
 
@@ -166,10 +173,10 @@ $userCart = array_map('intval', $userCart);
     <?php include("header.php"); ?>
 
     <div class="catup">
-        <div class="d-flex justify-content-around p-4 cataup">
+        <div class="d-flex justify-content-around p-4 cataup"  id="cataup">
             <h1 style="color:#58260f;font-weight:bold;">Catalogue</h1>
 
-            <div class="buttons gap-5">
+            <div class="buttons gap-5" >
                 <a href="catalogue.php?category=<?php echo urlencode('Coffee'); ?>"><button class="btncata">Coffee</button></a>
                 <a href="catalogue.php?category=<?php echo urlencode('Pastry'); ?>"><button class="btncata">Pastry</button></a>
                 <a href="catalogue.php?category=<?php echo urlencode('Desserts'); ?>"><button class="btncata">Dessert</button></a>
@@ -272,7 +279,7 @@ $userCart = array_map('intval', $userCart);
             <div class="d-flex justify-content-around p-5 cataup">
                 <h1 style="color:#58260f;font-weight:bold;">NEW COLLECTION</h1>
 
-                <div class="buttons gap-5">
+                <div class="buttons gap-5" id="but">
                     <a href="catalogue.php?newcategory=<?php echo urlencode('Cold Beverages'); ?>"><button class="btncata">Cold Beverages</button></a>
                     <a href="catalogue.php?newcategory=<?php echo urlencode('Hot Beverages'); ?>"><button class="btncata">Hot Beverages</button></a>
                     <a href="catalogue.php?newcategory=<?php echo urlencode('Cool Bean Specials'); ?>"><button class="btncata">Cool Bean</button></a>

@@ -1,4 +1,4 @@
-﻿<?php
+﻿﻿<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -259,21 +259,6 @@ include("connect.php");
 
         }
 
-        /* .cart-btn{
-      flex:1;
-    border:none;
-    background:#58260f;
-    color:#fff;
-    height:48px;
-    border-radius:8px;
-    font-weight:bold;
-} */
-
-
-        /* 
-.cart-btn:hover{
-    background:#7a1f06;
-} */
 
         .cart-btn {
             flex: 1;
@@ -388,7 +373,7 @@ include("connect.php");
 
         .cart-header button {
 
-            width: 38px;
+            width: 28px;
             height: 38px;
 
             border: none;
@@ -1071,9 +1056,9 @@ PREMIUM PROFILE DROPDOWN
 
 .head h1{
 
-    font-size:25px !important;
+    font-size:15px !important;
     margin-top: -15%;
-    margin-right: 7em;
+    margin-right: 10em;
     
 }
 
@@ -1100,20 +1085,17 @@ PREMIUM PROFILE DROPDOWN
 
     /* display:flex; */
     display: relative;
-    flex-wrap:wrap;
-
+   gap:3px;
+	height: 7vh !important;
     justify-content:space-between;
     align-items:center;
-
+	
     padding:12px 15px 15px;
-    margin-right: 15px;
+    
 
 }
+    
 
-
-.wishlist-area {
-    margin-top:-1.3em;
-}
     /* Logo */
 
     .head{
@@ -1146,12 +1128,6 @@ PREMIUM PROFILE DROPDOWN
         cursor:pointer;
     }
 
-    /* Navigation */
-
-.cart-icon-area{
-
-            margin-top: -1.5em;
-}
 
    
 
@@ -1163,7 +1139,7 @@ PREMIUM PROFILE DROPDOWN
 
     width:100% !important;
 
-    margin:3% 19%  !important;
+    margin:0% 19%  !important;
 
     display:flex;
 
@@ -1221,12 +1197,7 @@ PREMIUM PROFILE DROPDOWN
         width:100%;
     }
 
-    /* Right Side */
 
-    /* .button{
-        width:auto;
-        padding:0;
-    } */
 
     .profile-avatar{
         width:42px;
@@ -1639,15 +1610,17 @@ PREMIUM PROFILE DROPDOWN
 }
 
 .sign{
-    margin: -30% 20% 6%;
-    /* margin-top:-25% !important; */
-    /* padding: 3% !important; */
-    width:5px !important;
+  
+    margin-top:-25% !important; 
+    padding: 3% !important; 
+    width:-5px !important;
     height:40px;
     font-size:15px;
     transform:none;
 }
 
+
+    
 
 }
 
@@ -2247,9 +2220,549 @@ margin-top: 3% ;
         font-size: 12px;
     }
 }
+        
+        
+/* =========================================
+   MOBILE NAVBAR + FIXED SEARCH
+   NAVBAR HEIGHT DOES NOT INCREASE
+   SEARCH STAYS BELOW NAVBAR
+   ========================================= */
+
+@media (max-width: 750px) {
+
+    /* =====================================
+       MAIN BROWN NAVBAR
+       ===================================== */
+
+    .nav {
+        width: 100% !important;
+        max-width: 100vw !important;
+
+        height: 80px !important;
+        min-height: 80px !important;
+
+        display: grid !important;
+        grid-template-columns: 42px minmax(0, 1fr) 100px !important;
+
+        align-items: center !important;
+
+        padding: 5px 10px !important;
+        margin: 0 !important;
+
+        gap: 5px !important;
+
+        box-sizing: border-box !important;
+
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+
+        z-index: 9999 !important;
+
+        overflow: visible !important;
+    }
 
 
+    /* =====================================
+       HAMBURGER
+       ===================================== */
 
+    .nav .menu-btn {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+
+        width: 38px !important;
+        height: 38px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================
+       LOGO + AROMA HAVEN
+       ===================================== */
+
+    .nav .head {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+
+        height: 55px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+
+        gap: 5px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+
+    .nav .head img,
+    .nav .head .img {
+        width: 42px !important;
+        height: 42px !important;
+
+        max-width: 42px !important;
+        max-height: 42px !important;
+
+        margin: 0 !important;
+
+        flex: 0 0 42px !important;
+    }
+
+
+    .nav .head h1 {
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        font-size: clamp(15px, 4.5vw, 19px) !important;
+        line-height: 1.1 !important;
+
+        white-space: nowrap !important;
+
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+
+    /* =====================================
+       HIDE DESKTOP LINKS
+       ===================================== */
+
+    .nav .Alllink {
+        display: none !important;
+    }
+
+
+    /* =====================================
+       SIGN IN BUTTON
+       ===================================== */
+
+    .nav > .button {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+
+        width: 100px !important;
+        max-width: 100px !important;
+        min-width: 0 !important;
+		
+        height: 55px !important;
+
+        margin:-3% 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    .nav > .button .buttons {
+        width: 100px !important;
+        max-width: 100px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    .nav > .button #button1,
+    .nav > .button .sign {
+        width: 100px !important;
+        max-width: 100px !important;
+        min-width: 0 !important;
+
+        height: 42px !important;
+
+        margin:  0 !important;
+        padding: 0 5px !important;
+
+        font-size: 14px !important;
+
+        border-radius: 25px !important;
+
+        white-space: nowrap !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================
+       SEARCH BAR
+       FIXED DIRECTLY BELOW NAVBAR
+       ===================================== */
+
+    .nav .search-wrapper {
+        position: fixed !important;
+
+        top: 50px !important;
+        left: 0 !important;
+
+        width: 80% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        height: 58px !important;
+
+        margin: 0  12% !important;
+        padding: 5px 10px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+
+        z-index: 9998 !important;
+    }
+
+
+    /* =====================================
+       SEARCH BOX
+       ===================================== */
+
+    .nav .search-wrapper .search-bar-container {
+        width: 100% !important;
+        max-width: 600px !important;
+        min-width: 0 !important;
+
+        height: 48px !important;
+
+        margin: 0 auto !important;
+        padding: 4px 10px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        box-sizing: border-box !important;
+
+        border-radius: 30px !important;
+    }
+
+
+    /* SEARCH ICON */
+
+    .nav .search-wrapper .magnifier {
+        width: 28px !important;
+        height: 28px !important;
+
+        min-width: 28px !important;
+        max-width: 28px !important;
+
+        flex: 0 0 28px !important;
+
+        margin: 0 5px 0 0 !important;
+    }
+
+
+    /* SEARCH INPUT */
+
+    .nav .search-wrapper .input {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+
+        height: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 5px !important;
+
+        font-size: 14px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================
+       PAGE CONTENT
+       KEEP CONTENT BELOW BOTH FIXED BARS
+       ===================================== */
+
+    body {
+        padding-top: 138px !important;
+    }
+
+
+    /* =====================================
+       VERY SMALL PHONES
+       ===================================== */
+
+    @media (max-width: 360px) {
+
+        .nav {
+            grid-template-columns: 38px minmax(0, 1fr) 88px !important;
+            height: 75px !important;
+            min-height: 75px !important;
+        }
+
+        .nav .head img,
+        .nav .head .img {
+            width: 38px !important;
+            height: 38px !important;
+
+            flex-basis: 38px !important;
+        }
+
+        .nav .head h1 {
+            font-size: 15px !important;
+        }
+
+        .nav > .button,
+        .nav > .button .buttons,
+        .nav > .button #button1,
+        .nav > .button .sign {
+            width: 88px !important;
+            max-width: 88px !important;
+        }
+
+        .nav > .button #button1,
+        .nav > .button .sign {
+            font-size: 13px !important;
+        }
+
+        .nav .search-wrapper {
+            top: 75px !important;
+        }
+
+        body {
+            padding-top: 45px !important;
+        }
+    }
+
+
+    /* =====================================
+       NO HORIZONTAL OVERFLOW
+       ===================================== */
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        overflow-x: hidden !important;
+    }
+}
+    
+        @media (max-width: 750px) {
+
+    .Alllink {
+        z-index: 1000001 !important;
+    }
+
+    .mobile-overlay {
+        z-index: 1000000 !important;
+    }
+
+}
+        
+        
+        @media (max-width: 750px) {
+
+    .menu-btn {
+        display: flex !important;
+        position: relative !important;
+        z-index: 1000002 !important;
+    }
+
+    .Alllink {
+        position: fixed !important;
+        top: 0 !important;
+        left: -320px !important;
+
+        width: 300px !important;
+        max-width: 85vw !important;
+        height: 100vh !important;
+
+        background: #3d210f !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        padding-top: 90px !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        transition: left 0.45s ease !important;
+
+        z-index: 1000003 !important;
+    }
+
+    .Alllink.active {
+        left: 0 !important;
+    }
+
+    .mobile-overlay {
+        display: block !important;
+
+        position: fixed !important;
+        inset: 0 !important;
+
+        background: rgba(0,0,0,.55) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        z-index: 1000001 !important;
+
+        transition: .3s ease !important;
+    }
+
+    .mobile-overlay.show {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .Alllink .close-menu {
+        display: flex !important;
+    }
+}
+        
+        
+        
+        /* =========================================
+   FINAL MOBILE MENU VISIBILITY FIX
+   ========================================= */
+
+@media (max-width: 750px) {
+
+    /* Dark overlay */
+    .mobile-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+
+        display: block !important;
+
+        background: rgba(0, 0, 0, 0.55) !important;
+        backdrop-filter: blur(5px) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        z-index: 1000000 !important;
+    }
+
+    .mobile-overlay.show {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
+    /* SIDE MENU - MUST STAY ABOVE OVERLAY */
+    .nav .Alllink {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: -320px !important;
+
+        width: 300px !important;
+        max-width: 85vw !important;
+        height: 100vh !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        padding-top: 90px !important;
+
+        background: #3d210f !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        z-index: 1000005 !important;
+
+        transition: left 0.45s ease !important;
+
+        box-shadow: 20px 0 40px rgba(0,0,0,.35) !important;
+    }
+
+    /* OPEN STATE */
+    .nav .Alllink.active {
+        left: 0 !important;
+
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        z-index: 1000005 !important;
+    }
+
+
+    /* MENU LINKS */
+    .nav .Alllink a {
+        display: block !important;
+
+        width: 100% !important;
+
+        color: #fff !important;
+        text-decoration: none !important;
+
+        padding: 18px 30px !important;
+
+        font-size: 18px !important;
+
+        box-sizing: border-box !important;
+
+        border-bottom: 1px solid rgba(255,255,255,.08) !important;
+    }
+
+
+    /* CLOSE BUTTON */
+    .nav .Alllink .close-menu {
+        display: flex !important;
+
+        position: absolute !important;
+
+        top: 20px !important;
+        right: 20px !important;
+
+        width: 45px !important;
+        height: 45px !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 50% !important;
+
+        background: rgba(255,255,255,.15) !important;
+        color: #fff !important;
+
+        font-size: 22px !important;
+
+        z-index: 1000006 !important;
+    }
+
+
+    /* HAMBURGER ABOVE EVERYTHING */
+    .nav .menu-btn {
+        position: relative !important;
+        z-index: 1000007 !important;
+    }
+}
+        
     </style>
 
     <?php
@@ -2305,7 +2818,7 @@ margin-top: 3% ;
     <i class="fas fa-bars"></i>
 </button>
     
-
+<div class="mobile-overlay" id="overlay" onclick="closeMenu()"></div>
 
         <div class="head d-flex justify-content-between gap-3">
             <img src="./images/weblogo.png" class="img" style="border-radius:50%;" />
@@ -2550,7 +3063,7 @@ window.onclick = function(e){
 
 // }
 
-const mobileMenu = document.getElementById("mobileMenu");
+/* const mobileMenu = document.getElementById("mobileMenu");
 const overlay = document.getElementById("overlay");
 const menuBtn = document.querySelector(".menu-btn");
 
@@ -2580,7 +3093,39 @@ window.addEventListener("resize", function(){
 
     }
 
-});
+});  */
+        
+        
+const mobileMenu = document.getElementById("mobileMenu");
+const overlay = document.getElementById("overlay");
+
+function openMenu() {
+
+    if (window.innerWidth > 750) return;
+
+    if (mobileMenu) {
+        mobileMenu.classList.add("active");
+    }
+
+    if (overlay) {
+        overlay.classList.add("show");
+    }
+
+    document.body.style.overflow = "hidden";
+}
+
+function closeMenu() {
+
+    if (mobileMenu) {
+        mobileMenu.classList.remove("active");
+    }
+
+    if (overlay) {
+        overlay.classList.remove("show");
+    }
+
+    document.body.style.overflow = "";
+}
 
 const searchForm = document.querySelector(".search-bar-container");
 

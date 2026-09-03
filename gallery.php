@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -349,6 +349,20 @@ include("header.php");
         width: 12px;
         font-size: 12px;
     }
+    
+    #galltext{
+        margin-top: 14em !important;
+        margin-left: 5% !important;    
+
+    }
+    
+    .card{
+        height: 5vh ;
+    }
+    
+    .flex img{
+        margin-top:-4em !important;
+    }
 }
 
 
@@ -372,10 +386,9 @@ include("header.php");
 /* =========================
    PAGINATION
 ========================= */
-
 $limit = 6; // 6 products per page
 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
 if ($page < 1) {
     $page = 1;
@@ -386,7 +399,7 @@ $countQuery = mysqli_query($conn, "SELECT COUNT(*) AS total FROM products");
 
 $countRow = mysqli_fetch_assoc($countQuery);
 
-$totalProducts = (int)$countRow['total'];
+$totalProducts = intval($countRow['total']);
 
 $totalPages = max(1, ceil($totalProducts / $limit));
 
@@ -395,7 +408,6 @@ if ($page > $totalPages) {
 }
 
 $offset = ($page - 1) * $limit;
-
 
 /* Products for current page */
 $query = mysqli_query($conn, "

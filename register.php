@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -525,234 +525,845 @@ h1{
     0 5px 20px rgba(0,0,0,.3);
 }
 
-/* =========================================
-   MOBILE RESPONSIVE - MAX 750px
-========================================= */
 
-
-
-/* =====================================================
-   FINAL FORCE MOBILE
-===================================================== */
-
-@media screen and (max-width: 768px) {
-    body {
-        padding: 10px;
-        overflow-y: auto;
+    #id1{
+        margin:-5% -3%;
     }
-
-    .container {
-        width: 27em !important;
-        height: auto;
-        min-height: 680px;
-        display: flex;
-        flex-direction: column;
-        border-radius: 20px;
-        margin-left: -6.7%;
-    }
-
-    /* ফর্ম এবং ওভারলে উপর-নিচ সেটআপ */
-    .form-container {
-        width: 100em !important;
-        height: 65%;
-        top: 35%;
-        position: absolute;
-    }
-
-    .overlay-container {
-        width: 100%;
-        height: 35%;
-        top: 0;
-        left: 0;
-    }
-
-    /* মোবাইলের জন্য স্লাইডিং অ্যানিমেশন ডিসেবল করা হয়েছে */
-    .container.right-panel-active .overlay-container {
-        transform: none;
-    }
-
-    .overlay {
-        width: 100%;
-        left: 0;
-        transform: none !important;
-    }
-
-    .container.right-panel-active .overlay {
-        transform: none !important;
-    }
-
-    .overlay-panel {
-        width: 100%;
-        height: 100%;
-        padding: 15px;
-    }
-
-    /* প্যানেল টগল স্টাইল */
-    .overlay-left {
-        display: none;
-    }
-    .container.right-panel-active .overlay-left {
-        display: flex;
-        transform: none;
-    }
-    .container.right-panel-active .overlay-right {
-        display: none;
-    }
-    .overlay-right {
-        display: flex;
-        transform: none;
-    }
-
-    .overlay-panel img {
-        width: 70px;
-        height: 70px;
-        margin-bottom: 5px;
-    }
-
-    h1 {
-        font-size: 22px;
-        margin-bottom: 8px;
-    }
-
-    .overlay-panel p {
-        font-size: 12px;
-        margin-top: 2px;
-    }
-
-    button.ghost {
-        margin-top: 5px;
-        padding: 6px 20px;
-        font-size: 12px;
-    }
-
-    /* ফর্ম কন্টেইনার ফিক্স */
-    .sign-up-container {
-        opacity: 1;
-        z-index: 5;
-        transform: none !important;
-    }
-
-    .sign-in-container {
-        opacity: 0;
-        z-index: 1;
-        transform: none !important;
-    }
-
-    .container.right-panel-active .sign-up-container {
-        opacity: 0;
-        z-index: 1;
-        transform: none !important;
-    }
-
-    .container.right-panel-active .sign-in-container {
-        opacity: 1;
-        z-index: 5;
-        transform: none !important;
-    }
-
-    form {
-        padding: 20px;
-    }
-
-    input {
-        padding: 10px;
-        margin: 5px 0;
-        font-size: 14px;
-    }
-
-    .upload-label {
-        padding: 8px;
-        font-size: 13px;
-    }
-
-
-/* ONLY FIX OVERLAY CONTENT POSITION */
-
-.hello,
-.hello1 {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
-
-.hello h1,
-.hello1 h1 {
-    margin-top: 0 !important;
-}
-
-.hello p,
-.hello1 p {
-    margin-top: 3px !important;
-}
-
-
     
-}
+    #id2{
+        margin-top:-5%;
+    }
+    
+    
+  /* =====================================================
+   REGISTER MOBILE - CLEAN RESET
+   ===================================================== */
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 750px) {
+
+    html,
+    body {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
 
     body {
-        padding: 10px;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        min-height: 100vh !important;
+
+        padding: 8px !important;
+    }
+
+
+    /* =========================
+       MAIN CARD
+       ========================= */
+
+    #container {
+        all: unset;
+
+        position: relative !important;
+
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 420px !important;
+
+        height: calc(100vh - 16px) !important;
+        min-height: 580px !important;
+        max-height: 820px !important;
+
+        margin: 0 auto !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius: 20px !important;
+
+        background: rgba(255,255,255,.08) !important;
+
+        border: 1px solid rgba(255,255,255,.15) !important;
+
+        box-shadow: 0 25px 70px rgba(0,0,0,.35) !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* Remove desktop positioning/transforms */
+    #container *,
+    #container *::before,
+    #container *::after {
+        box-sizing: border-box !important;
+    }
+
+
+    /* =========================
+       TOP IMAGE/PANEL
+       ========================= */
+
+    #container > .overlay-container {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 32% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+
+        transform: none !important;
+
+        z-index: 20 !important;
+    }
+
+
+    #container > .overlay-container > .overlay {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+
         overflow: hidden !important;
     }
 
-    .form-container {
+
+    /* Kill desktop 200% overlay */
+    #container > .overlay-container > .overlay {
         width: 100% !important;
-        height: 65%;
-        top: 35%;
-        position: absolute;
+        left: 0 !important;
+    }
+
+
+    /* =========================
+       OVERLAY PANELS
+       ========================= */
+
+    #container .overlay-panel {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 10px 14px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex-direction: column !important;
+
+        text-align: center !important;
+
+        transform: none !important;
+    }
+
+
+    #container .overlay-right {
+        display: flex !important;
+
+        left: 0 !important;
+        right: auto !important;
+
+        transform: none !important;
+    }
+
+
+    #container .overlay-left {
+        display: none !important;
+
+        left: 0 !important;
+
+        transform: none !important;
+    }
+
+
+    #container.right-panel-active .overlay-right {
+        display: none !important;
+    }
+
+
+    #container.right-panel-active .overlay-left {
+        display: flex !important;
+    }
+
+
+    /* =========================
+       IMAGE
+       ========================= */
+
+    #container .overlay-panel .img,
+    #container .overlay-panel .img1 {
+        width: 100% !important;
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+
+    #container .overlay-panel img {
+        width: 60px !important;
+        height: 60px !important;
+
+        max-width: 60px !important;
+        max-height: 60px !important;
+
+        object-fit: cover !important;
+
+        margin: 0 auto 5px !important;
+
+        animation: none !important;
+    }
+
+
+    /* =========================
+       TEXT
+       ========================= */
+
+    #container .hello,
+    #container .hello1 {
+        width: 100% !important;
+        max-width: 360px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        text-align: center !important;
+    }
+
+
+    #container .hello h1,
+    #container .hello1 h1 {
+        margin: 2px 0 !important;
+
+        font-size: clamp(17px, 5vw, 24px) !important;
+
+        line-height: 1.15 !important;
+    }
+
+
+    #container .hello h4 {
+        margin: 2px 0 !important;
+
+        font-size: 13px !important;
+    }
+
+
+    #container .hello p,
+    #container .hello1 p {
+        margin: 2px 0 !important;
+
+        font-size: 10px !important;
+
+        line-height: 1.25 !important;
+    }
+
+
+    #container .overlay-panel .ghost {
+        width: auto !important;
+
+        min-width: 105px !important;
+        max-width: 160px !important;
+
+        height: 34px !important;
+
+        margin: 5px auto 0 !important;
+
+        padding: 5px 15px !important;
+
+        font-size: 11px !important;
+    }
+
+
+    /* =========================
+       FORM AREA
+       ========================= */
+
+    #container > .sign-up-container,
+    #container > .sign-in-container {
+        position: absolute !important;
+
+        top: 32% !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 68% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
 
         overflow-y: auto !important;
         overflow-x: hidden !important;
     }
 
-    .form-container::-webkit-scrollbar {
-        width: 5px !important;
+
+    #container > .sign-up-container {
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        z-index: 5 !important;
     }
 
-    .form-container::-webkit-scrollbar-thumb {
-        background: rgba(255,255,255,.35) !important;
-        border-radius: 10px !important;
+
+    #container > .sign-in-container {
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        z-index: 1 !important;
     }
 
-    .form-container form {
+
+    #container.right-panel-active > .sign-up-container {
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        z-index: 1 !important;
+    }
+
+
+    #container.right-panel-active > .sign-in-container {
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        z-index: 5 !important;
+    }
+
+
+    /* =========================
+       FORM
+       ========================= */
+
+    #container .form-container form {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
         height: auto !important;
         min-height: 100% !important;
+
+        margin: 0 !important;
+        padding: 16px !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    #container .form-container h1 {
+        width: 100% !important;
+
+        margin: 0 0 8px !important;
+
+        text-align: center !important;
+
+        font-size: 22px !important;
+    }
+
+
+    /* =========================
+       INPUT
+       ========================= */
+
+    #container .form-container input {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 41px !important;
+
+        margin: 4px 0 !important;
+        padding: 9px 12px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    /* =========================
+       UPLOAD
+       ========================= */
+
+    #container .upload-box {
+        width: 100% !important;
+
+        margin: 6px 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        align-items: center !important;
+    }
+
+
+    #container .upload-label {
+        width: 100% !important;
+
+        padding: 9px !important;
+
+        font-size: 12px !important;
+    }
+
+
+    #container #imgpreview {
+        width: 75px !important;
+        height: 75px !important;
+    }
+
+
+    /* =========================
+       BUTTON
+       ========================= */
+
+    #container .form-container button {
+        width: auto !important;
+
+        min-width: 120px !important;
+        max-width: 190px !important;
+
+        height: 40px !important;
+
+        margin: 8px auto 0 !important;
+        padding: 8px 18px !important;
+
+        font-size: 13px !important;
+    }
+
+
+    /* =========================
+       SCROLLBAR
+       ========================= */
+
+    #container .form-container::-webkit-scrollbar {
+        width: 4px !important;
+    }
+
+    #container .form-container::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.35) !important;
+
+        border-radius: 10px !important;
     }
 }
+
+
+/* =====================================================
+   VERY SMALL PHONES
+   ===================================================== */
+
+@media screen and (max-width: 360px) {
+
+    #container {
+        min-height: 570px !important;
+    }
+
+    #container > .overlay-container {
+        height: 31% !important;
+    }
+
+    #container > .sign-up-container,
+    #container > .sign-in-container {
+        top: 31% !important;
+        height: 69% !important;
+    }
+
+    #container .overlay-panel img {
+        width: 52px !important;
+        height: 52px !important;
+    }
+
+    #container .form-container form {
+        padding: 12px !important;
+    }
+
+    #container .form-container h1 {
+        font-size: 20px !important;
+    }
+
+    #container .form-container input {
+        height: 38px !important;
+        font-size: 12px !important;
+    }
+}
+    
+    
+    /* =========================================
+   REGISTER - FINAL MOBILE OVERRIDE
+   ========================================= */
+
+@media screen and (max-width: 750px) {
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    body {
+        display: block !important;
+    }
+
+    /* MAIN CARD */
+    #container {
+        position: relative !important;
+
+        width: calc(100% - 16px) !important;
+        max-width: 430px !important;
+
+        height: auto !important;
+        min-height: 650px !important;
+
+        margin: 8px auto !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius: 20px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ===== REMOVE DESKTOP SPLIT ===== */
+
+    #container .overlay-container {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 240px !important;
+
+        margin: 0 !important;
+
+        overflow: hidden !important;
+
+        transform: none !important;
+
+        z-index: 10 !important;
+    }
+
+
+    #container .overlay {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* VERY IMPORTANT:
+       NO 200% WIDTH ON MOBILE */
+
+    #container .overlay,
+    #container .overlay-container {
+        right: auto !important;
+    }
+
+
+    /* ===== OVERLAY PANELS ===== */
+
+    #container .overlay-panel {
+        position: absolute !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        padding: 15px !important;
+        margin: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex-direction: column !important;
+
+        text-align: center !important;
+
+        transform: none !important;
+    }
+
+
+    #container .overlay-right {
+        display: flex !important;
+        left: 0 !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    #container .overlay-left {
+        display: none !important;
+        left: 0 !important;
+        transform: none !important;
+    }
+
+
+    /* ===== IMAGE ===== */
+
+    #container .overlay-panel img {
+        width: 65px !important;
+        height: 65px !important;
+
+        margin: 0 auto 6px !important;
+
+        object-fit: cover !important;
+
+        animation: none !important;
+    }
+
+
+    /* ===== TEXT ===== */
+
+    #container .hello,
+    #container .hello1 {
+        width: 100% !important;
+        max-width: 360px !important;
+
+        padding: 0 !important;
+        margin: 0 auto !important;
+
+        text-align: center !important;
+    }
+
+    #container .hello h1,
+    #container .hello1 h1 {
+        font-size: 22px !important;
+        line-height: 1.15 !important;
+
+        margin: 3px 0 !important;
+    }
+
+    #container .hello h4 {
+        font-size: 14px !important;
+        margin: 3px 0 !important;
+    }
+
+    #container .hello p,
+    #container .hello1 p {
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+
+        margin: 3px 0 !important;
+    }
+
+
+    /* ===== FORM CONTAINERS ===== */
+
+    #container .sign-up-container,
+    #container .sign-in-container {
+        position: absolute !important;
+
+        top: 240px !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: calc(100% - 240px) !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* SIGN UP */
+    #container .sign-up-container {
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        z-index: 5 !important;
+    }
+
+
+    /* SIGN IN */
+    #container .sign-in-container {
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        z-index: 1 !important;
+    }
+
+
+    /* ===== FORM ITSELF ===== */
+
+    #container .form-container form {
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        min-height: 100% !important;
+
+        margin: 0 !important;
+
+        padding: 18px 15px 25px !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ===== INPUTS ===== */
+
+    #container .form-container input {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 42px !important;
+
+        margin: 5px 0 !important;
+        padding: 9px 12px !important;
+
+        font-size: 13px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ===== UPLOAD ===== */
+
+    #container .upload-box {
+        width: 100% !important;
+
+        margin: 6px 0 !important;
+    }
+
+    #container .upload-label {
+        width: 100% !important;
+
+        padding: 10px !important;
+
+        font-size: 12px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ===== BUTTON ===== */
+
+    #container .form-container button {
+        width: auto !important;
+
+        min-width: 120px !important;
+        max-width: 190px !important;
+
+        margin: 8px auto 0 !important;
+
+        padding: 9px 20px !important;
+    }
+}
+
 
 /* =========================================
-   CREATE ACCOUNT CONTENT SCROLL
-========================================= */
+   SMALL PHONES
+   ========================================= */
 
-.form-container {
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100%;
-    margin-left: -1em !important;
+@media screen and (max-width: 360px) {
+
+    #container {
+        width: calc(100% - 12px) !important;
+        min-height: 620px !important;
     }
 
-/* Scrollbar */
-.form-container::-webkit-scrollbar {
-    width: 6px;
+    #container .overlay-container {
+        height: 220px !important;
+    }
+
+    #container .sign-up-container,
+    #container .sign-in-container {
+        top: 220px !important;
+        height: calc(100% - 220px) !important;
+    }
+
+    #container .overlay-panel img {
+        width: 55px !important;
+        height: 55px !important;
+    }
+
+    #container .form-container form {
+        padding: 14px 12px 20px !important;
+    }
+
+    #container .form-container input {
+        height: 39px !important;
+    }
 }
-
-.form-container::-webkit-scrollbar-track {
-    background: transparent;
-
-}
-
-.form-container::-webkit-scrollbar-thumb {
-    background: #b88b5a;
-    border-radius: 10px;
-
-}
-
-.form-container::-webkit-scrollbar-thumb:hover {
-    background: #8f633c;
-    margin-left: -8% !important;
-
-}
-
+    
 </style>
 </head>
 <body>
@@ -783,7 +1394,7 @@ h1{
 
 
   <div class="form-container sign-up-container">
-    <form onsubmit="return signup()" action="form_action.php" method="POST" enctype="multipart/form-data" style="margin:-5% -3%;">
+    <form onsubmit="return signup()" action="form_action.php" method="POST" enctype="multipart/form-data"  id="id1">
       <h1>Create Account</h1>
       <input type="text" placeholder="Name"   name="name" id="name"  />
       <input type="text" placeholder="Email" name="email" id="email_id"  />
@@ -832,7 +1443,7 @@ id="signup_password" />
 
   <!-- Sign In -->
   <div class="form-container sign-in-container" style="margin-left:1%;">
-    <form   action="login_action.php" method="POST" enctype="multipart/form-data" style="margin-top:-5%;" >
+    <form   action="login_action.php" method="POST" enctype="multipart/form-data"    id="id2"  >
       <h1>SignIn Form</h1>
       <input type="email" placeholder="Email" name="email" id="email" />
       <input type="password"
