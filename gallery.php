@@ -9,14 +9,15 @@ include("header.php");
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/png" href="weblogo.png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="coffee.css" />
     <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />
 
-    <link rel="stylesheet" type="text/css" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css" />
-    <link rel="icon" type="image/png" href="weblogo.png">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
     <style>
@@ -675,7 +676,7 @@ $query = mysqli_query($conn, "
     <script src="script.js"></script>
     <script src="search.js"></script>
 
-    <script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function redirectPage(select) {
 

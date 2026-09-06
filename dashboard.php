@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +7,7 @@
     <title>Document</title>
         <link rel="icon" type="image/png" href="weblogo.png">
 
-    <link rel="stylesheet" scr="../assets/bootstrap-5.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" scr="../https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
 </head>
 <?php
     include "index.php";

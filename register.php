@@ -1364,6 +1364,150 @@ h1{
     }
 }
     
+
+
+    /* =========================================
+   DESKTOP SIGN IN / OVERLAY FINAL FIX
+========================================= */
+
+@media screen and (min-width: 751px) {
+
+    /* Container */
+    #container {
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    /* SIGN UP */
+    #container .sign-up-container {
+        position: absolute !important;
+        left: 0 !important;
+        width: 50% !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: 5 !important;
+        transform: translateX(0) !important;
+    }
+
+    /* SIGN IN - initially hidden */
+    #container .sign-in-container {
+        position: absolute !important;
+        left: 0 !important;
+        width: 50% !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        z-index: 1 !important;
+        transform: translateX(0) !important;
+    }
+
+    /* When Sign In clicked */
+    #container.right-panel-active .sign-in-container {
+        transform: translateX(100%) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: 50 !important;
+    }
+
+    /* Hide Sign Up */
+    #container.right-panel-active .sign-up-container {
+        transform: translateX(-100%) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        z-index: 1 !important;
+    }
+
+
+    /* OVERLAY */
+    #container .overlay-container {
+        position: absolute !important;
+        top: 0 !important;
+        left: 50% !important;
+        width: 50% !important;
+        height: 100% !important;
+        z-index: 20 !important;
+        overflow: hidden !important;
+        transform: translateX(0) !important;
+    }
+
+    #container .overlay {
+        position: relative !important;
+        left: -100% !important;
+        width: 200% !important;
+        height: 100% !important;
+        transform: translateX(0) !important;
+    }
+
+    /* RIGHT PANEL - initially visible */
+    #container .overlay-right {
+        position: absolute !important;
+        top: 0 !important;
+        left: 50% !important;
+        right: auto !important;
+        width: 50% !important;
+        height: 100% !important;
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* LEFT PANEL - initially hidden */
+    #container .overlay-left {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 50% !important;
+        height: 100% !important;
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
+    /* AFTER SIGN IN CLICK */
+    #container.right-panel-active .overlay-container {
+        transform: translateX(-100%) !important;
+    }
+
+    #container.right-panel-active .overlay {
+        transform: translateX(50%) !important;
+    }
+
+}
+
+/* SIGN UP FORM SCROLL FIX */
+
+@media screen and (min-width: 751px) {
+
+    #container .sign-up-container {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    #container .sign-in-container {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    #container .sign-up-container::-webkit-scrollbar,
+    #container .sign-in-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #container .sign-up-container::-webkit-scrollbar-thumb,
+    #container .sign-in-container::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.4);
+        border-radius: 10px;
+    }
+
+    #container .form-container form {
+        height: auto !important;
+        min-height: 100% !important;
+        padding-bottom: 30px !important;
+        padding-top:30px !important;
+    }
+}
+
+
 </style>
 </head>
 <body>

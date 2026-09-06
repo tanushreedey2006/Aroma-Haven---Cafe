@@ -1,23 +1,31 @@
-﻿﻿        <?php
-        include('connect.php');
+﻿﻿<?php
+
+
+ include('connect.php');
         session_start();
 
-        ?>
-        <!DOCTYPE html>
-        <html lang="en">
+        error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+?>
+<!DOCTYPE html>
+<html lang="en">
 
-        <head>
+<head>
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Document</title>
+
+            <title>Aroma Haven</title>
+                    <!-- <link rel="icon" type="image/png" href="weblogo.png"> -->
+                     <link rel="icon" type="image/png" href="weblogo.png?v=5">
+<link rel="shortcut icon" type="image/png" href="weblogo.png?v=5">
             <link rel="stylesheet" type="text/css" href="coffee.css" />
     <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />
 
             <link rel="stylesheet" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css" />
-            <link rel="icon" type="image/png" href="weblogo.png">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-
             <style>
+                
                 .seat-title {
                     text-align: center;
                     padding: 60px 0 30px;
@@ -71,6 +79,9 @@
                     transform: translate(-50%, -50%);
 
                     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+                }
+                .left{
+                    width: 50%;
                 }
 
                 .contact-card.show {
@@ -1872,16 +1883,6 @@
 }             
                 
 
-                
-                
-                
-                
-/* =====================================================
-   FINAL MOBILE COFFEE SLIDER
-   ONE IMAGE AT A TIME
-   2 SECONDS EACH
-   ===================================================== */
-
 .coffee-mobile-slider {
     position: relative !important;
     width: 100% !important;
@@ -1892,6 +1893,9 @@
     align-items: center !important;
 }
 
+.respon{
+    margin-top: -3% !important;
+}
 .coffee-slide {
     position: absolute !important;
 
@@ -2398,8 +2402,10 @@
                 
                 
                 
-       	         
- 
+       	      body {
+    font-family: "Times New Roman", Times, serif !important;
+}
+
             </style>
 
 
@@ -2483,7 +2489,7 @@
                         <div class="bg-light rounded-3  border  abc" style="width: 100%; height: 30vh;">
                             <div class="d-flex justify-content-between p-2">
                                 <h3 class="paragraph">The food</h3>
-                                <img src="./Png/burger.png" style="width: 15%; height: 9vh;" />
+                                <img src="./Png/burger2.png" style="width: 15%; height: 9vh;" />
                             </div>
                             <p class="px-3 " style="width: 90%; font-size: 17px;">Coffee snacks range from sweet treats like donuts, croissants, and chocolate to savory options such as bacon, grilled cheese, and hard cheeses. </p>
                         </div>

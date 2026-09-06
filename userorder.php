@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="coffee.css"  />
     <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />
     <link rel="icon" type="image/png" href="weblogo.png">
-    <link rel="stylesheet"  type="text/css" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"  />
+    <link rel="stylesheet"  type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"  />
 <?php
 session_start();
 include("connect.php");
@@ -1682,7 +1682,7 @@ $orderDetails = mysqli_fetch_assoc($detailsQuery);
 <script src="script.js"></script>
     <script src="search.js"></script>
    
-    <script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 

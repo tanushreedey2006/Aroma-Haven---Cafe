@@ -22,6 +22,10 @@ include("connect.php");
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <style>
+               	      body {
+    font-family: "Times New Roman", Times, serif !important;
+}
+
         .logicon {
             margin-top: 7px;
             margin-left: 20px;

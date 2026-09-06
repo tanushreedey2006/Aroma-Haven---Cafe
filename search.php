@@ -209,7 +209,7 @@ if ($search !== '') {
 
     <link
         rel="stylesheet"
-        href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
     >
 
     <link
@@ -708,7 +708,7 @@ if ($search !== '') {
 
 <script src="search.js"></script>
 
-<script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 
 </body>

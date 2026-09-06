@@ -11,7 +11,7 @@ include("connect.php");
 /** @var mysqli $conn */
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: register.php");
     exit();
 }
 
@@ -267,6 +267,105 @@ $user_id = $_SESSION['user_id'];
             }
 
         }
+
+        /* =========================================
+   LOGIN REQUIRED CARD
+========================================= */
+
+.login-required-card {
+    background: linear-gradient(135deg, #6F4E37, #3d2b20);
+    border-radius: 22px;
+    padding: 28px;
+    margin-bottom: 25px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    box-shadow: 0 15px 35px rgba(111, 78, 55, 0.25);
+}
+
+.login-required-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.login-required-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.login-required-card h4 {
+    margin: 0 0 5px;
+    font-weight: 700;
+}
+
+.login-required-card p {
+    margin: 0;
+    opacity: 0.85;
+    font-size: 14px;
+}
+
+.login-required-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.signup-btn,
+.signin-btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.signup-btn {
+    background: white;
+    color: #6F4E37;
+}
+
+.signup-btn:hover {
+    background: #f5e6d8;
+    color: #4d3526;
+}
+
+.signin-btn {
+    border: 1px solid rgba(255,255,255,0.7);
+    color: white;
+}
+
+.signin-btn:hover {
+    background: white;
+    color: #6F4E37;
+}
+
+@media(max-width:768px) {
+
+    .login-required-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .login-required-buttons {
+        width: 100%;
+    }
+
+    .signup-btn,
+    .signin-btn {
+        text-align: center;
+        flex: 1;
+    }
+}
+
+
     </style>
 
 </head>
@@ -275,9 +374,44 @@ $user_id = $_SESSION['user_id'];
 
     <div class="support-wrapper">
 
-        <!-- =========================
-             HEADER
-        ========================= -->
+  <?php if (!isset($_SESSION['user_id'])) { ?>
+
+    <div class="login-required-card">
+
+        <div class="login-required-left">
+
+            <div class="login-required-icon">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div>
+                <h4>Want to Contact Support?</h4>
+
+                <p>
+                    Please Sign Up or Sign In first to send us a message.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="login-required-buttons">
+
+            <a href="register.php" class="signup-btn">
+                <i class="fa-solid fa-user-plus"></i>
+                Sign Up
+            </a>
+
+            <a href="login.php" class="signin-btn">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Sign In
+            </a>
+
+        </div>
+
+    </div>
+
+<?php } ?>
 
         <div class="support-header">
 

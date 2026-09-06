@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="mobile-responsive.css" />
     <link rel="icon" href="weblogo.png">
 
-    <link rel="stylesheet" href="assets/bootstrap-5.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
         .best-badge {
@@ -280,7 +280,7 @@ $userCart = array_map('intval', $userCart);
                 <h1 style="color:#58260f;font-weight:bold;">NEW COLLECTION</h1>
 
                 <div class="buttons gap-5" id="but">
-                    <a href="catalogue.php?newcategory=<?php echo urlencode('Cold Beverages'); ?>"><button class="btncata">Cold Beverages</button></a>
+                    <a href="catalogue.php?newcategory=<?php echo urlencode('Cold Beverages'); ?>"><button class="btncata">Cold Beverage</button></a>
                     <a href="catalogue.php?newcategory=<?php echo urlencode('Hot Beverages'); ?>"><button class="btncata">Hot Beverages</button></a>
                     <a href="catalogue.php?newcategory=<?php echo urlencode('Cool Bean Specials'); ?>"><button class="btncata">Cool Bean</button></a>
                     <a href="catalogue.php?newcategory=<?php echo urlencode('Tea & Herbal'); ?>"><button class="btncata">Herbal Tea</button></a>
@@ -375,7 +375,7 @@ $userCart = array_map('intval', $userCart);
 
             <script src="script.js"></script>
             <script src="search.js"></script>
-            <script src="assets/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
